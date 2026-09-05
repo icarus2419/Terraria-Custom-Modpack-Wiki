@@ -2,10 +2,22 @@ import json, os, sys, html
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from gen_css import CSS
 from gen_js import JS
+import site_common as SC
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 D = json.load(open(os.path.join(BASE, "site_data.json")))
 sprites = json.load(open(os.path.join(BASE, "sprites.json")))
+
+# merge the Hardmode verdicts computed by hardmode.py
+HM = json.load(open(os.path.join(BASE, "hardmode.json")))
+for k, v in D["items"].items():
+    v.pop("_ikey", None)
+    v["phm"] = HM["verdict"].get(k)
+    v["pw"]  = HM["why"].get(k)
+for i, r in enumerate(D["recipes"]):
+    st = HM["recipes"][i]
+    r["phm"] = st["phm"]
+    r["blk"] = st["blockers"][:4]
 
 # attach sprite for the station
 STATION = sprites.get("__station__", "")
@@ -17,6 +29,8 @@ I, R, MODS, ORDER = D["items"], D["recipes"], D["mods"], D["order"]
 per = {m: sum(1 for r in R if r["src"] == m) for m in ORDER}
 n_changed = sum(1 for r in R if r.get("chg"))
 n_mod_items = sum(1 for v in I.values() if v["own"] != "vanilla")
+n_pre = sum(1 for r in D["recipes"] if r["phm"] is True)
+n_hard = sum(1 for r in D["recipes"] if r["phm"] is False)
 
 initial = None
 for k, v in I.items():
@@ -42,7 +56,8 @@ changed_list = "".join(
   "<li><b>%s</b> — %s</li>" % (html.escape(n), ", ".join(MODS[s]["short"] for s in v))
   for n, v in sorted(D["changed"].items()))
 
-HTML = CSS + """
+HTML = ('<meta charset="utf-8">\n' + CSS + SC.NAV_CSS
+        + SC.nav("tinkerers.html", "accessory combinations") + """
 <header class="masthead"><div class="wrap mast-in">
   <div class="brandline">
     <div>
@@ -55,7 +70,8 @@ HTML = CSS + """
     <div><dt>Combinations</dt><dd>%(nrec)d</dd></div>
     <div><dt>Items</dt><dd>%(nitem)d</dd></div>
     <div><dt>Modded items</dt><dd>%(nmod)d</dd></div>
-    <div><dt>Changed by mods</dt><dd>%(nchg)d</dd></div>
+    <div><dt>Pre-Hardmode</dt><dd>%(npre)d</dd></div>
+    <div><dt>Hardmode only</dt><dd>%(nhard)d</dd></div>
   </dl>
 </div></header>
 
@@ -65,6 +81,11 @@ HTML = CSS + """
     <button class="clearx" id="clearq" type="button" aria-label="Clear search">&times;</button>
   </div>
   <div class="chips">%(chips)s</div>
+  <span class="chipsep" aria-hidden="true"></span>
+  <div class="chips">
+    <button class="chip phmchip" type="button" data-era="pre" aria-pressed="true">Pre-Hardmode<span class="n">%(npre)d</span></button>
+    <button class="chip hmchip" type="button" data-era="hard" aria-pressed="true">Hardmode<span class="n">%(nhard)d</span></button>
+  </div>
   <button class="chip flagchip" id="chgtoggle" type="button" aria-pressed="false">Only mod-changed<span class="n">%(nchg)d</span></button>
   <span class="spacer"></span>
   <span class="count" id="count"></span>
@@ -109,10 +130,12 @@ HTML = CSS + """
 """ % {"station": STATION, "nrec": len(R), "nitem": len(I), "nmod": n_mod_items,
        "nchg": n_changed, "chips": "".join(chips), "changed": changed_list,
        "nmodrec": sum(1 for r in R if r["src"] != "vanilla"),
-       "payload": payload, "initial": initial} + js
+       "npre": n_pre, "nhard": n_hard,
+       "payload": payload, "initial": initial}) + js
 
-out = os.path.join(BASE, "tinkerers-workshop.html")
-open(out, "w").write(HTML)
+out = os.path.join(BASE, "tinkerers.html")
+HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>Tinkerer's Workshop</title>", 1)
+open(out, "w", encoding="utf-8").write(HTML)
 print("wrote %s — %.0f KB" % (out, os.path.getsize(out)/1024))
 print("initial item id:", initial, I[str(initial)]["n"])
 print("chips:", per, "| changed rows:", n_changed)

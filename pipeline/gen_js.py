@@ -46,10 +46,13 @@ function itemBtn(id, qty, isRes){
 
 /* ---------------- state ---------------- */
 var active=new Set(ORDER), q="", onlyChg=false, sel=null;
+var eras={pre:true, hard:true};
 
 function recipeMatches(r){
   if(!active.has(r.src)) return false;
   if(onlyChg && !r.chg) return false;
+  if(r.phm===true && !eras.pre) return false;
+  if(r.phm===false && !eras.hard) return false;
   if(!q) return true;
   var t=I[r.res].n.toLowerCase();
   if(t.indexOf(q)>=0) return true;
@@ -83,6 +86,12 @@ function renderTable(){
         var bd=el("span","badge-chg","changed by "+MODS[r.src].short);
         bd.title="This recipe differs from the vanilla one. The mod's version is what the game will use.";
         td1.appendChild(bd);
+      }
+      if(r.phm!==null && r.phm!==undefined){
+        var eb=el("span","era "+(r.phm?"pre":"hard"), r.phm?"pre-hardmode":"hardmode");
+        eb.title = r.phm ? "Every ingredient is obtainable before Hardmode."
+                         : "Needs " + (r.blk && r.blk.length ? r.blk.join(", ") : "Hardmode content") + ".";
+        td1.appendChild(eb);
       }
       if(r.dup!=null){
         var du=el("span","badge-dup","also listed by "+MODS[R[r.dup].src].short);
@@ -210,6 +219,28 @@ function renderDetail(id, fromUser){
     });
     sg.appendChild(gl); panel.appendChild(sg);
   }
+  if(it.phm===true || it.phm===false){
+    var sv2=el("div","d-sec");
+    sv2.appendChild(el("h3",null,"Before Hardmode?"));
+    var vb=el("div","verdict "+(it.phm?"pre":"hard"));
+    vb.appendChild(el("span","mark", it.phm?"\u2713":"\u2717"));
+    var vt=el("div","");
+    vt.appendChild(el("b",null, it.phm ? "Yes \u2014 obtainable pre-Hardmode"
+                                       : "No \u2014 Hardmode only"));
+    if(it.pw) vt.appendChild(el("div","reason", it.pw.charAt(0).toUpperCase()+it.pw.slice(1)+"."));
+    var mk0=madeBy(id), blk=[];
+    mk0.forEach(function(ri){ (R[ri].blk||[]).forEach(function(b){ if(blk.indexOf(b)<0) blk.push(b); }); });
+    if(!it.phm && blk.length){
+      var bd=el("div","blockers");
+      bd.appendChild(document.createTextNode("Blocked by "));
+      bd.appendChild(el("b",null,blk.join(", ")));
+      sv2.appendChild(vb);
+      vt.appendChild(bd);
+    }
+    vb.appendChild(vt);
+    if(!sv2.firstChild || sv2.lastChild!==vb) sv2.appendChild(vb);
+    panel.appendChild(sv2);
+  }
   var sHow=el("div","d-sec"); sHow.appendChild(el("h3",null,"How to get it"));
   if(it.l) sHow.appendChild(el("p","lead",it.l));
   else sHow.appendChild(el("p","lead","No description on the source wiki. Follow the link below."));
@@ -303,6 +334,17 @@ document.querySelectorAll(".chip[data-src]").forEach(function(c){
     if(!active.size){ ORDER.forEach(function(x){active.add(x);}); }
     document.querySelectorAll(".chip[data-src]").forEach(function(x){
       x.setAttribute("aria-pressed", active.has(x.dataset.src)?"true":"false");
+    });
+    renderTable();
+  });
+});
+document.querySelectorAll(".chip[data-era]").forEach(function(c){
+  c.addEventListener("click",function(){
+    var e=c.dataset.era;
+    eras[e]=!eras[e];
+    if(!eras.pre && !eras.hard){ eras.pre=true; eras.hard=true; }
+    document.querySelectorAll(".chip[data-era]").forEach(function(x){
+      x.setAttribute("aria-pressed", eras[x.dataset.era]?"true":"false");
     });
     renderTable();
   });

@@ -1,0 +1,208 @@
+import json, os
+BASE = os.path.dirname(os.path.abspath(__file__))
+from gen_css import CSS as BASECSS
+import site_common as SC
+
+FULL = json.load(open(os.path.join(BASE,"full_site_data.json")))
+LO   = json.load(open(os.path.join(BASE,"loadouts.json")))
+SP   = json.load(open(os.path.join(BASE,"full_sprites.json")))
+IDX  = json.load(open(os.path.join(BASE,"full_index.json")))
+V1   = json.load(open(os.path.join(BASE,"site_data.json")))
+
+n_rec   = len(FULL["recipes"]); n_items = len(FULL["items"])
+n_st    = len(FULL["stations"])
+n_mod   = sum(1 for v in FULL["items"].values() if v["own"] != "vanilla")
+n_pre   = sum(1 for r in FULL["recipes"] if r["phm"] is True)
+n_hard  = sum(1 for r in FULL["recipes"] if r["phm"] is False)
+n_tink  = len(V1["recipes"])
+n_stage = len(LO["stages"])
+n_gear  = sum(len(b["items"]) for s in LO["data"].values() for c in s.values()
+              for m in c.values() for b in m)
+n_cls   = len({c for s in LO["data"].values() for c in s})
+
+def sprite_of(name):
+    for k, v in IDX.items():
+        if v["name"] == name and k in SP: return SP[k]
+    return None
+ICONS = {n: sprite_of(n) for n in
+         ["Tinkerer's Workshop","Soul Forge","Terraspark Boots","Ankh Shield"]}
+
+MODS = [("Thorium Mod","thorium","#3f9e8c","11 bosses, ~2,600 items, and the Bard, Healer and Thrower classes."),
+        ("Fargo's Souls / Mutant","fargo","#c9552f","Eternity Mode rewrites every vanilla boss. Boss summons and re-fights."),
+        ("Spirit Reforged","spirit_reforged","#7a5cc4","Biomes, events and atmosphere, built for multiplayer."),
+        ("Spirit Classic","spirit","#5a80c9","~12 bosses. Added last, after a clean join test."),
+        ("The Stars Above","stars","#c2a1e8","9 bosses, Hardmode to post-Moon Lord. Native Thorium damage support."),
+        ("Calamity Fables","fables","#c98a24","A standalone Calamity reimagining. 3 pre-Hardmode bosses.")]
+per_mod = {}
+for r in FULL["recipes"]: per_mod[r["m"]] = per_mod.get(r["m"], 0) + 1
+
+EXTRA = """
+<style>
+.hero{padding:46px 0 30px; border-bottom:1px solid var(--line); position:relative; overflow:hidden;
+  background:linear-gradient(180deg, color-mix(in srgb,var(--brass-soft) 45%, var(--surface)) 0%, var(--surface) 100%)}
+.hero::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:repeating-linear-gradient(0deg,transparent 0 3px,var(--grid) 3px 4px),
+                   repeating-linear-gradient(90deg,transparent 0 3px,var(--grid) 3px 4px)}
+.hero-in{position:relative; z-index:1; max-width:76ch}
+.hero .eyebrow{margin:0 0 8px; font-family:"Pixelify Sans",sans-serif; font-size:11px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--brass)}
+.hero h1{font-family:"Pixelify Sans",sans-serif; font-weight:600; font-size:clamp(32px,5vw,54px);
+  line-height:1; margin:0 0 12px; text-shadow:2px 2px 0 var(--wordshadow)}
+.hero p{margin:0; font-size:16px; line-height:1.55; color:var(--ink-2); max-width:62ch}
+.hero p b{color:var(--ink); font-weight:600}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:16px; padding:26px 0 6px}
+a.card{display:flex; flex-direction:column; gap:9px; text-decoration:none; color:inherit;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:18px 18px 16px; border-top:3px solid var(--ccol); position:relative}
+a.card:hover{border-color:var(--brass-line); border-top-color:var(--ccol); transform:translateY(-2px)}
+a.card{transition:transform .12s ease, border-color .12s ease}
+@media (prefers-reduced-motion:reduce){ a.card{transition:none} a.card:hover{transform:none} }
+a.card .ic{width:44px;height:44px;display:grid;place-items:center;background:var(--slot-bg);
+  border:1px solid var(--slot-line); border-radius:5px; box-shadow:inset 0 1px 0 var(--slot-in)}
+a.card .ic img{max-width:30px;max-height:30px;width:auto;height:auto}
+a.card h2{margin:0; font-family:"Pixelify Sans",sans-serif; font-size:20px; line-height:1.15; color:var(--ink)}
+a.card p{margin:0; font-size:13.5px; line-height:1.5; color:var(--ink-2)}
+a.card .figs{display:flex; gap:16px; margin-top:auto; padding-top:10px; flex-wrap:wrap}
+a.card .figs div{display:flex; flex-direction:column}
+a.card .figs dt{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3)}
+a.card .figs dd{margin:0; font-family:"JetBrains Mono",monospace; font-size:17px; font-weight:700;
+  color:var(--ink); font-variant-numeric:tabular-nums}
+a.card .go{font-family:"Pixelify Sans",sans-serif; font-size:11.5px; color:var(--brass);
+  letter-spacing:.05em}
+
+.sec{padding:30px 0 0}
+.sec > h2{margin:0 0 4px; font-family:"Pixelify Sans",sans-serif; font-size:15px; letter-spacing:.02em}
+.sec > p.lede{margin:0 0 14px; color:var(--ink-2); font-size:13.5px; max-width:68ch}
+.modgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px}
+.modrow{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:11px 13px; border-left:3px solid var(--mcol); display:flex; flex-direction:column; gap:3px}
+.modrow .top{display:flex; align-items:baseline; gap:8px}
+.modrow h3{margin:0; font-family:"Pixelify Sans",sans-serif; font-size:13.5px; color:var(--ink)}
+.modrow .cnt{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--ink-3)}
+.modrow p{margin:0; font-size:12px; color:var(--ink-2); line-height:1.45}
+
+.quick{display:flex; flex-wrap:wrap; gap:7px; padding-top:4px}
+a.qlink{display:inline-flex; align-items:center; gap:7px; text-decoration:none; font-size:12.5px;
+  background:var(--surface); border:1px solid var(--line-strong); border-radius:100px;
+  padding:5px 13px; color:var(--ink-2)}
+a.qlink:hover{border-color:var(--brass); color:var(--brass)}
+a.qlink .n{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--ink-3)}
+.startbox{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px 18px; margin-top:14px}
+.startbox ol{margin:0; padding-left:20px; font-size:13.5px; line-height:1.7; color:var(--ink-2)}
+.startbox ol b{color:var(--ink)}
+.startbox a{font-weight:600}
+</style>
+"""
+
+def card(href, ccol, icon, title, desc, figs, go):
+    f = "".join('<div><dt>%s</dt><dd>%s</dd></div>' % (k, v) for k, v in figs)
+    ic = ('<span class="ic"><img class="px" src="%s" alt=""></span>' % icon) if icon else ""
+    return ('<a class="card" href="%s" style="--ccol:%s">%s<h2>%s</h2><p>%s</p>'
+            '<dl class="figs">%s</dl><span class="go">%s &rarr;</span></a>'
+            % (href, ccol, ic, title, desc, f, go))
+
+cards = "".join([
+ card("tinkerers.html", "#e5b35a", ICONS.get("Tinkerer's Workshop"),
+      "Tinkerer's Workshop",
+      "Every accessory combination in the pack, modded and vanilla side by side. The station where "
+      "mod and vanilla gear actually meet.",
+      [("Combinations", n_tink), ("Changed by mods", 9)], "Open the workshop"),
+ card("recipes.html", "#3f9e8c", ICONS.get("Soul Forge"),
+      "All Recipes",
+      "Every recipe the six mods add, across all %d crafting stations. Search any item, filter by "
+      "mod, or browse one station at a time." % n_st,
+      [("Recipes", "{:,}".format(n_rec)), ("Stations", n_st)], "Browse recipes"),
+ card("loadouts.html", "#c9552f", ICONS.get("Terraspark Boots"),
+      "Loadouts",
+      "What to wear and carry for each class before each boss &mdash; armour, <b>accessories</b>, "
+      "weapons and buffs, from pre-Eye of Cthulhu to endgame.",
+      [("Boss stages", n_stage), ("Classes", n_cls)], "Plan your gear"),
+])
+
+modrows = "".join(
+ '<div class="modrow" style="--mcol:%s"><div class="top"><h3>%s</h3>'
+ '<span class="cnt">%s</span></div><p>%s</p></div>'
+ % (col, name, "{:,} recipes".format(per_mod.get(key, 0)) if per_mod.get(key) else "&mdash;", desc)
+ for name, key, col, desc in MODS)
+
+BODY = """
+<div class="hero"><div class="wrap hero-in">
+  <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
+  <h1>Joseph's Modpack Wiki</h1>
+  <p>Everything the pack adds, in one place: <b>@@NREC@@ recipes</b> across <b>@@NST@@ crafting
+  stations</b>, <b>@@NITEM@@ items</b> with how to get each one, and suggested loadouts for every
+  class at every boss. Built from the mods' own wikis, and it works offline.</p>
+</div></div>
+
+<main class="wrap">
+  <div class="cards">@@CARDS@@</div>
+
+  <section class="sec">
+    <h2>Start here</h2>
+    <p class="lede">If you are not sure where to look:</p>
+    <div class="startbox"><ol>
+      <li><b>Kitting out for a boss?</b> Go to <a href="loadouts.html">Loadouts</a>, pick the boss you
+      are about to fight, then your class. Accessories are listed with the armour.</li>
+      <li><b>Wondering what an item combines into?</b> The
+      <a href="tinkerers.html">Tinkerer's Workshop</a> page shows every accessory combination, and
+      flags the @@NCHG@@ recipes the mods change from vanilla.</li>
+      <li><b>Looking for a specific recipe?</b> <a href="recipes.html">All Recipes</a> searches every
+      item in the pack at once, and can filter to what is craftable before Hardmode.</li>
+    </ol></div>
+  </section>
+
+  <section class="sec">
+    <h2>Jump straight to a stage</h2>
+    <p class="lede">The boss checkpoints most people look up first.</p>
+    <div class="quick">@@QUICK@@</div>
+  </section>
+
+  <section class="sec">
+    <h2>What's in the pack</h2>
+    <p class="lede">Six content mods, plus the vanilla Tinkerer's Workshop where their accessories meet.</p>
+    <div class="modgrid">@@MODS@@</div>
+  </section>
+
+  <section class="sec">
+    <h2>Before and after Hardmode</h2>
+    <p class="lede">Every recipe is checked against the wikis to see whether you can actually make it
+    yet. @@NPRE@@ are craftable before Hardmode; @@NHARD@@ need Hardmode content.</p>
+  </section>
+</main>
+
+<footer><div class="wrap fgrid">
+  <div><h4>How it was built</h4>
+    <p>Recipes are parsed from each wiki's own generated recipe tables through the MediaWiki API &mdash;
+    161 station pages across seven wikis. Loadouts come from each wiki's <code>Guide:Class setups</code>.
+    Nothing is written from memory.</p></div>
+  <div><h4>Offline</h4>
+    <p>Every page is self-contained with its sprites embedded, so the wiki works with the Wi-Fi off &mdash;
+    handy on a second monitor mid-session.</p></div>
+  <div><h4>Sources</h4>
+    <p>terraria.wiki.gg &middot; thoriummod.wiki.gg &middot; fargosmods.wiki.gg &middot;
+    spiritmod.wiki.gg &middot; starsabovemod.wiki.gg &middot; calamityfables.wiki.gg.
+    A fan reference tool, not affiliated with Re-Logic or any mod team.</p></div>
+</div></footer>
+"""
+
+quick = "".join('<a class="qlink" href="loadouts.html#%s">%s<span class="n">%d</span></a>'
+                % (s[0], s[1], sum(len(b["items"]) for c in LO["data"].get(s[0], {}).values()
+                             for m in c.values() for b in m))
+                for s in LO["stages"][:7])
+
+for a, b in [("@@NREC@@", "{:,}".format(n_rec)), ("@@NST@@", str(n_st)),
+             ("@@NITEM@@", "{:,}".format(n_items)), ("@@CARDS@@", cards),
+             ("@@MODS@@", modrows), ("@@NPRE@@", "{:,}".format(n_pre)),
+             ("@@NHARD@@", "{:,}".format(n_hard)), ("@@NCHG@@", "9"),
+             ("@@QUICK@@", quick)]:
+    BODY = BODY.replace(a, b)
+
+HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + EXTRA
+        + SC.nav("index.html", "offline &middot; " + "{:,}".format(n_rec) + " recipes") + BODY)
+HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>",
+                    "<title>Joseph's Modpack Wiki</title>", 1)
+open(os.path.join(BASE, "index.html"), "w", encoding="utf-8").write(HTML)
+print("wrote index.html %.0f KB" % (os.path.getsize(os.path.join(BASE,"index.html"))/1024))

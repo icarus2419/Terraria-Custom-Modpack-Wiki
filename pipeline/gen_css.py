@@ -12,6 +12,8 @@ CSS = r"""
   --shadow:0 1px 2px rgba(25,29,48,.07), 0 8px 24px -12px rgba(25,29,48,.18);
   --radius:7px;
   --slot-bg:#dde1f0; --slot-line:#bfc6dd; --slot-in:rgba(255,255,255,.85);
+  --pre:#0d6b5e; --pre-soft:#d7efe9; --pre-line:#7fc4b6;
+  --hard:#a3341f; --hard-soft:#fadfd8; --hard-line:#e09b88;
   --rar-blend:#141830; --rar-amt:48%;
   --ui-shadow:none; --wordshadow:rgba(20,24,48,.13); --grid:rgba(20,24,48,.045);
   color-scheme:light;
@@ -26,6 +28,8 @@ CSS = r"""
     --tip-bg:#0a0c1c; --tip-ink:#dfe3f5;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
     --slot-bg:#272d55; --slot-line:#3c4472; --slot-in:rgba(255,255,255,.07);
+    --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
+    --hard:#ff8a6b; --hard-soft:#3d1c14; --hard-line:#7a3626;
     --rar-blend:#141830; --rar-amt:0%;
     --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.62); --grid:rgba(255,255,255,.032);
     color-scheme:dark;
@@ -40,6 +44,8 @@ CSS = r"""
   --tip-bg:#0a0c1c; --tip-ink:#dfe3f5;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
   --slot-bg:#272d55; --slot-line:#3c4472; --slot-in:rgba(255,255,255,.07);
+  --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
+  --hard:#ff8a6b; --hard-soft:#3d1c14; --hard-line:#7a3626;
   --rar-blend:#141830; --rar-amt:0%;
   --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.62); --grid:rgba(255,255,255,.032);
   color-scheme:dark;
@@ -154,6 +160,11 @@ h1{
 .chip[aria-pressed="true"] .n{color:var(--brass)}
 .chip.flagchip[aria-pressed="true"]{background:var(--flag-soft); border-color:var(--flag); color:var(--flag)}
 .chip.flagchip[aria-pressed="true"] .n{color:var(--flag)}
+.chipsep{width:1px; align-self:stretch; background:var(--line-strong); margin:0 2px}
+.chip.phmchip[aria-pressed="true"]{background:var(--pre-soft); border-color:var(--pre-line); color:var(--pre)}
+.chip.phmchip[aria-pressed="true"] .n{color:var(--pre)}
+.chip.hmchip[aria-pressed="true"]{background:var(--hard-soft); border-color:var(--hard-line); color:var(--hard)}
+.chip.hmchip[aria-pressed="true"] .n{color:var(--hard)}
 .spacer{flex:1}
 .count{font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums}
 
@@ -225,6 +236,26 @@ ul.ing li::before{
   color:var(--flag); background:var(--flag-soft); border:1px solid color-mix(in srgb,var(--flag) 40%, transparent);
   padding:1px 6px; border-radius:100px; white-space:nowrap;
 }
+.era{
+  display:inline-flex; align-items:center; gap:3px; margin-left:7px; vertical-align:middle;
+  font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+  padding:1px 6px; border-radius:100px; white-space:nowrap; border:1px solid;
+}
+.era.pre{color:var(--pre); background:var(--pre-soft); border-color:var(--pre-line)}
+.era.hard{color:var(--hard); background:var(--hard-soft); border-color:var(--hard-line)}
+.verdict{
+  display:flex; gap:10px; align-items:flex-start; padding:10px 11px; border-radius:5px;
+  border:1px solid; font-size:13px; line-height:1.45;
+}
+.verdict.pre{background:var(--pre-soft); border-color:var(--pre-line); color:var(--ink)}
+.verdict.hard{background:var(--hard-soft); border-color:var(--hard-line); color:var(--ink)}
+.verdict .mark{font-size:16px; line-height:1.2; flex:none; font-weight:700}
+.verdict.pre .mark{color:var(--pre)}
+.verdict.hard .mark{color:var(--hard)}
+.verdict b{display:block; margin-bottom:1px}
+.verdict .reason{color:var(--ink-2); font-size:12.5px}
+.blockers{margin-top:6px; font-size:12px; color:var(--ink-2)}
+.blockers b{display:inline; font-weight:600; color:var(--hard)}
 .badge-dup{
   display:inline-block; margin-left:7px; font-size:10.5px; color:var(--ink-3);
   font-style:italic; white-space:nowrap;

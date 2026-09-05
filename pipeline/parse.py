@@ -119,7 +119,12 @@ class CraftsParser(HTMLParser):
         elif tag == "a":
             if self.in_eico: return
             txt = (self.a_text or "").strip()
-            if txt and self.cur_item is not None and not self.cur_item["name"]:
+            # a missing sprite renders as a redlink to File:/Special:Upload whose link text is
+            # the filename - that is not the item's name, so let the real name anchor win
+            isfile = bool(re.search(r"/wiki/(File|Image|Media):|Special:Upload", self.a_href or "")) \
+                     or bool(re.match(r"(File|Image|Media):", self.a_title or "")) \
+                     or bool(re.match(r"(File|Image|Media):", txt))
+            if txt and not isfile and self.cur_item is not None and not self.cur_item["name"]:
                 self.cur_item["name"] = txt
                 self.cur_item["url"] = self.pageurl(self.a_href)
             self.a_text = None
