@@ -6,6 +6,7 @@ import site_common as SC
 L  = json.load(open(os.path.join(BASE,"loadouts.json")))
 SP = json.load(open(os.path.join(BASE,"loadout_sprites.json")))
 ICON = json.load(open(os.path.join(BASE,"boss_icons.json")))
+STATS = json.load(open(os.path.join(BASE,"loadout_stats.json")))
 
 STAGES, CLASS_ORDER, CLASS_META, MODS = L["stages"], L["class_order"], L["class_meta"], L["mods"]
 DATA = L["data"]
@@ -13,7 +14,7 @@ MODCOL = {"vanilla":"#6f7794","thorium":"#3f9e8c","spirit":"#5a80c9","stars":"#c
 
 payload = json.dumps({"stages":STAGES,"class_order":CLASS_ORDER,"class_meta":CLASS_META,
                       "mods":MODS,"modcol":MODCOL,"cat_order":L["cat_order"],"data":DATA,"sprites":SP,
-                      "icons":ICON},
+                      "icons":ICON,"stats":STATS},
                      separators=(",",":")).replace("<","\\u003c")
 
 n_items = sum(len(b["items"]) for s in DATA.values() for c in s.values()
@@ -103,6 +104,33 @@ a.gear:hover{border-color:var(--src); background:color-mix(in srgb, var(--src) 4
 .carry-block{background:color-mix(in srgb, var(--brass) 4%, transparent); border-top:1px dashed var(--line-strong)}
 .carrynote{margin:0 0 6px; font-size:10.5px; color:var(--ink-3); font-style:italic; line-height:1.4}
 .emptyclass{padding:14px; color:var(--ink-3); font-size:12.5px}
+#statcard{
+  position:fixed; z-index:200; max-width:300px; pointer-events:none; opacity:0;
+  background:var(--tip-bg); color:var(--tip-ink); border:1px solid var(--brass-line);
+  border-radius:6px; padding:10px 12px; box-shadow:0 10px 30px -8px rgba(0,0,0,.6);
+  transition:opacity .09s ease;
+}
+#statcard[data-show="1"]{opacity:1}
+#statcard .sc-h{display:flex; align-items:center; gap:8px; margin-bottom:7px}
+#statcard .sc-sp{width:30px;height:30px;flex:none;display:grid;place-items:center;
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15); border-radius:4px}
+#statcard .sc-sp img{max-width:24px;max-height:24px;width:auto;height:auto}
+#statcard h5{margin:0; font-family:"Pixelify Sans",sans-serif; font-size:14px; line-height:1.15;
+  color:#fff}
+#statcard .sc-kind{font-size:10px; letter-spacing:.05em; text-transform:uppercase;
+  color:color-mix(in srgb,var(--brass-bright) 80%, #fff); font-family:"Pixelify Sans",sans-serif}
+#statcard .sc-rows{display:grid; grid-template-columns:auto 1fr; gap:2px 12px; font-size:12px;
+  margin-bottom:6px}
+#statcard .sc-rows dt{color:rgba(223,227,245,.6); font-size:10.5px; letter-spacing:.04em;
+  text-transform:uppercase; font-family:"Pixelify Sans",sans-serif}
+#statcard .sc-rows dd{margin:0; font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums;
+  color:#fff}
+#statcard .sc-rows dd.dmg{color:var(--brass-bright); font-weight:700}
+#statcard .sc-tip{font-size:11.5px; line-height:1.45; color:rgba(223,227,245,.85);
+  border-top:1px solid rgba(255,255,255,.12); padding-top:6px; margin:0}
+#statcard .sc-bonus{font-size:11.5px; line-height:1.45; color:#fff; margin:0 0 4px;
+  border-left:2px solid var(--brass); padding-left:7px}
+#statcard .sc-none{font-size:11.5px; color:rgba(223,227,245,.6); margin:0}
 .keybar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
   box-shadow:var(--shadow); padding:9px 14px}
@@ -181,7 +209,7 @@ JS = r"""
 "use strict";
 var D=JSON.parse(document.getElementById("loadouts").textContent);
 var STAGES=D.stages, CO=D.class_order, CM=D.class_meta, MODS=D.mods, MC=D.modcol,
-    CATO=D.cat_order, DATA=D.data, SP=D.sprites, ICON=D.icons||{};
+    CATO=D.cat_order, DATA=D.data, SP=D.sprites, ICON=D.icons||{}, STATS=D.stats||{};
 function el(t,c,x){var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e;}
 var VALID={}; STAGES.forEach(function(s){VALID[s[0]]=1;});
 var cur=(location.hash||"").replace(/^#/,"");
@@ -293,7 +321,7 @@ function render(){
         var it=row.it, srcMod=(row.mod==="_carry"?"vanilla":(row.mod==="_tharmour"?"thorium":row.mod));
         var node = it.url ? el("a","gear") : el("span","gear");
         node.style.setProperty("--src", MC[srcMod]||"#7d85ab");
-        node.title = it.name + " \u2014 " + (MODS[srcMod]||srcMod) + (it.note? " ("+it.note+")" : "");
+        node.dataset.item = it.name;
         if(it.url){ node.href=it.url; node.target="_blank"; node.rel="noopener noreferrer"; }
         var sp=SP[it.name];
         if(sp){ var b2=el("span","gsp"); var im=new Image(); im.src=sp; im.alt=""; im.className="px"; im.loading="lazy"; b2.appendChild(im); node.appendChild(b2); }
@@ -311,6 +339,73 @@ function render(){
     grid.appendChild(card);
   });
 }
+/* ---------- hover stat card ---------- */
+var SC=el("div"); SC.id="statcard"; SC.setAttribute("data-show","0"); document.body.appendChild(SC);
+
+function buildStat(name){
+  var s=STATS[name]||{};
+  SC.textContent="";
+  var h=el("div","sc-h");
+  var sp=SP[name];
+  if(sp){ var box=el("span","sc-sp"); var im=new Image(); im.src=sp; im.alt=""; im.className="px"; box.appendChild(im); h.appendChild(box); }
+  var t=el("div");
+  t.appendChild(el("h5",null,name));
+  if(s.kind) t.appendChild(el("div","sc-kind",s.kind));
+  h.appendChild(t); SC.appendChild(h);
+
+  var rows=[];
+  if(s.damage) rows.push(["Damage", s.damage + (s.dtype ? "  " + s.dtype : ""), true]);
+  if(s.defense) rows.push(["Defense", s.defense, false]);
+  if(s.speed) rows.push(["Speed", s.speed + (s.use ? "  (" + s.use + ")" : ""), false]);
+  else if(s.use) rows.push(["Use time", s.use, false]);
+  if(s.knockback) rows.push(["Knockback", s.knockback, false]);
+  if(s.crit) rows.push(["Crit", s.crit, false]);
+  if(s.mana) rows.push(["Mana", s.mana, false]);
+  if(s.velocity) rows.push(["Velocity", s.velocity, false]);
+  if(rows.length){
+    var dl=el("dl","sc-rows");
+    rows.forEach(function(r){
+      var dd=el("dd",null,String(r[1]));
+      if(r[2]) dd.className="dmg";
+      dl.appendChild(el("dt",null,r[0])); dl.appendChild(dd);
+    });
+    SC.appendChild(dl);
+  }
+  if(s.setbonus) SC.appendChild(el("p","sc-bonus","Set bonus: "+s.setbonus));
+  if(s.tip) SC.appendChild(el("p","sc-tip",s.tip));
+  if(!rows.length && !s.tip && !s.setbonus)
+    SC.appendChild(el("p","sc-none","No stats published on the source wiki."));
+}
+
+function placeStat(x,y){
+  var pad=14, w=SC.offsetWidth, h=SC.offsetHeight;
+  var lx=x+pad, ly=y+pad;
+  if(lx+w>window.innerWidth-8) lx=Math.max(8, x-w-pad);
+  if(ly+h>window.innerHeight-8) ly=Math.max(8, y-h-pad);
+  SC.style.left=lx+"px"; SC.style.top=ly+"px";
+}
+document.addEventListener("mouseover",function(ev){
+  var t=ev.target.closest && ev.target.closest(".gear");
+  if(!t||!t.dataset.item) return;
+  buildStat(t.dataset.item); placeStat(ev.clientX,ev.clientY);
+  SC.setAttribute("data-show","1");
+});
+document.addEventListener("mousemove",function(ev){
+  if(SC.getAttribute("data-show")!=="1") return;
+  var t=ev.target.closest && ev.target.closest(".gear");
+  if(t) placeStat(ev.clientX,ev.clientY); else SC.setAttribute("data-show","0");
+});
+document.addEventListener("scroll",function(){ SC.setAttribute("data-show","0"); }, true);
+// keyboard: focusing a linked pill shows the same card
+document.addEventListener("focusin",function(ev){
+  var t=ev.target.closest && ev.target.closest(".gear");
+  if(!t||!t.dataset.item) return;
+  var r=t.getBoundingClientRect();
+  buildStat(t.dataset.item); placeStat(r.left, r.bottom-14);
+  SC.setAttribute("data-show","1");
+});
+document.addEventListener("focusout",function(){ SC.setAttribute("data-show","0"); });
+
 window.addEventListener("hashchange",function(){
   var k=(location.hash||"").replace(/^#/,"");
   if(VALID[k]&&k!==cur){ cur=k; render(); }
