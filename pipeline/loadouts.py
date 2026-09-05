@@ -5,18 +5,19 @@ sys.path.insert(0, BASE)
 import parse_guides as PG
 
 # canonical progression: (key, label, the boss this stage prepares you for, hardmode?)
+#   key, full stage label, what you are gearing up for, hardmode?, short nav name
 STAGES = [
- ("start",     "Pre-Boss",             "Before any boss — gearing up",                 False),
- ("eye",       "Pre-Eye of Cthulhu",   "Eye of Cthulhu",                               False),
- ("evil",      "Pre-Eater / Brain",    "Eater of Worlds or Brain of Cthulhu",          False),
- ("skeletron", "Pre-Skeletron",        "Skeletron",                                    False),
- ("wof",       "Pre-Wall of Flesh",    "Wall of Flesh — the gate into Hardmode",       False),
- ("mech",      "Pre-Mechanical Bosses","The Twins, Destroyer, Skeletron Prime",        True),
- ("plantera",  "Pre-Plantera",         "Plantera",                                     True),
- ("golem",     "Pre-Golem",            "Golem",                                        True),
- ("cultist",   "Pre-Lunatic Cultist",  "Lunatic Cultist and the Lunar Events",         True),
- ("moonlord",  "Pre-Moon Lord",        "Moon Lord",                                    True),
- ("endgame",   "Endgame",              "Post-Moon Lord and the mods' final bosses",    True),
+ ("start",     "Pre-Boss",             "Before any boss \u2014 gearing up",             False, "Your first boss"),
+ ("eye",       "Pre-Eye of Cthulhu",   "Eye of Cthulhu",                               False, "Eye of Cthulhu"),
+ ("evil",      "Pre-Eater / Brain",    "Eater of Worlds or Brain of Cthulhu",          False, "Eater / Brain"),
+ ("skeletron", "Pre-Skeletron",        "Skeletron",                                    False, "Skeletron"),
+ ("wof",       "Pre-Wall of Flesh",    "Wall of Flesh \u2014 the gate into Hardmode",   False, "Wall of Flesh"),
+ ("mech",      "Pre-Mechanical Bosses","The Twins, Destroyer, Skeletron Prime",        True,  "Mechanical Bosses"),
+ ("plantera",  "Pre-Plantera",         "Plantera",                                     True,  "Plantera"),
+ ("golem",     "Pre-Golem",            "Golem",                                        True,  "Golem"),
+ ("cultist",   "Pre-Lunatic Cultist",  "Lunatic Cultist and the Lunar Events",         True,  "Lunatic Cultist"),
+ ("moonlord",  "Pre-Moon Lord",        "Moon Lord",                                    True,  "Moon Lord"),
+ ("endgame",   "Endgame",              "Post-Moon Lord and the mods' final bosses",    True,  "Endgame"),
 ]
 ORDER = [s[0] for s in STAGES]
 
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     data, unmapped = build()
     tot = 0
     print("%-22s %s" % ("STAGE", "classes"))
-    for k, label, boss, hm in STAGES:
+    for k, label, boss, hm, short in STAGES:
         cl = data.get(k, {})
         n = sum(len(b["items"]) for c in cl.values() for m in c.values() for b in m)
         tot += n
