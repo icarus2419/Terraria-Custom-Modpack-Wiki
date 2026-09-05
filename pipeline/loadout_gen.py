@@ -11,7 +11,7 @@ DATA = L["data"]
 MODCOL = {"vanilla":"#6f7794","thorium":"#3f9e8c","spirit":"#5a80c9","stars":"#c2a1e8"}
 
 payload = json.dumps({"stages":STAGES,"class_order":CLASS_ORDER,"class_meta":CLASS_META,
-                      "mods":MODS,"modcol":MODCOL,"data":DATA,"sprites":SP},
+                      "mods":MODS,"modcol":MODCOL,"cat_order":L["cat_order"],"data":DATA,"sprites":SP},
                      separators=(",",":")).replace("<","\\u003c")
 
 n_items = sum(len(b["items"]) for s in DATA.values() for c in s.values()
@@ -55,13 +55,15 @@ button.stagebtn[aria-current="true"] .num{color:var(--brass)}
 .catblock h4{margin:0 0 6px; font-family:"Pixelify Sans",sans-serif; font-size:9.5px;
   letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); font-weight:500;
   display:flex; align-items:center; gap:6px}
-.catblock h4 .modtag{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:9px;
-  letter-spacing:0; text-transform:none; color:#fff; padding:1px 5px; border-radius:100px}
+.catblock h4 .cnt{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:9.5px;
+  letter-spacing:0; text-transform:none; color:var(--ink-3)}
 .gearlist{display:flex; flex-wrap:wrap; gap:5px; margin:0; padding:0; list-style:none}
-.gear{display:inline-flex; align-items:center; gap:6px; background:var(--surface-2);
-  border:1px solid var(--line); border-radius:100px; padding:3px 10px 3px 3px; font-size:12px; color:var(--ink)}
+.gear{display:inline-flex; align-items:center; gap:6px;
+  background:color-mix(in srgb, var(--src) 24%, var(--surface-2));
+  border:1px solid color-mix(in srgb, var(--src) 85%, transparent);
+  border-radius:100px; padding:3px 10px 3px 3px; font-size:12px; color:var(--ink)}
 a.gear{text-decoration:none}
-a.gear:hover{border-color:var(--brass); color:var(--brass)}
+a.gear:hover{border-color:var(--src); background:color-mix(in srgb, var(--src) 42%, var(--surface-2))}
 .gear .gsp{width:24px;height:24px;display:grid;place-items:center;background:var(--slot-bg);
   border:1px solid var(--slot-line); border-radius:3px; flex:none}
 .gear .gsp img{max-width:19px;max-height:19px;width:auto;height:auto}
@@ -70,9 +72,16 @@ a.gear:hover{border-color:var(--brass); color:var(--brass)}
 .carry-block{background:color-mix(in srgb, var(--brass) 4%, transparent); border-top:1px dashed var(--line-strong)}
 .carrynote{margin:0 0 6px; font-size:10.5px; color:var(--ink-3); font-style:italic; line-height:1.4}
 .emptyclass{padding:14px; color:var(--ink-3); font-size:12.5px}
-.legend{display:flex; gap:14px; flex-wrap:wrap; align-items:center; padding:10px 0 0; font-size:11.5px; color:var(--ink-3)}
-.legend span.k{display:inline-flex; align-items:center; gap:5px}
-.legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.keybar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:9px 14px}
+.keybar .lbl{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3); margin-right:2px}
+.keybar .k{display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink);
+  background:color-mix(in srgb, var(--src) 24%, var(--surface-2));
+  border:1px solid color-mix(in srgb, var(--src) 85%, transparent);
+  border-radius:100px; padding:2px 10px}
+.keybar .k i{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--src)}
 </style>
 """
 
@@ -96,14 +105,14 @@ BODY = """
   <nav class="stagenav" id="stagenav"><h3>Progression</h3></nav>
   <section>
     <div class="stagehead" id="stagehead"></div>
-    <div class="classgrid" id="classgrid"></div>
-    <div class="legend">
-      <span class="k"><i style="background:#6f7794"></i>Terraria</span>
-      <span class="k"><i style="background:#3f9e8c"></i>Thorium</span>
-      <span class="k"><i style="background:#5a80c9"></i>Spirit</span>
-      <span class="k"><i style="background:#c2a1e8"></i>Stars Above</span>
-      <span>Each block is credited to the wiki it came from. Accessory blocks are tinted.</span>
+    <div class="keybar">
+      <span class="lbl">Gear colour = source</span>
+      <span class="k" style="--src:#6f7794"><i></i>Terraria</span>
+      <span class="k" style="--src:#3f9e8c"><i></i>Thorium</span>
+      <span class="k" style="--src:#5a80c9"><i></i>Spirit</span>
+      <span class="k" style="--src:#c2a1e8"><i></i>Stars Above</span>
     </div>
+    <div class="classgrid" id="classgrid"></div>
   </section>
 </main>
 
@@ -140,7 +149,8 @@ JS = r"""
 (function(){
 "use strict";
 var D=JSON.parse(document.getElementById("loadouts").textContent);
-var STAGES=D.stages, CO=D.class_order, CM=D.class_meta, MODS=D.mods, MC=D.modcol, DATA=D.data, SP=D.sprites;
+var STAGES=D.stages, CO=D.class_order, CM=D.class_meta, MODS=D.mods, MC=D.modcol,
+    CATO=D.cat_order, DATA=D.data, SP=D.sprites;
 function el(t,c,x){var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e;}
 var VALID={}; STAGES.forEach(function(s){VALID[s[0]]=1;});
 var cur=(location.hash||"").replace(/^#/,"");
@@ -191,35 +201,43 @@ function render(){
     h.appendChild(el("h3",null,cl));
     h.appendChild(el("p","blurb",meta[1]));
     card.appendChild(h);
-    var mods=classes[cl];
-    Object.keys(mods).sort(function(a,b){
-      return (a==="_carry"?1:0)-(b==="_carry"?1:0);       // carried-forward blocks last
-    }).forEach(function(m){
+    // one block per category, pills coloured by the wiki they came from
+    var mods=classes[cl], byCat={}, carry={};
+    Object.keys(mods).forEach(function(m){
       mods[m].forEach(function(box){
-        var isAcc=/accessor/i.test(box.t);
-        var isCarry=(m==="_carry");
-        var blk=el("div","catblock"+(isAcc?" acc-block":"")+(isCarry?" carry-block":""));
-        var h4=el("h4",null,box.t);
-        if(!isCarry){
-          var tag=el("span","modtag",MODS[m]||m); tag.style.background=MC[m]||"#888";
-          h4.appendChild(tag);
-        }
-        blk.appendChild(h4);
-        if(isCarry) blk.appendChild(el("p","carrynote",
-          "The guides list no new accessories here \u2014 keep what you had at " + box.src + "."));
-        var ul=el("ul","gearlist");
+        var arr = byCat[box.t] || (byCat[box.t]=[]);
         box.items.forEach(function(it){
-          var node = it.url ? el("a","gear") : el("span","gear");
-          if(it.url){ node.href=it.url; node.target="_blank"; node.rel="noopener noreferrer"; }
-          var sp=SP[it.name];
-          if(sp){ var b2=el("span","gsp"); var im=new Image(); im.src=sp; im.alt=""; im.className="px"; im.loading="lazy"; b2.appendChild(im); node.appendChild(b2); }
-          node.appendChild(document.createTextNode(it.name));
-          if(it.note) node.appendChild(el("span","qual",it.note));
-          var li=el("li"); li.appendChild(node); ul.appendChild(li);
+          if(!arr.some(function(x){return x.it.name===it.name;})) arr.push({it:it, mod:m});
         });
-        blk.appendChild(ul);
-        card.appendChild(blk);
+        if(m==="_carry") carry[box.t]=box.src;
       });
+    });
+    Object.keys(byCat).sort(function(a,b){
+      var ia=CATO.indexOf(a), ib=CATO.indexOf(b);
+      return (ia<0?99:ia)-(ib<0?99:ib);
+    }).forEach(function(catName){
+      var list=byCat[catName], isAcc=/accessor/i.test(catName), isCarry=!!carry[catName];
+      var blk=el("div","catblock"+(isAcc?" acc-block":"")+(isCarry?" carry-block":""));
+      var h4=el("h4",null,catName);
+      h4.appendChild(el("span","cnt",String(list.length)));
+      blk.appendChild(h4);
+      if(isCarry) blk.appendChild(el("p","carrynote",
+        "The guides list no new "+catName.toLowerCase()+" here \u2014 keep what you had at "+carry[catName]+"."));
+      var ul=el("ul","gearlist");
+      list.forEach(function(row){
+        var it=row.it, srcMod=(row.mod==="_carry"?"vanilla":row.mod);
+        var node = it.url ? el("a","gear") : el("span","gear");
+        node.style.setProperty("--src", MC[srcMod]||"#7d85ab");
+        node.title = it.name + " \u2014 " + (MODS[srcMod]||srcMod) + (it.note? " ("+it.note+")" : "");
+        if(it.url){ node.href=it.url; node.target="_blank"; node.rel="noopener noreferrer"; }
+        var sp=SP[it.name];
+        if(sp){ var b2=el("span","gsp"); var im=new Image(); im.src=sp; im.alt=""; im.className="px"; im.loading="lazy"; b2.appendChild(im); node.appendChild(b2); }
+        node.appendChild(document.createTextNode(it.name));
+        if(it.note) node.appendChild(el("span","qual",it.note));
+        var li=el("li"); li.appendChild(node); ul.appendChild(li);
+      });
+      blk.appendChild(ul);
+      card.appendChild(blk);
     });
     grid.appendChild(card);
   });

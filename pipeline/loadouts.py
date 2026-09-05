@@ -120,5 +120,5 @@ if __name__ == "__main__":
     print("\ntotal loadout items:", tot)
     if unmapped: print("UNMAPPED stages:", unmapped)
     json.dump({"stages": STAGES, "order": ORDER, "class_order": CLASS_ORDER,
-               "class_meta": CLASS_META, "mods": MODS, "data": data},
+               "class_meta": CLASS_META, "mods": MODS, "cat_order": CAT_ORDER, "data": data},
               open(os.path.join(BASE, "loadouts.json"), "w"))
