@@ -1,0 +1,36 @@
+{
+ "Any Iron Bar": [
+  "Iron Bar",
+  "Lead Bar"
+ ],
+ "Any Pressure Plate": [
+  "Gray Pressure Plate",
+  "Blue Pressure Plate",
+  "Brown Pressure Plate",
+  "Green Pressure Plate",
+  "Lihzahrd Pressure Plate",
+  "Red Pressure Plate",
+  "Yellow Pressure Plate",
+  "Orange Pressure Plate"
+ ],
+ "Any Cloud Balloon": [
+  "Cloud in a Balloon",
+  "Blue Horseshoe Balloon"
+ ],
+ "Any Blizzard Balloon": [
+  "Blizzard in a Balloon",
+  "White Horseshoe Balloon"
+ ],
+ "Any Sandstorm Balloon": [
+  "Sandstorm in a Balloon",
+  "Yellow Horseshoe Balloon"
+ ],
+ "Any Duck": [
+  "Duck",
+  "Mallard Duck"
+ ],
+ "Any Scorpion": [
+  "Scorpion",
+  "Black Scorpion"
+ ]
+}

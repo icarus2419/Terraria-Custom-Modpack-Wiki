@@ -1,0 +1,12 @@
+# regenerable pipeline intermediates
+pipeline/wiki/
+pipeline/wikitext_cache.json
+pipeline/vanilla_itemdb.json
+pipeline/items.json
+pipeline/recipes_raw.json
+pipeline/sprites.json
+pipeline/site_data.json
+pipeline/altingr.txt
+pipeline/tinkerers-workshop.html
+pipeline/__pycache__/
+.DS_Store
