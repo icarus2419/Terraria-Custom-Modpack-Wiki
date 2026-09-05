@@ -239,23 +239,33 @@ function render(){
         box.items.forEach(function(it){
           if(!arr.some(function(x){return x.it.name===it.name;})) arr.push({it:it, mod:m});
         });
-        if(m==="_carry") carry[box.t]=box.src;
+        if(m==="_carry"||m==="_tharmour") carry[box.t]={src:box.src, kind:m};
       });
     });
     Object.keys(byCat).sort(function(a,b){
       var ia=CATO.indexOf(a), ib=CATO.indexOf(b);
       return (ia<0?99:ia)-(ib<0?99:ib);
     }).forEach(function(catName){
-      var list=byCat[catName], isAcc=/accessor/i.test(catName), isCarry=!!carry[catName];
+      var list=byCat[catName], isAcc=/accessor/i.test(catName);
+      var cinfo=carry[catName]||null, isCarry=!!cinfo;
       var blk=el("div","catblock"+(isAcc?" acc-block":"")+(isCarry?" carry-block":""));
       var h4=el("h4",null,catName);
       h4.appendChild(el("span","cnt",String(list.length)));
       blk.appendChild(h4);
-      if(isCarry) blk.appendChild(el("p","carrynote",
-        "The guides list no new "+catName.toLowerCase()+" here \u2014 keep what you had at "+carry[catName]+"."));
+      if(isCarry){
+        var only = list.every(function(r){ return r.mod===cinfo.kind; });
+        var txt;
+        if(cinfo.kind==="_tharmour"){
+          txt = "Thorium sets here come from " + cinfo.src + " \u2014 its class guide skips armour at this stage.";
+        } else {
+          txt = (only ? "The guides list no new " : "No new ") + catName.toLowerCase()
+              + " here \u2014 the " + (only ? "" : "greyed ") + "sets carry over from " + cinfo.src + ".";
+        }
+        blk.appendChild(el("p","carrynote", txt));
+      }
       var ul=el("ul","gearlist");
       list.forEach(function(row){
-        var it=row.it, srcMod=(row.mod==="_carry"?"vanilla":row.mod);
+        var it=row.it, srcMod=(row.mod==="_carry"?"vanilla":(row.mod==="_tharmour"?"thorium":row.mod));
         var node = it.url ? el("a","gear") : el("span","gear");
         node.style.setProperty("--src", MC[srcMod]||"#7d85ab");
         node.title = it.name + " \u2014 " + (MODS[srcMod]||srcMod) + (it.note? " ("+it.note+")" : "");

@@ -3,6 +3,7 @@ import json, os, re, sys
 BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE)
 import parse_guides as PG
+import thorium_armor as TA
 
 # canonical progression: (key, label, the boss this stage prepares you for, hardmode?)
 #   key, full stage label, what you are gearing up for, hardmode?, short nav name
@@ -92,6 +93,19 @@ def build():
                                           "items": b["items"][:14]})
     # A guide may not re-list accessories at every stage (vanilla drops them at Pre-Moon Lord).
     # Rather than show a gap, point at the most recent stage that does list them for that class.
+    # Thorium's class guide omits armour on many cards (Melee has none at all until
+    # Pre-Mechanical Bosses). Fill those gaps from Thorium's own Armor page so the
+    # reader is not left thinking the mod has no armour at that point.
+    TARM = TA.parse()
+    for si, key in enumerate(ORDER):
+        hard = next(s[3] for s in STAGES if s[0] == key)
+        for cl, mods in out.get(key, {}).items():
+            if any(b["t"] == "Armour" for b in mods.get("thorium", [])): continue
+            sets = TARM.get("%s|%d" % (cl, int(hard))) or TARM.get("Mixed|%d" % int(hard)) or []
+            if not sets: continue
+            out[key][cl].setdefault("_tharmour", []).append(
+                {"t": "Armour", "src": "Thorium's Armor page", "items": sets[:8]})
+
     for want, pat in (("Armour", r"^armour$"), ("Accessories", r"accessor")):
         for si, key in enumerate(ORDER):
             for cl, mods in out.get(key, {}).items():
