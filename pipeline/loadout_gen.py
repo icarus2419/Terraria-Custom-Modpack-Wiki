@@ -91,6 +91,14 @@ a.gear:hover{border-color:var(--src); background:color-mix(in srgb, var(--src) 4
   border:1px solid var(--slot-line); border-radius:3px; flex:none}
 .gear .gsp img{max-width:19px;max-height:19px;width:auto;height:auto}
 .gear .qual{font-size:9.5px; color:var(--ink-3); font-style:italic}
+.gear .qual.best{
+  font-style:normal; font-family:"Pixelify Sans",sans-serif; letter-spacing:.05em;
+  text-transform:uppercase; font-size:9px; color:var(--brass-bright);
+  border:1px solid var(--brass-line); border-radius:100px; padding:0 5px;
+}
+.gear.is-best{box-shadow:0 0 0 1px color-mix(in srgb,var(--brass) 45%, transparent)}
+.catblock h4 .rankhint{margin-left:6px; font-family:"Asap",sans-serif; font-size:9.5px;
+  letter-spacing:0; text-transform:none; font-style:italic; color:var(--ink-3)}
 .acc-block{background:color-mix(in srgb, var(--brass) 7%, transparent)}
 .carry-block{background:color-mix(in srgb, var(--brass) 4%, transparent); border-top:1px dashed var(--line-strong)}
 .carrynote{margin:0 0 6px; font-size:10.5px; color:var(--ink-3); font-style:italic; line-height:1.4}
@@ -242,6 +250,21 @@ function render(){
         if(m==="_carry"||m==="_tharmour") carry[box.t]={src:box.src, kind:m};
       });
     });
+    // The vanilla guide marks its picks "Best" / "Second Best"; lead with those and keep
+    // each wiki's own listing order underneath. Mods that publish no ranking stay as listed.
+    function rank(note){
+      var n=(note||"").toLowerCase();
+      if(n==="best") return 0;
+      if(n==="second best") return 1;
+      return 2;
+    }
+    Object.keys(byCat).forEach(function(k){
+      byCat[k].forEach(function(row,i){ row._i=i; });
+      byCat[k].sort(function(a,b){
+        var d=rank(a.it.note)-rank(b.it.note);
+        return d!==0 ? d : a._i-b._i;
+      });
+    });
     Object.keys(byCat).sort(function(a,b){
       var ia=CATO.indexOf(a), ib=CATO.indexOf(b);
       return (ia<0?99:ia)-(ib<0?99:ib);
@@ -250,6 +273,8 @@ function render(){
       var cinfo=carry[catName]||null, isCarry=!!cinfo;
       var blk=el("div","catblock"+(isAcc?" acc-block":"")+(isCarry?" carry-block":""));
       var h4=el("h4",null,catName);
+      if(list.some(function(r){ return rank(r.it.note)<2; }))
+        h4.appendChild(el("span","rankhint","best first"));
       h4.appendChild(el("span","cnt",String(list.length)));
       blk.appendChild(h4);
       if(isCarry){
@@ -273,7 +298,11 @@ function render(){
         var sp=SP[it.name];
         if(sp){ var b2=el("span","gsp"); var im=new Image(); im.src=sp; im.alt=""; im.className="px"; im.loading="lazy"; b2.appendChild(im); node.appendChild(b2); }
         node.appendChild(document.createTextNode(it.name));
-        if(it.note) node.appendChild(el("span","qual",it.note));
+        if(it.note){
+          var r=rank(it.note);
+          node.appendChild(el("span", r<2 ? "qual best" : "qual", it.note));
+          if(r<2) node.classList.add("is-best");
+        }
         var li=el("li"); li.appendChild(node); ul.appendChild(li);
       });
       blk.appendChild(ul);
