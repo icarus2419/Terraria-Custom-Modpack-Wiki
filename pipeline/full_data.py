@@ -74,6 +74,12 @@ for ri, r in enumerate(RECIPES):
 for it in ITEMS.values():
     it["uin"] = len(it["ui"]); it["ui"] = it["ui"][:40]
 
+# Spirit Reforged re-implements items that Spirit Classic also has, under the same
+# display name; the page title is what separates them. Label the variant so a shimmer
+# swap does not read as "Bamboo Halberd <- Bamboo Halberd".
+for iid, it in ITEMS.items():
+    it["vr"] = "Reforged" if it["ti"].startswith("Spirit Reforged/") else None
+
 # ---------- ownership ----------
 used_by = {}
 for r in RECIPES:

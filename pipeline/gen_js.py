@@ -34,7 +34,11 @@ function itemBtn(id, qty, isRes){
   b.title=it.n+(it.tt?" — "+it.tt:"");
   b.appendChild(sprite(it));
   var nm=el("span","nm",it.n);
-  if(isRes && RARECOL[String(it.r)]){ nm.className="nm rar"; nm.style.setProperty("--rar",RARECOL[String(it.r)]); }
+  if(isRes && RARECOL[String(it.r)]){
+    nm.className="nm rar";
+    nm.style.setProperty("--rar",RARECOL[String(it.r)]);
+    b.style.setProperty("--rar",RARECOL[String(it.r)]);
+  }
   b.appendChild(nm);
   if(qty&&qty>1) b.appendChild(el("span","q","×"+qty));
   if(it.own!=="vanilla"){

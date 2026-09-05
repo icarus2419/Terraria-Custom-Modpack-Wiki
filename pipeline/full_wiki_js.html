@@ -16,13 +16,14 @@ function lum(h){var r=parseInt(h.substr(1,2),16)/255,g=parseInt(h.substr(3,2),16
   return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b);}
 function sprite(it){var s=el("span","sp");
   if(it.sp){var im=new Image(); im.src=it.sp; im.alt=""; im.className="px"; im.loading="lazy"; s.appendChild(im);} return s;}
-function itemBtn(id,qty,isRes){
+function itemBtn(id,qty,isRes,variant){
   var it=I[id]; var b=el("button","it"+(isRes?" res-it":"")); b.type="button"; b.dataset.id=id;
   b.title=it.n+(it.tt?" — "+it.tt:"");
   b.appendChild(sprite(it));
   var nm=el("span","nm",it.n);
   if(isRes&&RARECOL[String(it.r)]){nm.className="nm rar"; nm.style.setProperty("--rar",RARECOL[String(it.r)]);}
   b.appendChild(nm);
+  if(variant) b.appendChild(el("span","vrt",variant));
   if(qty&&qty>1) b.appendChild(el("span","q","×"+qty));
   if(it.own!=="vanilla"){var d=el("span","modtick"); d.style.background=MODCOL[it.own]||"#888"; d.title=MODS[it.own].name; b.appendChild(d);}
   return b;
@@ -101,8 +102,12 @@ function render(){
       th.appendChild(mr); tr.appendChild(th); tbody.appendChild(tr);
     }
     var row=el("tr","rec"); row.dataset.ri=ri;
+    var resName=I[r.res].n;
+    var clash=r.ing.some(function(g){return g.some(function(e){
+      return I[e.i].n===resName && e.i!==r.res; });});
+    function vlabel(id){ return clash ? (I[id].vr || "Classic") : null; }
     var td1=el("td","res");
-    td1.appendChild(itemBtn(r.res, r.rq>1?r.rq:0, true));
+    td1.appendChild(itemBtn(r.res, r.rq>1?r.rq:0, true, vlabel(r.res)));
     if(r.phm===true||r.phm===false){
       var eb=el("span","era "+(r.phm?"pre":"hard"), r.phm?"pre-hardmode":"hardmode");
       eb.title=r.phm?"Every ingredient is obtainable before Hardmode."
@@ -113,7 +118,8 @@ function render(){
     var td2=el("td","ing"), ul=el("ul","ing");
     r.ing.forEach(function(g){
       var li=el("li");
-      g.forEach(function(e,k){ if(k) li.appendChild(el("span","orsep","or")); li.appendChild(itemBtn(e.i,e.q,false)); });
+      g.forEach(function(e,k){ if(k) li.appendChild(el("span","orsep","or"));
+        li.appendChild(itemBtn(e.i,e.q,false, I[e.i].n===resName?vlabel(e.i):null)); });
       ul.appendChild(li);
     });
     td2.appendChild(ul); row.appendChild(td2); tbody.appendChild(row);

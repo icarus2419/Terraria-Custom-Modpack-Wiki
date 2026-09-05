@@ -101,16 +101,24 @@ h1{
   text-transform:uppercase; color:var(--brass); margin:0 0 5px;
 }
 .sectionbar{
-  display:flex; align-items:center; gap:11px; padding:11px 14px;
-  border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border-bottom:1px solid var(--line); position:relative; overflow:hidden;
+  background:
+    radial-gradient(120% 180% at 0% 0%, color-mix(in srgb,var(--brass) 13%, transparent), transparent 62%),
+    linear-gradient(180deg,var(--surface-2),var(--surface));
+}
+.sectionbar::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg, var(--brass), transparent 70%);
 }
 .sectionbar .sbsp{
-  width:32px; height:32px; flex:none; display:grid; place-items:center;
-  background:var(--surface-3); border:1px solid var(--brass-line); border-radius:5px;
+  width:40px; height:40px; flex:none; display:grid; place-items:center;
+  background:linear-gradient(180deg, color-mix(in srgb,var(--brass) 20%, var(--slot-bg)), var(--slot-bg));
+  border:1px solid var(--brass-line); border-radius:5px;
+  box-shadow:inset 0 1px 0 var(--slot-in), 0 0 14px -6px var(--brass);
 }
-.sectionbar .sbsp img{max-width:22px; max-height:22px; width:auto; height:auto}
-.sectionbar h2{margin:0; font-family:"Pixelify Sans",sans-serif; font-weight:600; font-size:17px; line-height:1.1}
+.sectionbar .sbsp img{max-width:28px; max-height:28px; width:auto; height:auto}
+.sectionbar h2{margin:0; font-family:"Pixelify Sans",sans-serif; font-weight:600; font-size:19px; line-height:1.1; text-shadow:1px 1px 0 var(--wordshadow)}
 .sectionbar .sbnote{
   margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:11.5px;
   color:var(--ink-3); text-align:right;
@@ -183,7 +191,7 @@ table.crafts th{
   padding:9px 14px; background:var(--surface-2); border-bottom:1px solid var(--line);
   position:sticky; top:0; z-index:2;
 }
-table.crafts th.c-res{width:33%}
+table.crafts th.c-res{width:34%}
 tr.modrow th{
   background:var(--surface-3); color:var(--ink); font-size:11.5px; letter-spacing:.08em;
   border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:7px 14px;
@@ -198,8 +206,15 @@ tbody tr.rec:last-child{border-bottom:0}
 tbody tr.rec:hover{background:var(--surface-2)}
 tbody tr.rec.sel{background:color-mix(in srgb, var(--brass) 11%, transparent)}
 tbody tr.rec.sel td.res{box-shadow:inset 4px 0 0 var(--brass)}
-td{padding:8px 14px; vertical-align:top}
-td.res{border-right:1px solid var(--line)}
+td{padding:10px 14px; vertical-align:middle}
+td.res{border-right:1px solid var(--line); position:relative}
+td.ing{position:relative}
+td.ing::before{
+  content:"="; position:absolute; left:-9px; top:12px;
+  font-family:"JetBrains Mono",monospace; font-size:13px; font-weight:700; color:var(--brass);
+  opacity:.55;
+}
+tbody tr.rec:hover td.ing::before{opacity:1}
 
 .it{
   display:inline-flex; align-items:center; gap:7px; cursor:pointer;
@@ -208,11 +223,14 @@ td.res{border-right:1px solid var(--line)}
 }
 .it:hover{background:color-mix(in srgb,var(--brass) 15%, transparent)}
 .it .sp{
-  width:30px; height:30px; flex:none; display:grid; place-items:center;
-  background:var(--slot-bg); border:1px solid var(--slot-line); border-radius:3px;
-  box-shadow:inset 0 1px 0 var(--slot-in);
+  width:34px; height:34px; flex:none; display:grid; place-items:center;
+  background:
+    linear-gradient(180deg, color-mix(in srgb,var(--slot-in) 55%, transparent), transparent 62%),
+    var(--slot-bg);
+  border:1px solid var(--slot-line); border-radius:4px;
+  box-shadow:inset 0 1px 0 var(--slot-in), 0 1px 1px rgba(0,0,0,.10);
 }
-.it .sp img{max-width:24px; max-height:24px; width:auto; height:auto}
+.it .sp img{max-width:26px; max-height:26px; width:auto; height:auto}
 .it:hover .sp{border-color:var(--brass); box-shadow:inset 0 1px 0 var(--slot-in), 0 0 0 2px color-mix(in srgb,var(--brass) 30%, transparent)}
 .it .nm{min-width:0}
 .it .q{
@@ -220,14 +238,25 @@ td.res{border-right:1px solid var(--line)}
   color:var(--ink-3); font-variant-numeric:tabular-nums;
 }
 .it.res-it{font-weight:600}
+.it.res-it .sp{
+  border-color:color-mix(in srgb, var(--rar,var(--slot-line)) 60%, var(--slot-line));
+  box-shadow:inset 0 1px 0 var(--slot-in), 0 0 0 1px color-mix(in srgb,var(--rar,transparent) 22%, transparent),
+             0 0 10px -2px color-mix(in srgb,var(--rar,transparent) 45%, transparent);
+}
+.it .vrt{font-size:9.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--brass);
+  border:1px solid var(--brass-line); border-radius:100px; padding:0 5px; white-space:nowrap;
+  font-family:"Pixelify Sans",sans-serif}
 .rar{color:var(--rar); color:color-mix(in srgb, var(--rar) calc(100% - var(--rar-amt)), var(--rar-blend)); text-shadow:var(--ui-shadow)}
 .modtick{width:5px; height:5px; border-radius:50%; flex:none; margin-left:1px}
 
-ul.ing{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+ul.ing{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; align-items:center; gap:3px 4px}
 ul.ing li{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
-ul.ing li::before{
-  content:""; width:4px; height:4px; border-radius:50%; background:var(--line-strong);
-  flex:none; margin-right:3px;
+ul.ing li + li::before{
+  content:"+"; font-family:"JetBrains Mono",monospace; font-size:13px; font-weight:700;
+  color:var(--ink-3); flex:none; margin-right:4px; line-height:1;
+}
+ul.ing li:first-child::before{
+  content:""; width:0; flex:none; margin:0;
 }
 .orsep{font-size:11.5px; font-style:italic; color:var(--ink-3); padding:0 1px}
 
@@ -490,7 +519,11 @@ function itemBtn(id, qty, isRes){
   b.title=it.n+(it.tt?" — "+it.tt:"");
   b.appendChild(sprite(it));
   var nm=el("span","nm",it.n);
-  if(isRes && RARECOL[String(it.r)]){ nm.className="nm rar"; nm.style.setProperty("--rar",RARECOL[String(it.r)]); }
+  if(isRes && RARECOL[String(it.r)]){
+    nm.className="nm rar";
+    nm.style.setProperty("--rar",RARECOL[String(it.r)]);
+    b.style.setProperty("--rar",RARECOL[String(it.r)]);
+  }
   b.appendChild(nm);
   if(qty&&qty>1) b.appendChild(el("span","q","×"+qty));
   if(it.own!=="vanilla"){
