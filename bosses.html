@@ -27,7 +27,7 @@
 :root{
   --bg:#eceef1; --surface:#fbfcfd; --surface-2:#f2f4f7; --surface-3:#e4e8ed;
   --line:#d6dbe2; --line-strong:#b4bcc7;
-  --ink:#141920; --ink-2:#4a545f; --ink-3:#66717d;
+  --ink:#141920; --ink-2:#4a545f; --ink-3:#5c6672;
   --brass:#0f6d72; --brass-bright:#0b585d; --brass-soft:#dff0f1; --brass-line:#a7cfd1;
   --flag:#b23a1c; --flag-soft:#f9e0d6;
   --tip-bg:#141920; --tip-ink:#eef1f5;
@@ -587,6 +587,12 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
 .boss .sp img{max-width:42px; max-height:42px; width:auto; height:auto}
 .boss .nm{min-width:0}
 .boss .nm .top{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+/* light mode lifts toward a dark ink, where the neutral Terraria grey has far less room
+   than the saturated mods, so it needs to travel further to clear 4.5:1 */
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .modtag{color:color-mix(in srgb, var(--mcol) 50%, var(--ink))}
+}
+:root[data-theme="light"] .modtag{color:color-mix(in srgb, var(--mcol) 50%, var(--ink))}
 .boss .nm a.name{font-family:"Pixelify Sans",sans-serif; font-size:15.5px; color:var(--ink);
   text-decoration:none}
 .boss .nm a.name:hover{color:var(--brass)}
@@ -658,7 +664,7 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
   </div>
   <!-- height reserved from the known row count so the footer does not jump when the
        list renders; the JS clears it once the real content is in -->
-  <div id="bands" style="min-height:7419px"></div>
+  <div id="bands" style="min-height:11556px"></div>
 </main>
 
 <footer><div class="wrap fgrid">

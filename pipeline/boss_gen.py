@@ -98,6 +98,12 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
 .boss .sp img{max-width:42px; max-height:42px; width:auto; height:auto}
 .boss .nm{min-width:0}
 .boss .nm .top{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+/* light mode lifts toward a dark ink, where the neutral Terraria grey has far less room
+   than the saturated mods, so it needs to travel further to clear 4.5:1 */
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]) .modtag{color:color-mix(in srgb, var(--mcol) 50%, var(--ink))}
+}
+:root[data-theme="light"] .modtag{color:color-mix(in srgb, var(--mcol) 50%, var(--ink))}
 .boss .nm a.name{font-family:"Pixelify Sans",sans-serif; font-size:15.5px; color:var(--ink);
   text-decoration:none}
 .boss .nm a.name:hover{color:var(--brass)}
@@ -197,8 +203,10 @@ BODY = """
 <script id="bossdata" type="application/json">@@PAYLOAD@@</script>
 """
 
-# 81px a row plus a header per band, measured from the rendered page
-BANDS_MIN = len(BOSSES) * 81 + len({b["band"] for b in BOSSES}) * 62
+# 81px a row on a desktop, ~128px once rows wrap on a phone, plus a header per band.
+# Deliberately reserving for the taller case: over-reserving costs one frame of blank
+# space, under-reserving costs the layout shift this exists to prevent.
+BANDS_MIN = len(BOSSES) * 128 + len({b["band"] for b in BOSSES}) * 70
 
 for a, b in [("@@NB@@", str(len(BOSSES))), ("@@NM@@", str(n_mod)),
              ("@@BANDSMIN@@", str(BANDS_MIN)), ("@@PAYLOAD@@", payload)]:
