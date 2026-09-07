@@ -191,18 +191,40 @@ regenerable intermediates and are not committed; the merged datasets in `data/` 
 
 Python 3, standard library only. From inside `pipeline/`:
 
+Fetch and parse, in this order:
+
 ```bash
-python3 boss_fetch.py       # each wiki's Bosses page, boss categories and boss pages
+# bosses -> bosses.json, boss_sprites.json
+python3 boss_fetch.py       # each wiki's Bosses page, its categories, and every boss page
 python3 bosses.py --write   # merge the progression charts into one order
 python3 boss_sprites.py     # a sprite for every boss
+
+# recipes and items -> full_site_data.json, full_index.json, full_sprites.json
 python3 full_fetch.py       # every Recipes/<Station> page across the seven wikis
 python3 full_items.py       # parse stations, then batch-fetch item wikitext
 python3 full_sprites.py     # download and base64-encode every sprite
 python3 full_entities.py    # resolve drop-source NPCs
 python3 full_cats2.py       # categories for items with no direct Hardmode signal
 python3 full_data.py        # merge, index, classify Hardmode
+
+# loadouts -> loadouts.json, loadout_sprites.json, loadout_stats.json
 python3 loadouts.py         # parse the class-setup guides onto one timeline
 python3 loadout_sprites.py
+python3 loadout_stats_fetch.py   # item pages behind the hover stat card
+python3 loadout_stats.py         # -> loadout_stats.json, required by loadout_gen.py
+
+# the Tinkerer's-only dataset the v1 page still uses
+python3 parse.py            # -> recipes_raw.json
+python3 items.py            # -> items.json
+python3 sprites.py          # -> sprites.json
+python3 hm_cats.py          # -> item_categories.json
+python3 hardmode.py         # -> hardmode.json
+python3 build_data.py       # -> site_data.json
+```
+
+Then generate the pages, which only read the files above:
+
+```bash
 python3 full_gen.py         # recipes.html
 python3 gen.py              # tinkerers.html
 python3 loadout_gen.py      # loadouts.html
@@ -210,7 +232,15 @@ python3 boss_gen.py         # bosses.html
 python3 home_gen.py         # index.html
 ```
 
-Every stage caches, so a re-run after a parser change costs no requests.
+Every fetch stage caches, so a re-run after a parser change costs no requests.
+
+`pipeline/logo.py` holds the site mark — a 16x16 pixel grid rendered to SVG for the nav and to
+transparent PNGs for the favicon. It has no fetch step and no output file; the generators import
+it directly.
+
+`data/boss_icons.json` is the one committed dataset with no script that regenerates it. The boss
+icons on the loadout timeline come from it, and it was recovered from a built page rather than
+fetched. Keep it.
 
 ## Licence
 
