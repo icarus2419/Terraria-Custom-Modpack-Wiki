@@ -15,6 +15,11 @@ pipeline/full_recipes.json
 pipeline/site_data.json
 pipeline/full_site_data.json
 pipeline/loadouts.json
+pipeline/bosses_raw/
+pipeline/bosses.json
+pipeline/boss_sprites.json
+pipeline/loadout_stats.json
+pipeline/boss_icons.json
 pipeline/hardmode.json
 pipeline/*.log
 pipeline/__pycache__/

@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <title>Joseph's Modpack Wiki</title>
 <style>
@@ -101,16 +102,24 @@ h1{
   text-transform:uppercase; color:var(--brass); margin:0 0 5px;
 }
 .sectionbar{
-  display:flex; align-items:center; gap:11px; padding:11px 14px;
-  border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border-bottom:1px solid var(--line); position:relative; overflow:hidden;
+  background:
+    radial-gradient(120% 180% at 0% 0%, color-mix(in srgb,var(--brass) 13%, transparent), transparent 62%),
+    linear-gradient(180deg,var(--surface-2),var(--surface));
+}
+.sectionbar::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg, var(--brass), transparent 70%);
 }
 .sectionbar .sbsp{
-  width:32px; height:32px; flex:none; display:grid; place-items:center;
-  background:var(--surface-3); border:1px solid var(--brass-line); border-radius:5px;
+  width:40px; height:40px; flex:none; display:grid; place-items:center;
+  background:linear-gradient(180deg, color-mix(in srgb,var(--brass) 20%, var(--slot-bg)), var(--slot-bg));
+  border:1px solid var(--brass-line); border-radius:5px;
+  box-shadow:inset 0 1px 0 var(--slot-in), 0 0 14px -6px var(--brass);
 }
-.sectionbar .sbsp img{max-width:22px; max-height:22px; width:auto; height:auto}
-.sectionbar h2{margin:0; font-family:"Pixelify Sans",sans-serif; font-weight:600; font-size:17px; line-height:1.1}
+.sectionbar .sbsp img{max-width:28px; max-height:28px; width:auto; height:auto}
+.sectionbar h2{margin:0; font-family:"Pixelify Sans",sans-serif; font-weight:600; font-size:19px; line-height:1.1; text-shadow:1px 1px 0 var(--wordshadow)}
 .sectionbar .sbnote{
   margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:11.5px;
   color:var(--ink-3); text-align:right;
@@ -183,7 +192,7 @@ table.crafts th{
   padding:9px 14px; background:var(--surface-2); border-bottom:1px solid var(--line);
   position:sticky; top:0; z-index:2;
 }
-table.crafts th.c-res{width:33%}
+table.crafts th.c-res{width:34%}
 tr.modrow th{
   background:var(--surface-3); color:var(--ink); font-size:11.5px; letter-spacing:.08em;
   border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:7px 14px;
@@ -198,8 +207,15 @@ tbody tr.rec:last-child{border-bottom:0}
 tbody tr.rec:hover{background:var(--surface-2)}
 tbody tr.rec.sel{background:color-mix(in srgb, var(--brass) 11%, transparent)}
 tbody tr.rec.sel td.res{box-shadow:inset 4px 0 0 var(--brass)}
-td{padding:8px 14px; vertical-align:top}
-td.res{border-right:1px solid var(--line)}
+td{padding:10px 14px; vertical-align:middle}
+td.res{border-right:1px solid var(--line); position:relative}
+td.ing{position:relative}
+td.ing::before{
+  content:"="; position:absolute; left:-9px; top:12px;
+  font-family:"JetBrains Mono",monospace; font-size:13px; font-weight:700; color:var(--brass);
+  opacity:.55;
+}
+tbody tr.rec:hover td.ing::before{opacity:1}
 
 .it{
   display:inline-flex; align-items:center; gap:7px; cursor:pointer;
@@ -208,11 +224,14 @@ td.res{border-right:1px solid var(--line)}
 }
 .it:hover{background:color-mix(in srgb,var(--brass) 15%, transparent)}
 .it .sp{
-  width:30px; height:30px; flex:none; display:grid; place-items:center;
-  background:var(--slot-bg); border:1px solid var(--slot-line); border-radius:3px;
-  box-shadow:inset 0 1px 0 var(--slot-in);
+  width:34px; height:34px; flex:none; display:grid; place-items:center;
+  background:
+    linear-gradient(180deg, color-mix(in srgb,var(--slot-in) 55%, transparent), transparent 62%),
+    var(--slot-bg);
+  border:1px solid var(--slot-line); border-radius:4px;
+  box-shadow:inset 0 1px 0 var(--slot-in), 0 1px 1px rgba(0,0,0,.10);
 }
-.it .sp img{max-width:24px; max-height:24px; width:auto; height:auto}
+.it .sp img{max-width:26px; max-height:26px; width:auto; height:auto}
 .it:hover .sp{border-color:var(--brass); box-shadow:inset 0 1px 0 var(--slot-in), 0 0 0 2px color-mix(in srgb,var(--brass) 30%, transparent)}
 .it .nm{min-width:0}
 .it .q{
@@ -220,14 +239,25 @@ td.res{border-right:1px solid var(--line)}
   color:var(--ink-3); font-variant-numeric:tabular-nums;
 }
 .it.res-it{font-weight:600}
+.it.res-it .sp{
+  border-color:color-mix(in srgb, var(--rar,var(--slot-line)) 60%, var(--slot-line));
+  box-shadow:inset 0 1px 0 var(--slot-in), 0 0 0 1px color-mix(in srgb,var(--rar,transparent) 22%, transparent),
+             0 0 10px -2px color-mix(in srgb,var(--rar,transparent) 45%, transparent);
+}
+.it .vrt{font-size:9.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--brass);
+  border:1px solid var(--brass-line); border-radius:100px; padding:0 5px; white-space:nowrap;
+  font-family:"Pixelify Sans",sans-serif}
 .rar{color:var(--rar); color:color-mix(in srgb, var(--rar) calc(100% - var(--rar-amt)), var(--rar-blend)); text-shadow:var(--ui-shadow)}
 .modtick{width:5px; height:5px; border-radius:50%; flex:none; margin-left:1px}
 
-ul.ing{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+ul.ing{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; align-items:center; gap:3px 4px}
 ul.ing li{display:flex; align-items:center; gap:4px; flex-wrap:wrap}
-ul.ing li::before{
-  content:""; width:4px; height:4px; border-radius:50%; background:var(--line-strong);
-  flex:none; margin-right:3px;
+ul.ing li + li::before{
+  content:"+"; font-family:"JetBrains Mono",monospace; font-size:13px; font-weight:700;
+  color:var(--ink-3); flex:none; margin-right:4px; line-height:1;
+}
+ul.ing li:first-child::before{
+  content:""; width:0; flex:none; margin:0;
 }
 .orsep{font-size:11.5px; font-style:italic; color:var(--ink-3); padding:0 1px}
 
@@ -386,6 +416,28 @@ footer ul{margin:0; padding-left:16px; line-height:1.6}
 </style>
 
 <style>
+.runbar{background:var(--surface-2); border-bottom:1px solid var(--line)}
+.runbar-in{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:7px 0; font-size:12.5px}
+.runbar .tag{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3)}
+.runbar .bit{color:var(--ink-2)}
+.runbar .bit b{color:var(--ink); font-weight:600}
+.runbar .dot{color:var(--line-strong)}
+.runbar .era{margin:0}
+.runbar .sp{flex:1}
+.runbar a.go, .runbar button.go{font:inherit; font-size:11.5px; cursor:pointer; text-decoration:none;
+  padding:3px 11px; border-radius:100px; border:1px solid var(--line-strong); color:var(--ink-2);
+  background:var(--surface); white-space:nowrap}
+.runbar a.go:hover, .runbar button.go:hover{border-color:var(--brass); color:var(--brass)}
+.runbar button.go[aria-pressed="true"]{background:var(--brass-soft); border-color:var(--brass);
+  color:var(--brass); font-weight:600}
+.runbar button.go[disabled]{opacity:.5; cursor:default}
+.runbar .track{width:110px; height:6px; border-radius:3px; background:var(--surface-3); overflow:hidden}
+.runbar .track i{display:block; height:100%; background:var(--brass)}
+@media (max-width:640px){ .runbar .track{display:none} }
+</style>
+
+<style>
 .hero{padding:46px 0 30px; border-bottom:1px solid var(--line); position:relative; overflow:hidden;
   background:linear-gradient(180deg, color-mix(in srgb,var(--brass-soft) 45%, var(--surface)) 0%, var(--surface) 100%)}
 .hero::after{content:""; position:absolute; inset:0; pointer-events:none;
@@ -443,24 +495,28 @@ a.qlink .n{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(-
 .startbox ol b{color:var(--ink)}
 .startbox a{font-weight:600}
 </style>
-<nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html" aria-current="page">Home</a><a class="tab" href="tinkerers.html">Tinkerer's Workshop</a><a class="tab" href="recipes.html">All Recipes</a><a class="tab" href="loadouts.html">Loadouts</a><span class="navspacer"></span><span class="navnote">offline &middot; 5,455 recipes</span></div></nav>
+<nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html" aria-current="page">Home</a><a class="tab" href="bosses.html">Boss Order</a><a class="tab" href="loadouts.html">Loadouts</a><a class="tab" href="recipes.html">All Recipes</a><a class="tab" href="tinkerers.html">Tinkerer's Workshop</a><span class="navspacer"></span><span class="navnote">offline &middot; 5,455 recipes</span></div></nav><div class="runbar" id="runbar"></div>
 <div class="hero"><div class="wrap hero-in">
   <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
   <h1>Joseph's Modpack Wiki</h1>
   <p>Everything the pack adds, in one place: <b>5,455 recipes</b> across <b>130 crafting
-  stations</b>, <b>6,255 items</b> with how to get each one, and suggested loadouts for every
-  class at every boss. Built from the mods' own wikis, and it works offline.</p>
+  stations</b>, <b>6,255 items</b> with how to get each one, and a ready equipment panel for
+  every class at every boss. Built from the mods' own wikis, and it works offline.</p>
 </div></div>
 
 <main class="wrap">
-  <div class="cards"><a class="card" href="tinkerers.html" style="--ccol:#e5b35a"><span class="ic"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAcBAMAAACE1hKaAAAALVBMVEUAAACgoKBo1BighLiieFyYaEB/XEV4TJDQHJhhRzm+ExOgEBAyMjIwMDBABAjohiCzAAAAAXRSTlMAQObYZgAAAG9JREFUeNqVzFENgDAMhOFamAUsYKEWsHAWsICFs4AFLJyFWkADkCUksC6EP+uS7+Vsf2Zva12369VTa4JnAK4vMUTVqMwujlEiSiG9tUlYYoqYB0rW2u49yHJ7jR3DgQIg9/c+HO7nNf6537XVMh+SYNNxO+T9PQAAAABJRU5ErkJggg==" alt=""></span><h2>Tinkerer's Workshop</h2><p>Every accessory combination in the pack, modded and vanilla side by side. The station where mod and vanilla gear actually meet.</p><dl class="figs"><div><dt>Combinations</dt><dd>308</dd></div><div><dt>Changed by mods</dt><dd>9</dd></div></dl><span class="go">Open the workshop &rarr;</span></a><a class="card" href="recipes.html" style="--ccol:#3f9e8c"><span class="ic"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeCAMAAAB61OwbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABIUExURR0dJgAAAGD/0gCZeiEhPQDhtq3/5ysrOF5eel+Lnnaiu0t3hZG92ycnST9rnDMzYBERFh9LXhwcNZOTvLW15V7/1Hd3mUZGWzkF42gAAAACdFJOU/8A5bcwSgAAAMlJREFUeNqNz9GSgyAMheGssmtWKwbB5P3ftJwJF22n0+a/QAnfDAP9PESjp9lX4Pmvau2pjr0XAK35V/W6Wu+6QFCtUWBWqxmAqq8+aS0GmM2YiUDMfKUxjQA8BwMRDKXH7DsznH4HIseRs0gpeBYAHleKSM7HIRIB+w5wnikRaY8opfME2PcY8CvSS35FFJQCMM+/o3kGKCUOcsbhNP2Npgko5xjwljeRFwDM/7113bbbaNvWFTPmGDDj3rIw68h3zGYxsHwoAO5gkSPVEgADJAAAAABJRU5ErkJggg==" alt=""></span><h2>All Recipes</h2><p>Every recipe the six mods add, across all 130 crafting stations. Search any item, filter by mod, or browse one station at a time.</p><dl class="figs"><div><dt>Recipes</dt><dd>5,455</dd></div><div><dt>Stations</dt><dd>130</dd></div></dl><span class="go">Browse recipes &rarr;</span></a><a class="card" href="loadouts.html" style="--ccol:#c9552f"><span class="ic"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAMAAABAUVr7AAAANlBMVEUAAAADKDUHNUspNARtFkAPVH0CcZ4UeHbOVkAAougisUzEjXHYtCFm0f+15h3q0nP31Yz6/NquQhQqAAAAAXRSTlMAQObYZgAAAL5JREFUeNqd0IEKhCAMgGH1NnXTVr3/y15rlR0Hx7ofiogPNg1n6SrG8JWfiKzrPIsgxqN/SM4iRLyl30SG/MR6XSHa2rj3lOjCzEQ5GyAS8ZOBUrIjI+rC02TAT8YgG2OP9pSMQfd1vcRAzjYIUeFY10vS3ufl27AQPMQAkWzZcUvRB7EUZV5iYN26IyI9sp/ESHQOMqILM5fC7CcAek3MBhAB4hFArQBe0lrvyzLv9d6a/qlV326i6EchuMgbkA4SoSE1sCQAAAAASUVORK5CYII=" alt=""></span><h2>Loadouts</h2><p>What to wear and carry for each class before each boss &mdash; armour, <b>accessories</b>, weapons and buffs, from pre-Eye of Cthulhu to endgame.</p><dl class="figs"><div><dt>Boss stages</dt><dd>11</dd></div><div><dt>Classes</dt><dd>9</dd></div></dl><span class="go">Plan your gear &rarr;</span></a></div>
+  <div class="cards"><a class="card" href="bosses.html" style="--ccol:#5fb08a"><span class="ic"><img class="px" src="data:image/png;base64,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" alt=""></span><h2>Boss Order</h2><p>Every boss the pack contains, merged into one fight order and tickable as you go. Tick them off and the rest of the wiki follows &mdash; it knows which checkpoint you are on.</p><dl class="figs"><div><dt>Bosses</dt><dd>87</dd></div><div><dt>Added by mods</dt><dd>54</dd></div></dl><span class="go">Open the checklist &rarr;</span></a><a class="card" href="loadouts.html" style="--ccol:#c9552f"><span class="ic"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAMAAABAUVr7AAAANlBMVEUAAAADKDUHNUspNARtFkAPVH0CcZ4UeHbOVkAAougisUzEjXHYtCFm0f+15h3q0nP31Yz6/NquQhQqAAAAAXRSTlMAQObYZgAAAL5JREFUeNqd0IEKhCAMgGH1NnXTVr3/y15rlR0Hx7ofiogPNg1n6SrG8JWfiKzrPIsgxqN/SM4iRLyl30SG/MR6XSHa2rj3lOjCzEQ5GyAS8ZOBUrIjI+rC02TAT8YgG2OP9pSMQfd1vcRAzjYIUeFY10vS3ufl27AQPMQAkWzZcUvRB7EUZV5iYN26IyI9sp/ESHQOMqILM5fC7CcAek3MBhAB4hFArQBe0lrvyzLv9d6a/qlV326i6EchuMgbkA4SoSE1sCQAAAAASUVORK5CYII=" alt=""></span><h2>Loadouts</h2><p>Pick the boss you are about to fight and your class, and get one filled equipment panel: armour, five <b>accessories</b>, a weapon hotbar, ammo and buffs. Everything else the guides list sits underneath.</p><dl class="figs"><div><dt>Checkpoints</dt><dd>11</dd></div><div><dt>Classes</dt><dd>7</dd></div></dl><span class="go">Gear up for a boss &rarr;</span></a><a class="card" href="recipes.html" style="--ccol:#3f9e8c"><span class="ic"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAeCAMAAAB61OwbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABIUExURR0dJgAAAGD/0gCZeiEhPQDhtq3/5ysrOF5eel+Lnnaiu0t3hZG92ycnST9rnDMzYBERFh9LXhwcNZOTvLW15V7/1Hd3mUZGWzkF42gAAAACdFJOU/8A5bcwSgAAAMlJREFUeNqNz9GSgyAMheGssmtWKwbB5P3ftJwJF22n0+a/QAnfDAP9PESjp9lX4Pmvau2pjr0XAK35V/W6Wu+6QFCtUWBWqxmAqq8+aS0GmM2YiUDMfKUxjQA8BwMRDKXH7DsznH4HIseRs0gpeBYAHleKSM7HIRIB+w5wnikRaY8opfME2PcY8CvSS35FFJQCMM+/o3kGKCUOcsbhNP2Npgko5xjwljeRFwDM/7113bbbaNvWFTPmGDDj3rIw68h3zGYxsHwoAO5gkSPVEgADJAAAAABJRU5ErkJggg==" alt=""></span><h2>All Recipes</h2><p>Every recipe the six mods add, across all 130 crafting stations. Search any item, filter by mod, or browse one station at a time.</p><dl class="figs"><div><dt>Recipes</dt><dd>5,455</dd></div><div><dt>Stations</dt><dd>130</dd></div></dl><span class="go">Browse recipes &rarr;</span></a><a class="card" href="tinkerers.html" style="--ccol:#e5b35a"><span class="ic"><img class="px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAcBAMAAACE1hKaAAAALVBMVEUAAACgoKBo1BighLiieFyYaEB/XEV4TJDQHJhhRzm+ExOgEBAyMjIwMDBABAjohiCzAAAAAXRSTlMAQObYZgAAAG9JREFUeNqVzFENgDAMhOFamAUsYKEWsHAWsICFs4AFLJyFWkADkCUksC6EP+uS7+Vsf2Zva12369VTa4JnAK4vMUTVqMwujlEiSiG9tUlYYoqYB0rW2u49yHJ7jR3DgQIg9/c+HO7nNf6537XVMh+SYNNxO+T9PQAAAABJRU5ErkJggg==" alt=""></span><h2>Tinkerer's Workshop</h2><p>Every accessory combination in the pack, modded and vanilla side by side. The station where mod and vanilla gear actually meet.</p><dl class="figs"><div><dt>Combinations</dt><dd>308</dd></div><div><dt>Changed by mods</dt><dd>9</dd></div></dl><span class="go">Open the workshop &rarr;</span></a></div>
 
   <section class="sec">
     <h2>Start here</h2>
     <p class="lede">If you are not sure where to look:</p>
     <div class="startbox"><ol>
-      <li><b>Kitting out for a boss?</b> Go to <a href="loadouts.html">Loadouts</a>, pick the boss you
-      are about to fight, then your class. Accessories are listed with the armour.</li>
+      <li><b>Not sure what to fight next?</b> Open the <a href="bosses.html">Boss Order</a> and tick
+      off what you have already killed. Every other page then knows where you are: Loadouts opens on
+      your checkpoint, and the recipe pages can hide what you cannot make yet.</li>
+      <li><b>About to fight a boss?</b> Go to <a href="loadouts.html">Loadouts</a>, click the boss on
+      the timeline, then your class. You get one panel of what to equip &mdash; and each pick says why
+      it was chosen. Arrow keys walk the run; the full list is a click below.</li>
       <li><b>Wondering what an item combines into?</b> The
       <a href="tinkerers.html">Tinkerer's Workshop</a> page shows every accessory combination, and
       flags the 9 recipes the mods change from vanilla.</li>
@@ -470,9 +526,10 @@ a.qlink .n{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(-
   </section>
 
   <section class="sec">
-    <h2>Jump straight to a stage</h2>
-    <p class="lede">The boss checkpoints most people look up first.</p>
-    <div class="quick"><a class="qlink" href="loadouts.html#start">Pre-Boss<span class="n">207</span></a><a class="qlink" href="loadouts.html#eye">Pre-Eye of Cthulhu<span class="n">127</span></a><a class="qlink" href="loadouts.html#evil">Pre-Eater / Brain<span class="n">133</span></a><a class="qlink" href="loadouts.html#skeletron">Pre-Skeletron<span class="n">332</span></a><a class="qlink" href="loadouts.html#wof">Pre-Wall of Flesh<span class="n">329</span></a><a class="qlink" href="loadouts.html#mech">Pre-Mechanical Bosses<span class="n">480</span></a><a class="qlink" href="loadouts.html#plantera">Pre-Plantera<span class="n">291</span></a></div>
+    <h2>Jump straight to a checkpoint</h2>
+    <p class="lede">The boss checkpoints most people look up first. The number is how much gear the
+    guides publish there; the page picks one per slot out of it.</p>
+    <div class="quick"><a class="qlink" href="loadouts.html#start">Pre-Boss<span class="n">223</span></a><a class="qlink" href="loadouts.html#eye">Pre-Eye of Cthulhu<span class="n">145</span></a><a class="qlink" href="loadouts.html#evil">Pre-Eater / Brain<span class="n">146</span></a><a class="qlink" href="loadouts.html#skeletron">Pre-Skeletron<span class="n">345</span></a><a class="qlink" href="loadouts.html#wof">Pre-Wall of Flesh<span class="n">344</span></a><a class="qlink" href="loadouts.html#mech">Pre-Mechanical Bosses<span class="n">483</span></a><a class="qlink" href="loadouts.html#plantera">Pre-Plantera<span class="n">306</span></a></div>
   </section>
 
   <section class="sec">
@@ -501,3 +558,80 @@ a.qlink .n{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(-
     spiritmod.wiki.gg &middot; starsabovemod.wiki.gg &middot; calamityfables.wiki.gg.
     A fan reference tool, not affiliated with Re-Logic or any mod team.</p></div>
 </div></footer>
+
+<script id="bosssummary" type="application/json">{"Trojan Squirrel":["pre","start",0],"The Grand Thunder Bird":["pre","start",1],"King Slime":["pre","start",2],"Sir Nautilus and Signathion":["pre","eye",3],"Scarabeus":["pre","eye",4],"Eye of Cthulhu":["pre","eye",5],"The Vagrant of Space and Time":["pre","evil",6],"Desert Scourge":["pre","evil",7],"Cursed Coffin":["pre","evil",8],"Moon Jelly Wizard":["pre","evil",9],"Crabulon":["pre","evil",10],"Eater of Worlds":["pre","evil",11],"Brain of Cthulhu":["pre","evil",12],"Thespian, the Act of Alchemy":["pre","skeletron",13],"Queen Jellyfish":["pre","skeletron",14],"Vinewrath Bane":["pre","skeletron",15],"Queen Bee":["pre","skeletron",16],"Viscount":["pre","skeletron",17],"Ancient Avian":["pre","skeletron",18],"Deerclops":["pre","skeletron",19],"Skeletron":["pre","skeletron",20],"Deviantt (boss)":["pre","wof",21],"Dioskouroi, the Twin Forces":["pre","wof",22],"Granite Energy Storm":["pre","wof",23],"Starplate Voyager":["pre","wof",24],"Buried Champion":["pre","wof",25],"Star Scouter":["pre","wof",26],"Wall of Flesh":["pre","wof",27],"Banished Baron":["hard","mech",28],"Borean Strider":["hard","mech",29],"Fallen Beholder":["hard","mech",30],"Queen Slime":["hard","mech",31],"Infernon":["hard","mech",32],"Lich":["hard","mech",33],"The Twins":["hard","mech",34],"Dusking":["hard","mech",35],"The Destroyer":["hard","mech",36],"Skeletron Prime":["hard","mech",37],"Lifelight":["hard","plantera",38],"Plantera":["hard","plantera",39],"Penthesilea, the Witch of Ink":["hard","golem",40],"Asphodene and Eridani":["hard","golem",41],"Golem":["hard","golem",42],"Nalhaun, The Burnished King":["hard","cultist",43],"Forgotten One":["hard","cultist",44],"Duke Fishron":["hard","cultist",45],"Empress of Light":["hard","cultist",46],"Arbitration":["hard","cultist",47],"Atlas":["hard","cultist",48],"Lunatic Cultist":["hard","cultist",49],"Moon Lord":["hard","moonlord",50],"Eridanus, Champion of Cosmos":["postml","endgame",51],"Abominationn (boss)":["postml","endgame",52],"Mutant (boss)":["postml","endgame",53],"The Warrior Of Light":["postml","endgame",54],"Tsukiyomi, the First Starfarer":["postml","endgame",55],"The Primordials":["postml","endgame",56],"Dark Mage":["event","endgame",57],"Ogre":["event","endgame",58],"Betsy":["event","endgame",59],"Flying Dutchman":["event","endgame",60],"Mourning Wood":["event","endgame",61],"Pumpking":["event","endgame",62],"Everscream":["event","endgame",63],"Santa-NK1":["event","endgame",64],"Ice Queen":["event","endgame",65],"Martian Saucer":["event","endgame",66],"Solar Pillar":["event","endgame",67],"Nebula Pillar":["event","endgame",68],"Vortex Pillar":["event","endgame",69],"Stardust Pillar":["event","endgame",70],"Mechdusa":["seed","endgame",71],"Patch Werk":["mini",null,72],"Corpse Bloom":["mini",null,73],"Illusionist":["mini",null,74],"Champion of Timber":["mini",null,75],"Champion of Terra":["mini",null,76],"Champion of Spirit":["mini",null,77],"Champion of Life":["mini",null,78],"Champion of Death":["mini",null,79],"Champion of Will":["mini",null,80],"Champion of Nature":["mini",null,81],"Champion of Earth":["mini",null,82],"Occultist":["mini",null,83],"R'lyehian":["mini",null,84],"Vulture Matriarch":["mini",null,85],"Snow Monger":["mini",null,86]}</script>
+<script>
+(function(){
+"use strict";
+var SUM=JSON.parse(document.getElementById("bosssummary").textContent);
+var KEY="bosses.done.v1";
+function read(){ try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ return {}; } }
+
+function state(){
+  var done=read(), names=Object.keys(SUM);
+  var live=names.filter(function(n){ var b=SUM[n][0]; return b!=="mini" && b!=="seed"; });
+  live.sort(function(a,b){ return SUM[a][2]-SUM[b][2]; });
+  var beaten=names.filter(function(n){ return done[n]; }).length;
+  // where you are is the furthest boss you have beaten, not the first you have not:
+  // skipping an optional modded boss should not drag the whole site back to the start
+  var far=-1;
+  names.forEach(function(n){ if(done[n] && SUM[n][2]>far) far=SUM[n][2]; });
+  var next=null;
+  for(var i=0;i<live.length;i++){ if(!done[live[i]] && SUM[live[i]][2]>far){ next=live[i]; break; } }
+  if(!next) for(var j=0;j<live.length;j++){ if(!done[live[j]]){ next=live[j]; break; } }
+  return {done:done, beaten:beaten, total:names.length, next:next,
+          stage: next ? SUM[next][1] : "endgame",
+          hardmode: !!done["Wall of Flesh"],
+          started: beaten>0};
+}
+function el(t,c,x){var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e;}
+
+window.PackProgress={state:state, summary:SUM, key:KEY, page:"index.html"};
+
+window.PackProgress.mountBar=function(host, extra){
+  var s=state();
+  host.textContent="";
+  var wrap=el("div","wrap runbar-in");
+  wrap.appendChild(el("span","tag","Your run"));
+  if(!s.started){
+    var p=el("span","bit");
+    p.appendChild(document.createTextNode("No bosses ticked off yet \u2014 "));
+    var a=el("a",null,"start the checklist"); a.href="bosses.html";
+    p.appendChild(a);
+    p.appendChild(document.createTextNode(", and every page follows along."));
+    wrap.appendChild(p);
+  } else {
+    var t=el("span","track"), i=el("i");
+    i.style.width=(s.beaten/s.total*100)+"%"; t.appendChild(i);
+    wrap.appendChild(t);
+    var b1=el("span","bit");
+    b1.appendChild(el("b",null,String(s.beaten)));
+    b1.appendChild(document.createTextNode(" of "+s.total+" bosses beaten"));
+    wrap.appendChild(b1);
+    wrap.appendChild(el("span","dot","\u00b7"));
+    var b2=el("span","bit");
+    b2.appendChild(document.createTextNode("next up "));
+    b2.appendChild(el("b",null, s.next || "nothing left"));
+    wrap.appendChild(b2);
+    wrap.appendChild(el("span","era "+(s.hardmode?"hard":"pre"),
+                        s.hardmode?"hardmode":"pre-hardmode"));
+  }
+  wrap.appendChild(el("span","sp"));
+  if(extra) extra(wrap, s);
+  if(window.PackProgress.page!=="bosses.html"){
+    var g=el("a","go","Boss order \u2192"); g.href="bosses.html"; wrap.appendChild(g);
+  }
+  host.appendChild(wrap);
+  return s;
+};
+
+/* A page that wants its own control in the bar sets window.RUNBAR_EXTRA before this runs. */
+function boot(){
+  var h=document.getElementById("runbar");
+  if(h) window.PackProgress.mountBar(h, window.RUNBAR_EXTRA||null);
+}
+window.PackProgress.refresh=boot;
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
+})();
+</script>

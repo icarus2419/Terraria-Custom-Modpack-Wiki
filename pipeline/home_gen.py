@@ -1,5 +1,6 @@
 import json, os
 BASE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(BASE)
 from gen_css import CSS as BASECSS
 import site_common as SC
 
@@ -18,7 +19,8 @@ n_tink  = len(V1["recipes"])
 n_stage = len(LO["stages"])
 n_gear  = sum(len(b["items"]) for s in LO["data"].values() for c in s.values()
               for m in c.values() for b in m)
-n_cls   = len({c for s in LO["data"].values() for c in s})
+SHARED  = {"Mixed", "All Classes"}          # class-agnostic gear, not a class you pick
+n_cls   = len({c for s in LO["data"].values() for c in s} - SHARED)
 
 def sprite_of(name):
     for k, v in IDX.items():
@@ -26,6 +28,14 @@ def sprite_of(name):
     return None
 ICONS = {n: sprite_of(n) for n in
          ["Tinkerer's Workshop","Soul Forge","Terraspark Boots","Ankh Shield"]}
+
+BOSSES = json.load(open(os.path.join(BASE, "bosses.json"), encoding="utf-8"))["bosses"] \
+         if os.path.exists(os.path.join(BASE, "bosses.json")) else \
+         json.load(open(os.path.join(os.path.dirname(BASE), "data", "bosses.json"),
+                        encoding="utf-8"))["bosses"]
+BSP     = json.load(open(os.path.join(BASE, "boss_sprites.json"), encoding="utf-8"))
+n_boss  = len(BOSSES)
+n_bmod  = sum(1 for b in BOSSES if b["mod"] != "vanilla")
 
 MODS = [("Thorium Mod","thorium","#3f9e8c","11 bosses, ~2,600 items, and the Bard, Healer and Thrower classes."),
         ("Fargo's Souls / Mutant","fargo","#c9552f","Eternity Mode rewrites every vanilla boss. Boss summons and re-fights."),
@@ -105,21 +115,27 @@ def card(href, ccol, icon, title, desc, figs, go):
             % (href, ccol, ic, title, desc, f, go))
 
 cards = "".join([
- card("tinkerers.html", "#e5b35a", ICONS.get("Tinkerer's Workshop"),
-      "Tinkerer's Workshop",
-      "Every accessory combination in the pack, modded and vanilla side by side. The station where "
-      "mod and vanilla gear actually meet.",
-      [("Combinations", n_tink), ("Changed by mods", 9)], "Open the workshop"),
+ card("bosses.html", "#5fb08a", BSP.get("Skeletron") or BSP.get("King Slime"),
+      "Boss Order",
+      "Every boss the pack contains, merged into one fight order and tickable as you go. Tick them "
+      "off and the rest of the wiki follows &mdash; it knows which checkpoint you are on.",
+      [("Bosses", n_boss), ("Added by mods", n_bmod)], "Open the checklist"),
+ card("loadouts.html", "#c9552f", ICONS.get("Terraspark Boots"),
+      "Loadouts",
+      "Pick the boss you are about to fight and your class, and get one filled equipment panel: "
+      "armour, five <b>accessories</b>, a weapon hotbar, ammo and buffs. Everything else the guides "
+      "list sits underneath.",
+      [("Checkpoints", n_stage), ("Classes", n_cls)], "Gear up for a boss"),
  card("recipes.html", "#3f9e8c", ICONS.get("Soul Forge"),
       "All Recipes",
       "Every recipe the six mods add, across all %d crafting stations. Search any item, filter by "
       "mod, or browse one station at a time." % n_st,
       [("Recipes", "{:,}".format(n_rec)), ("Stations", n_st)], "Browse recipes"),
- card("loadouts.html", "#c9552f", ICONS.get("Terraspark Boots"),
-      "Loadouts",
-      "What to wear and carry for each class before each boss &mdash; armour, <b>accessories</b>, "
-      "weapons and buffs, from pre-Eye of Cthulhu to endgame.",
-      [("Boss stages", n_stage), ("Classes", n_cls)], "Plan your gear"),
+ card("tinkerers.html", "#e5b35a", ICONS.get("Tinkerer's Workshop"),
+      "Tinkerer's Workshop",
+      "Every accessory combination in the pack, modded and vanilla side by side. The station where "
+      "mod and vanilla gear actually meet.",
+      [("Combinations", n_tink), ("Changed by mods", 9)], "Open the workshop"),
 ])
 
 modrows = "".join(
@@ -133,8 +149,8 @@ BODY = """
   <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
   <h1>Joseph's Modpack Wiki</h1>
   <p>Everything the pack adds, in one place: <b>@@NREC@@ recipes</b> across <b>@@NST@@ crafting
-  stations</b>, <b>@@NITEM@@ items</b> with how to get each one, and suggested loadouts for every
-  class at every boss. Built from the mods' own wikis, and it works offline.</p>
+  stations</b>, <b>@@NITEM@@ items</b> with how to get each one, and a ready equipment panel for
+  every class at every boss. Built from the mods' own wikis, and it works offline.</p>
 </div></div>
 
 <main class="wrap">
@@ -144,8 +160,12 @@ BODY = """
     <h2>Start here</h2>
     <p class="lede">If you are not sure where to look:</p>
     <div class="startbox"><ol>
-      <li><b>Kitting out for a boss?</b> Go to <a href="loadouts.html">Loadouts</a>, pick the boss you
-      are about to fight, then your class. Accessories are listed with the armour.</li>
+      <li><b>Not sure what to fight next?</b> Open the <a href="bosses.html">Boss Order</a> and tick
+      off what you have already killed. Every other page then knows where you are: Loadouts opens on
+      your checkpoint, and the recipe pages can hide what you cannot make yet.</li>
+      <li><b>About to fight a boss?</b> Go to <a href="loadouts.html">Loadouts</a>, click the boss on
+      the timeline, then your class. You get one panel of what to equip &mdash; and each pick says why
+      it was chosen. Arrow keys walk the run; the full list is a click below.</li>
       <li><b>Wondering what an item combines into?</b> The
       <a href="tinkerers.html">Tinkerer's Workshop</a> page shows every accessory combination, and
       flags the @@NCHG@@ recipes the mods change from vanilla.</li>
@@ -155,8 +175,9 @@ BODY = """
   </section>
 
   <section class="sec">
-    <h2>Jump straight to a stage</h2>
-    <p class="lede">The boss checkpoints most people look up first.</p>
+    <h2>Jump straight to a checkpoint</h2>
+    <p class="lede">The boss checkpoints most people look up first. The number is how much gear the
+    guides publish there; the page picks one per slot out of it.</p>
     <div class="quick">@@QUICK@@</div>
   </section>
 
@@ -200,9 +221,11 @@ for a, b in [("@@NREC@@", "{:,}".format(n_rec)), ("@@NST@@", str(n_st)),
              ("@@QUICK@@", quick)]:
     BODY = BODY.replace(a, b)
 
-HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + EXTRA
-        + SC.nav("index.html", "offline &middot; " + "{:,}".format(n_rec) + " recipes") + BODY)
+HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
+        + SC.nav("index.html", "offline &middot; " + "{:,}".format(n_rec) + " recipes")
+        + SC.runbar() + BODY)
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>",
                     "<title>Joseph's Modpack Wiki</title>", 1)
-open(os.path.join(BASE, "index.html"), "w", encoding="utf-8").write(HTML)
-print("wrote index.html %.0f KB" % (os.path.getsize(os.path.join(BASE,"index.html"))/1024))
+out = os.path.join(ROOT, "index.html")
+open(out, "w", encoding="utf-8").write(HTML + SC.progress_js("index.html"))
+print("wrote index.html %.0f KB" % (os.path.getsize(out)/1024))

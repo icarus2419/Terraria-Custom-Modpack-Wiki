@@ -52,11 +52,20 @@ function itemBtn(id, qty, isRes){
 var active=new Set(ORDER), q="", onlyChg=false, sel=null;
 var eras={pre:true, hard:true};
 
+/* "In reach now" leans on the boss checklist: until the Wall of Flesh is ticked off,
+   nothing that needs Hardmode content can actually be made. */
+var REACH_KEY="tinkerers.reachonly.v1";
+var reach=(function(){ try{ return localStorage.getItem(REACH_KEY)==="1"; }catch(e){ return false; } })();
+function hardmodeOpen(){
+  return !window.PackProgress || window.PackProgress.state().hardmode;
+}
+
 function recipeMatches(r){
   if(!active.has(r.src)) return false;
   if(onlyChg && !r.chg) return false;
   if(r.phm===true && !eras.pre) return false;
   if(r.phm===false && !eras.hard) return false;
+  if(reach && r.phm===false && !hardmodeOpen()) return false;
   if(!q) return true;
   var t=I[r.res].n.toLowerCase();
   if(t.indexOf(q)>=0) return true;
@@ -357,6 +366,28 @@ var chgBtn=document.getElementById("chgtoggle");
 chgBtn.addEventListener("click",function(){
   onlyChg=!onlyChg; chgBtn.setAttribute("aria-pressed",onlyChg?"true":"false"); renderTable();
 });
+
+window.RUNBAR_EXTRA=function(wrap, st){
+  var b=document.createElement("button");
+  b.type="button"; b.className="go";
+  if(st.hardmode){
+    b.textContent="Hardmode open \u2014 all combinations in reach";
+    b.disabled=true;
+    b.title="You have beaten the Wall of Flesh, so nothing is gated any more.";
+  } else {
+    var nhard=0; for(var i=0;i<R.length;i++) if(R[i].phm===false) nhard++;
+    b.textContent="Only what I can make now";
+    b.setAttribute("aria-pressed", reach?"true":"false");
+    b.title="Hide the "+nhard+" combinations that need Hardmode, which you have not opened yet.";
+    b.addEventListener("click",function(){
+      reach=!reach;
+      try{ localStorage.setItem(REACH_KEY, reach?"1":"0"); }catch(e){}
+      b.setAttribute("aria-pressed", reach?"true":"false");
+      renderTable();
+    });
+  }
+  wrap.appendChild(b);
+};
 
 renderTable();
 renderDetail(window.__INITIAL__);

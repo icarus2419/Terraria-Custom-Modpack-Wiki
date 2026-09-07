@@ -83,12 +83,12 @@ def from_wiki(name):
                 w = speed_word(u)
                 if w: s["speed"] = w
         if ib.get("setbonus"):
-            s["setbonus"] = re.sub(r"\s+", " ", B.unwrap_templates(B.preclean(ib["setbonus"]))).strip()[:150]
+            s["setbonus"] = re.sub(r"\s+", " ", B.unwrap_templates(B.preclean(ib["setbonus"]))).strip()[:400]
         ty = [ib.get(x) for x in ("type","type2","type3") if ib.get(x)]
         if ty: s["kind"] = " · ".join(t.strip() for t in ty[:2])
         if ib.get("tooltip"):
             tt = re.sub(r"\s+", " ", B.unwrap_templates(B.preclean(ib["tooltip"]))).strip()
-            if tt: s["tip"] = tt[:170]
+            if tt: s["tip"] = tt[:320]
         # vanilla pages carry no tooltip field, so an accessory would otherwise show
         # nothing useful - fall back to the first sentence of the article
         if "tip" not in s:
@@ -97,7 +97,7 @@ def from_wiki(name):
             if m and len(m[0]) > 24:
                 sent = m[0]
                 if len(sent) < 70 and len(m) > 1: sent = sent + " " + m[1]
-                s["tip"] = re.sub(r"\s+", " ", sent).strip()[:170]
+                s["tip"] = re.sub(r"\s+", " ", sent).strip()[:320]
         if s and (best is None or len(s) > len(best)): best = s
     return best
 

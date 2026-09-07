@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <title>Tinkerer's Workshop</title>
 <style>
@@ -413,12 +414,34 @@ footer ul{margin:0; padding-left:16px; line-height:1.6}
 }
 @media (max-width:700px){ .sitenav .navnote{display:none} .sitenav a.tab{padding:9px 10px} }
 </style>
-<nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html">Home</a><a class="tab" href="tinkerers.html" aria-current="page">Tinkerer's Workshop</a><a class="tab" href="recipes.html">All Recipes</a><a class="tab" href="loadouts.html">Loadouts</a><span class="navspacer"></span><span class="navnote">accessory combinations</span></div></nav>
+
+<style>
+.runbar{background:var(--surface-2); border-bottom:1px solid var(--line)}
+.runbar-in{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:7px 0; font-size:12.5px}
+.runbar .tag{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3)}
+.runbar .bit{color:var(--ink-2)}
+.runbar .bit b{color:var(--ink); font-weight:600}
+.runbar .dot{color:var(--line-strong)}
+.runbar .era{margin:0}
+.runbar .sp{flex:1}
+.runbar a.go, .runbar button.go{font:inherit; font-size:11.5px; cursor:pointer; text-decoration:none;
+  padding:3px 11px; border-radius:100px; border:1px solid var(--line-strong); color:var(--ink-2);
+  background:var(--surface); white-space:nowrap}
+.runbar a.go:hover, .runbar button.go:hover{border-color:var(--brass); color:var(--brass)}
+.runbar button.go[aria-pressed="true"]{background:var(--brass-soft); border-color:var(--brass);
+  color:var(--brass); font-weight:600}
+.runbar button.go[disabled]{opacity:.5; cursor:default}
+.runbar .track{width:110px; height:6px; border-radius:3px; background:var(--surface-3); overflow:hidden}
+.runbar .track i{display:block; height:100%; background:var(--brass)}
+@media (max-width:640px){ .runbar .track{display:none} }
+</style>
+<nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html">Home</a><a class="tab" href="bosses.html">Boss Order</a><a class="tab" href="loadouts.html">Loadouts</a><a class="tab" href="recipes.html">All Recipes</a><a class="tab" href="tinkerers.html" aria-current="page">Tinkerer's Workshop</a><span class="navspacer"></span><span class="navnote">accessory combinations</span></div></nav><div class="runbar" id="runbar"></div>
 <header class="masthead"><div class="wrap mast-in">
   <div class="brandline">
     <div>
       <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
-      <h1>Joseph's Modpack Wiki</h1>
+      <h1>Tinkerer's Workshop</h1>
       <p class="tagline">Every accessory combination in the pack, <b>modded and vanilla together</b> — Thorium, Fargo's Souls, Spirit Reforged, Spirit Classic and Calamity Fables alongside base Terraria. Click any item for how to get it.</p>
     </div>
   </div>
@@ -537,11 +560,20 @@ function itemBtn(id, qty, isRes){
 var active=new Set(ORDER), q="", onlyChg=false, sel=null;
 var eras={pre:true, hard:true};
 
+/* "In reach now" leans on the boss checklist: until the Wall of Flesh is ticked off,
+   nothing that needs Hardmode content can actually be made. */
+var REACH_KEY="tinkerers.reachonly.v1";
+var reach=(function(){ try{ return localStorage.getItem(REACH_KEY)==="1"; }catch(e){ return false; } })();
+function hardmodeOpen(){
+  return !window.PackProgress || window.PackProgress.state().hardmode;
+}
+
 function recipeMatches(r){
   if(!active.has(r.src)) return false;
   if(onlyChg && !r.chg) return false;
   if(r.phm===true && !eras.pre) return false;
   if(r.phm===false && !eras.hard) return false;
+  if(reach && r.phm===false && !hardmodeOpen()) return false;
   if(!q) return true;
   var t=I[r.res].n.toLowerCase();
   if(t.indexOf(q)>=0) return true;
@@ -843,7 +875,106 @@ chgBtn.addEventListener("click",function(){
   onlyChg=!onlyChg; chgBtn.setAttribute("aria-pressed",onlyChg?"true":"false"); renderTable();
 });
 
+window.RUNBAR_EXTRA=function(wrap, st){
+  var b=document.createElement("button");
+  b.type="button"; b.className="go";
+  if(st.hardmode){
+    b.textContent="Hardmode open \u2014 all combinations in reach";
+    b.disabled=true;
+    b.title="You have beaten the Wall of Flesh, so nothing is gated any more.";
+  } else {
+    var nhard=0; for(var i=0;i<R.length;i++) if(R[i].phm===false) nhard++;
+    b.textContent="Only what I can make now";
+    b.setAttribute("aria-pressed", reach?"true":"false");
+    b.title="Hide the "+nhard+" combinations that need Hardmode, which you have not opened yet.";
+    b.addEventListener("click",function(){
+      reach=!reach;
+      try{ localStorage.setItem(REACH_KEY, reach?"1":"0"); }catch(e){}
+      b.setAttribute("aria-pressed", reach?"true":"false");
+      renderTable();
+    });
+  }
+  wrap.appendChild(b);
+};
+
 renderTable();
 renderDetail(window.__INITIAL__);
+})();
+</script>
+
+<script id="bosssummary" type="application/json">{"Trojan Squirrel":["pre","start",0],"The Grand Thunder Bird":["pre","start",1],"King Slime":["pre","start",2],"Sir Nautilus and Signathion":["pre","eye",3],"Scarabeus":["pre","eye",4],"Eye of Cthulhu":["pre","eye",5],"The Vagrant of Space and Time":["pre","evil",6],"Desert Scourge":["pre","evil",7],"Cursed Coffin":["pre","evil",8],"Moon Jelly Wizard":["pre","evil",9],"Crabulon":["pre","evil",10],"Eater of Worlds":["pre","evil",11],"Brain of Cthulhu":["pre","evil",12],"Thespian, the Act of Alchemy":["pre","skeletron",13],"Queen Jellyfish":["pre","skeletron",14],"Vinewrath Bane":["pre","skeletron",15],"Queen Bee":["pre","skeletron",16],"Viscount":["pre","skeletron",17],"Ancient Avian":["pre","skeletron",18],"Deerclops":["pre","skeletron",19],"Skeletron":["pre","skeletron",20],"Deviantt (boss)":["pre","wof",21],"Dioskouroi, the Twin Forces":["pre","wof",22],"Granite Energy Storm":["pre","wof",23],"Starplate Voyager":["pre","wof",24],"Buried Champion":["pre","wof",25],"Star Scouter":["pre","wof",26],"Wall of Flesh":["pre","wof",27],"Banished Baron":["hard","mech",28],"Borean Strider":["hard","mech",29],"Fallen Beholder":["hard","mech",30],"Queen Slime":["hard","mech",31],"Infernon":["hard","mech",32],"Lich":["hard","mech",33],"The Twins":["hard","mech",34],"Dusking":["hard","mech",35],"The Destroyer":["hard","mech",36],"Skeletron Prime":["hard","mech",37],"Lifelight":["hard","plantera",38],"Plantera":["hard","plantera",39],"Penthesilea, the Witch of Ink":["hard","golem",40],"Asphodene and Eridani":["hard","golem",41],"Golem":["hard","golem",42],"Nalhaun, The Burnished King":["hard","cultist",43],"Forgotten One":["hard","cultist",44],"Duke Fishron":["hard","cultist",45],"Empress of Light":["hard","cultist",46],"Arbitration":["hard","cultist",47],"Atlas":["hard","cultist",48],"Lunatic Cultist":["hard","cultist",49],"Moon Lord":["hard","moonlord",50],"Eridanus, Champion of Cosmos":["postml","endgame",51],"Abominationn (boss)":["postml","endgame",52],"Mutant (boss)":["postml","endgame",53],"The Warrior Of Light":["postml","endgame",54],"Tsukiyomi, the First Starfarer":["postml","endgame",55],"The Primordials":["postml","endgame",56],"Dark Mage":["event","endgame",57],"Ogre":["event","endgame",58],"Betsy":["event","endgame",59],"Flying Dutchman":["event","endgame",60],"Mourning Wood":["event","endgame",61],"Pumpking":["event","endgame",62],"Everscream":["event","endgame",63],"Santa-NK1":["event","endgame",64],"Ice Queen":["event","endgame",65],"Martian Saucer":["event","endgame",66],"Solar Pillar":["event","endgame",67],"Nebula Pillar":["event","endgame",68],"Vortex Pillar":["event","endgame",69],"Stardust Pillar":["event","endgame",70],"Mechdusa":["seed","endgame",71],"Patch Werk":["mini",null,72],"Corpse Bloom":["mini",null,73],"Illusionist":["mini",null,74],"Champion of Timber":["mini",null,75],"Champion of Terra":["mini",null,76],"Champion of Spirit":["mini",null,77],"Champion of Life":["mini",null,78],"Champion of Death":["mini",null,79],"Champion of Will":["mini",null,80],"Champion of Nature":["mini",null,81],"Champion of Earth":["mini",null,82],"Occultist":["mini",null,83],"R'lyehian":["mini",null,84],"Vulture Matriarch":["mini",null,85],"Snow Monger":["mini",null,86]}</script>
+<script>
+(function(){
+"use strict";
+var SUM=JSON.parse(document.getElementById("bosssummary").textContent);
+var KEY="bosses.done.v1";
+function read(){ try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ return {}; } }
+
+function state(){
+  var done=read(), names=Object.keys(SUM);
+  var live=names.filter(function(n){ var b=SUM[n][0]; return b!=="mini" && b!=="seed"; });
+  live.sort(function(a,b){ return SUM[a][2]-SUM[b][2]; });
+  var beaten=names.filter(function(n){ return done[n]; }).length;
+  // where you are is the furthest boss you have beaten, not the first you have not:
+  // skipping an optional modded boss should not drag the whole site back to the start
+  var far=-1;
+  names.forEach(function(n){ if(done[n] && SUM[n][2]>far) far=SUM[n][2]; });
+  var next=null;
+  for(var i=0;i<live.length;i++){ if(!done[live[i]] && SUM[live[i]][2]>far){ next=live[i]; break; } }
+  if(!next) for(var j=0;j<live.length;j++){ if(!done[live[j]]){ next=live[j]; break; } }
+  return {done:done, beaten:beaten, total:names.length, next:next,
+          stage: next ? SUM[next][1] : "endgame",
+          hardmode: !!done["Wall of Flesh"],
+          started: beaten>0};
+}
+function el(t,c,x){var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e;}
+
+window.PackProgress={state:state, summary:SUM, key:KEY, page:"tinkerers.html"};
+
+window.PackProgress.mountBar=function(host, extra){
+  var s=state();
+  host.textContent="";
+  var wrap=el("div","wrap runbar-in");
+  wrap.appendChild(el("span","tag","Your run"));
+  if(!s.started){
+    var p=el("span","bit");
+    p.appendChild(document.createTextNode("No bosses ticked off yet \u2014 "));
+    var a=el("a",null,"start the checklist"); a.href="bosses.html";
+    p.appendChild(a);
+    p.appendChild(document.createTextNode(", and every page follows along."));
+    wrap.appendChild(p);
+  } else {
+    var t=el("span","track"), i=el("i");
+    i.style.width=(s.beaten/s.total*100)+"%"; t.appendChild(i);
+    wrap.appendChild(t);
+    var b1=el("span","bit");
+    b1.appendChild(el("b",null,String(s.beaten)));
+    b1.appendChild(document.createTextNode(" of "+s.total+" bosses beaten"));
+    wrap.appendChild(b1);
+    wrap.appendChild(el("span","dot","\u00b7"));
+    var b2=el("span","bit");
+    b2.appendChild(document.createTextNode("next up "));
+    b2.appendChild(el("b",null, s.next || "nothing left"));
+    wrap.appendChild(b2);
+    wrap.appendChild(el("span","era "+(s.hardmode?"hard":"pre"),
+                        s.hardmode?"hardmode":"pre-hardmode"));
+  }
+  wrap.appendChild(el("span","sp"));
+  if(extra) extra(wrap, s);
+  if(window.PackProgress.page!=="bosses.html"){
+    var g=el("a","go","Boss order \u2192"); g.href="bosses.html"; wrap.appendChild(g);
+  }
+  host.appendChild(wrap);
+  return s;
+};
+
+/* A page that wants its own control in the bar sets window.RUNBAR_EXTRA before this runs. */
+function boot(){
+  var h=document.getElementById("runbar");
+  if(h) window.PackProgress.mountBar(h, window.RUNBAR_EXTRA||null);
+}
+window.PackProgress.refresh=boot;
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
 })();
 </script>

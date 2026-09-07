@@ -5,6 +5,7 @@ from gen_js import JS
 import site_common as SC
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(BASE)
 D = json.load(open(os.path.join(BASE, "site_data.json")))
 sprites = json.load(open(os.path.join(BASE, "sprites.json")))
 
@@ -56,13 +57,13 @@ changed_list = "".join(
   "<li><b>%s</b> — %s</li>" % (html.escape(n), ", ".join(MODS[s]["short"] for s in v))
   for n, v in sorted(D["changed"].items()))
 
-HTML = ('<meta charset="utf-8">\n' + CSS + SC.NAV_CSS
-        + SC.nav("tinkerers.html", "accessory combinations") + """
+HTML = ('<meta charset="utf-8">\n' + CSS + SC.NAV_CSS + SC.PROGRESS_CSS
+        + SC.nav("tinkerers.html", "accessory combinations") + SC.runbar() + """
 <header class="masthead"><div class="wrap mast-in">
   <div class="brandline">
     <div>
       <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
-      <h1>Joseph's Modpack Wiki</h1>
+      <h1>Tinkerer's Workshop</h1>
       <p class="tagline">Every accessory combination in the pack, <b>modded and vanilla together</b> — Thorium, Fargo's Souls, Spirit Reforged, Spirit Classic and Calamity Fables alongside base Terraria. Click any item for how to get it.</p>
     </div>
   </div>
@@ -133,9 +134,9 @@ HTML = ('<meta charset="utf-8">\n' + CSS + SC.NAV_CSS
        "npre": n_pre, "nhard": n_hard,
        "payload": payload, "initial": initial}) + js
 
-out = os.path.join(BASE, "tinkerers.html")
+out = os.path.join(ROOT, "tinkerers.html")
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>Tinkerer's Workshop</title>", 1)
-open(out, "w", encoding="utf-8").write(HTML)
+open(out, "w", encoding="utf-8").write(HTML + SC.progress_js("tinkerers.html"))
 print("wrote %s — %.0f KB" % (out, os.path.getsize(out)/1024))
 print("initial item id:", initial, I[str(initial)]["n"])
 print("chips:", per, "| changed rows:", n_changed)

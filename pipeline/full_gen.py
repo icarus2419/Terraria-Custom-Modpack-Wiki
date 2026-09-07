@@ -1,5 +1,6 @@
 import json, os, html
 BASE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(BASE)
 from gen_css import CSS as BASECSS
 import site_common as SC
 
@@ -56,11 +57,11 @@ nmod  = sum(1 for v in I.values() if v["own"] != "vanilla")
 
 payload = json.dumps(D, separators=(",", ":")).replace("<", "\\u003c")
 
-HTML = '<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + EXTRA + SC.nav("recipes.html", "all stations") + """
+TPL = """
 <header class="masthead"><div class="wrap mast-in">
   <div class="brandline"><div>
     <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
-    <h1>Joseph's Modpack Wiki</h1>
+    <h1>All Recipes</h1>
     <p class="tagline">Every crafting recipe the pack adds, across <b>%(nst)d stations</b> and six mods &mdash;
     Thorium, Fargo's Souls, Spirit Reforged, Spirit Classic, The Stars Above and Calamity Fables,
     plus the vanilla Tinkerer's Workshop. Click any item for how to get it.</p>
@@ -121,10 +122,16 @@ HTML = '<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + EXTRA + SC.nav("recip
 </div></footer>
 
 <script id="dataset" type="application/json">%(payload)s</script>
-""" % {"nrec": len(R), "nitem": len(I), "nmod": nmod, "npre": npre, "nhard": nhard,
-       "nst": len(ST), "chips": chips(), "payload": payload}
+"""
+
+# the % formatting binds to the template alone -- the shared CSS is full of "100%"
+BODY = TPL % {"nrec": len(R), "nitem": len(I), "nmod": nmod, "npre": npre, "nhard": nhard,
+              "nst": len(ST), "chips": chips(), "payload": payload}
+HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
+        + SC.nav("recipes.html", "all stations") + SC.runbar() + BODY)
 
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>All Recipes</title>", 1)
 js = open(os.path.join(BASE, "full_wiki_js.html"), encoding="utf-8").read()
-open(os.path.join(BASE, "recipes.html"), "w", encoding="utf-8").write(HTML + js)
-print("wrote recipes.html %.1f MB" % (os.path.getsize(os.path.join(BASE,"recipes.html"))/1048576))
+out = os.path.join(ROOT, "recipes.html")
+open(out, "w", encoding="utf-8").write(HTML + SC.progress_js("recipes.html") + js)
+print("wrote recipes.html %.1f MB" % (os.path.getsize(out)/1048576))
