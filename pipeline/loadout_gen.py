@@ -522,31 +522,31 @@ BODY = """
 </main>
 
 <footer><div class="wrap fgrid">
-  <div><h4>How a slot is filled</h4>
+  <div><h2 class="fh">How a slot is filled</h2>
     <p>The guides list far more gear than you can wear. Each slot takes the first of: something the
     wiki itself marks <em>Best</em>; then the highest published defence or damage; then whatever that
     wiki lists first. Roles are spread before doubling up, so the hotbar is not six broadswords.
     Every pick shows the reason it was chosen, and nothing is invented &mdash; if a wiki publishes no
     ranking and no stats, the slot says so.</p></div>
-  <div><h4>How the checkpoints line up</h4>
+  <div><h2 class="fh">How the checkpoints line up</h2>
     <p>Each mod names its stages differently &mdash; Thorium's <em>Pre-Eater of Worlds / Brain of
     Cthulhu</em>, Spirit's <em>Pre-Evil Boss</em> and Stars Above's <em>Pre-The Vagrant of Space and
     Time</em> all sit at the same point. They are mapped onto one timeline, and every item still
     shows the wiki and the stage name it came from.</p></div>
-  <div><h4>Reading the panel</h4>
+  <div><h2 class="fh">Reading the panel</h2>
     <p>The strip under each slot is the wiki that recommends it &mdash;
     <b class="lg" style="--src:#6f7794">Terraria</b>,
     <b class="lg" style="--src:#3f9e8c">Thorium</b>,
     <b class="lg" style="--src:#5a80c9">Spirit</b>,
     <b class="lg" style="--src:#c2a1e8">Stars Above</b>.
     Pick the boss on the timeline, then your class; arrow keys walk the run.</p></div>
-  <div><h4>What the tags mean</h4>
+  <div><h2 class="fh">What the tags mean</h2>
     <p><b>New here</b> means the gear was not in this class's list at its previous checkpoint &mdash;
     at Pre-Moon Lord the guides publish no Healer list at all, so its next list is compared against
     Pre-Lunatic Cultist rather than pretending everything is new. <b>Any class</b> means the entry
     comes from a guide's mixed-class section, not from this class's own. Gear the guides carry
     forward rather than re-listing says so, and where it carries from.</p></div>
-  <div><h4>Nothing is hidden</h4>
+  <div><h2 class="fh">Nothing is hidden</h2>
     <p>The panel is a recommendation, not the whole list. <b>All options</b> underneath holds every
     entry the guides publish for that class at that checkpoint, ranked the same way, with the
     equipped ones marked. Gear tagged <em>any class</em> comes from the guides' own mixed-class

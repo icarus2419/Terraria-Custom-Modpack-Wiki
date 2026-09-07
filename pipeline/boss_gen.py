@@ -170,19 +170,19 @@ BODY = """
 </main>
 
 <footer><div class="wrap fgrid">
-  <div><h4>Where the order comes from</h4>
+  <div><h2 class="fh">Where the order comes from</h2>
     <p>Thorium, Spirit, The Stars Above and Calamity Fables each publish a boss progression chart on
     their own wiki that already interleaves their bosses with the vanilla ones. Those charts are
     merged here on the vanilla bosses they share &mdash; so &ldquo;after Skeletron&rdquo; is that
     wiki's own placement, not a guess. Vanilla's order is its own Bosses page.</p></div>
-  <div><h4>Where it does not exist</h4>
+  <div><h2 class="fh">Where it does not exist</h2>
     <p>Fargo's Souls publishes no chart &mdash; but its boss pages say in words where each fight
     belongs (<em>&ldquo;intended to be fought before the mechanical bosses&rdquo;</em>), so those
     are placed from their own sentences, quoted on the row. A placement read that way is held to
     the tier its wiki files the boss under, so a post-Moon Lord superboss cannot drift into
     pre-Hardmode. Mini-bosses are the only ones left unordered: no wiki sequences them, and
     guessing would be worse than saying so.</p></div>
-  <div><h4>Reading a row</h4>
+  <div><h2 class="fh">Reading a row</h2>
     <p>The colour down the left is the mod that adds the boss. <b>Summoned with</b> is the item you
     need to start the fight, quoted from that wiki. <b>Gear up</b> jumps to the Loadouts checkpoint
     you want to be equipped for. Tick a boss and it greys out; the next unbeaten one is called out

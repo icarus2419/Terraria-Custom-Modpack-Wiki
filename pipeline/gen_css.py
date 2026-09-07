@@ -394,7 +394,7 @@ table.drops td.rate,table.drops td.qty{text-align:right; padding-right:0}
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line); background:var(--surface); padding:22px 0 34px; font-size:12.5px; color:var(--ink-2)}
 footer .fgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px 34px}
-footer h4{margin:0 0 6px; font-family:"Pixelify Sans",sans-serif; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+footer h2.fh{margin:0 0 6px; font-family:"Pixelify Sans",sans-serif; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
 footer p{margin:0 0 7px; line-height:1.55; max-width:60ch}
 footer ul{margin:0; padding-left:16px; line-height:1.6}
 .note-warn{border-left:2px solid var(--flag); padding-left:10px}

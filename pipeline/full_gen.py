@@ -121,15 +121,15 @@ TPL = """
 </main>
 
 <footer><div class="wrap fgrid">
-  <div><h4>Scope</h4>
+  <div><h2 class="fh">Scope</h2>
     <p>Every recipe the six content mods add, at all %(nst)d stations they use, plus the vanilla
     Tinkerer's Workshop because it is where mod and vanilla accessories meet. Vanilla's other
     3,944 recipes are not duplicated here &mdash; terraria.wiki.gg already covers them.</p></div>
-  <div><h4>Where this came from</h4>
+  <div><h2 class="fh">Where this came from</h2>
     <p>Parsed from each wiki's own generated <code>Recipes/&lt;Station&gt;</code> tables through the
     MediaWiki API &mdash; 161 station pages across seven wikis. Item descriptions, drop rates and
     prices come from the raw wikitext of each item page.</p></div>
-  <div><h4>Pre-Hardmode verdicts</h4>
+  <div><h2 class="fh">Pre-Hardmode verdicts</h2>
     <p>Each item is classified from the wikis' <code>tags</code> field, the Hardmode-only category,
     mod infobox flags, lead wording, drop-source NPCs, and recipe propagation to a fixed point.
     Items with no Hardmode evidence anywhere are treated as pre-Hardmode, which is these wikis'

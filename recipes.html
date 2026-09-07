@@ -408,7 +408,7 @@ table.drops td.rate,table.drops td.qty{text-align:right; padding-right:0}
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line); background:var(--surface); padding:22px 0 34px; font-size:12.5px; color:var(--ink-2)}
 footer .fgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px 34px}
-footer h4{margin:0 0 6px; font-family:"Pixelify Sans",sans-serif; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+footer h2.fh{margin:0 0 6px; font-family:"Pixelify Sans",sans-serif; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
 footer p{margin:0 0 7px; line-height:1.55; max-width:60ch}
 footer ul{margin:0; padding-left:16px; line-height:1.6}
 .note-warn{border-left:2px solid var(--flag); padding-left:10px}
@@ -558,15 +558,15 @@ button.snav[aria-current="true"] .c{color:var(--brass)}
 </main>
 
 <footer><div class="wrap fgrid">
-  <div><h4>Scope</h4>
+  <div><h2 class="fh">Scope</h2>
     <p>Every recipe the six content mods add, at all 130 stations they use, plus the vanilla
     Tinkerer's Workshop because it is where mod and vanilla accessories meet. Vanilla's other
     3,944 recipes are not duplicated here &mdash; terraria.wiki.gg already covers them.</p></div>
-  <div><h4>Where this came from</h4>
+  <div><h2 class="fh">Where this came from</h2>
     <p>Parsed from each wiki's own generated <code>Recipes/&lt;Station&gt;</code> tables through the
     MediaWiki API &mdash; 161 station pages across seven wikis. Item descriptions, drop rates and
     prices come from the raw wikitext of each item page.</p></div>
-  <div><h4>Pre-Hardmode verdicts</h4>
+  <div><h2 class="fh">Pre-Hardmode verdicts</h2>
     <p>Each item is classified from the wikis' <code>tags</code> field, the Hardmode-only category,
     mod infobox flags, lead wording, drop-source NPCs, and recipe propagation to a fixed point.
     Items with no Hardmode evidence anywhere are treated as pre-Hardmode, which is these wikis'

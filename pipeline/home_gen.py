@@ -195,14 +195,14 @@ BODY = """
 </main>
 
 <footer><div class="wrap fgrid">
-  <div><h4>How it was built</h4>
+  <div><h2 class="fh">How it was built</h2>
     <p>Recipes are parsed from each wiki's own generated recipe tables through the MediaWiki API &mdash;
     161 station pages across seven wikis. Loadouts come from each wiki's <code>Guide:Class setups</code>.
     Nothing is written from memory.</p></div>
-  <div><h4>Offline</h4>
+  <div><h2 class="fh">Offline</h2>
     <p>Every page is self-contained with its sprites embedded, so the wiki works with the Wi-Fi off &mdash;
     handy on a second monitor mid-session.</p></div>
-  <div><h4>Sources</h4>
+  <div><h2 class="fh">Sources</h2>
     <p>terraria.wiki.gg &middot; thoriummod.wiki.gg &middot; fargosmods.wiki.gg &middot;
     spiritmod.wiki.gg &middot; starsabovemod.wiki.gg &middot; calamityfables.wiki.gg.
     A fan reference tool, not affiliated with Re-Logic or any mod team.</p></div>

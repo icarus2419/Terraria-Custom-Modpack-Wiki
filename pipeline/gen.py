@@ -105,16 +105,16 @@ HTML = (SC.head('tinkerers.html', "Tinkerer's Workshop", 'Every accessory combin
 
 <footer><div class="wrap fgrid">
   <div>
-    <h4>Where this came from</h4>
+    <h2 class="fh">Where this came from</h2>
     <p>Recipes were read straight off each mod's own <code>Recipes/Tinkerer's Workshop</code> page and parsed, not written from memory — terraria.wiki.gg, thoriummod.wiki.gg, fargosmods.wiki.gg, spiritmod.wiki.gg and calamityfables.wiki.gg, on 5 September 2026. Item descriptions, drop rates and prices come from the same wikis' item pages.</p>
   </div>
   <div>
-    <h4>Recipes the mods change</h4>
+    <h2 class="fh">Recipes the mods change</h2>
     <p>Where a mod redefines a vanilla combination, the mod's version is what the game uses. The vanilla row is kept so you can see what moved.</p>
     <ul>%(changed)s</ul>
   </div>
   <div>
-    <h4>Not covered</h4>
+    <h2 class="fh">Not covered</h2>
     <p class="note-warn"><b>The Stars Above</b> adds no Tinkerer's Workshop recipes at all — its stations are the Iron Anvil, Celestriad Root, Loom and Work Bench. Nothing is missing from this table on its account.</p>
     <p>Spirit Reforged and Spirit Classic are listed separately because they are separate wikis with separate content; the pack runs Reforged, with Classic added last.</p>
   </div>
