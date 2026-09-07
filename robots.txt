@@ -1,0 +1,7 @@
+# Joseph's Modpack Wiki — a fan reference for a Terraria tModLoader modpack.
+# Everything here is derived from the mods' own wikis and is free to index.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://josephwiki.pages.dev/sitemap.xml

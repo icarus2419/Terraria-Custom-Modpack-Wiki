@@ -1,0 +1,23 @@
+# Joseph's Modpack Wiki
+
+> An offline-first reference for a Terraria tModLoader 1.4.4 modpack. Every boss in one
+> fight order, a filled equipment panel for every class at every boss, and every recipe the
+> six content mods add. Built by parsing the mods' own wikis; nothing is written from memory.
+
+Each page is a single self-contained HTML file with its sprites and data embedded, so the
+whole site works with no network connection.
+
+## Pages
+
+- [Boss Order](https://josephwiki.pages.dev/bosses): All 87 bosses merged into one fight order from each mod's own progression chart, tickable as you go.
+- [Loadouts](https://josephwiki.pages.dev/loadouts): Pick a boss and a class, get one equipment panel — armour, five accessories, a weapon hotbar, ammo and buffs.
+- [All Recipes](https://josephwiki.pages.dev/recipes): 5,455 recipes across 130 crafting stations, with how to obtain each item and whether it is craftable before Hardmode.
+- [Tinkerer's Workshop](https://josephwiki.pages.dev/tinkerers): Every accessory combination, modded and vanilla side by side.
+
+## Sources
+
+Data is parsed from terraria.wiki.gg, thoriummod.wiki.gg, fargosmods.wiki.gg,
+spiritmod.wiki.gg, starsabovemod.wiki.gg and calamityfables.wiki.gg. Recipe and item data
+belongs to those wikis under their own terms. Sprites are © Re-Logic and the respective mod
+authors, used here for reference. A fan reference tool, not affiliated with Re-Logic or any
+mod team.

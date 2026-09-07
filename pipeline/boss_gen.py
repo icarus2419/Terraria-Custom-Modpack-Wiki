@@ -116,7 +116,11 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
 .boss .side .life{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--ink-3);
   white-space:nowrap}
 .modtag{font-family:"Pixelify Sans",sans-serif; font-size:9px; letter-spacing:.07em;
-  text-transform:uppercase; color:var(--mcol); border:1px solid color-mix(in srgb,var(--mcol) 60%, transparent);
+  text-transform:uppercase;
+  /* 9px text needs 4.5:1; the raw mod colours sit between 3.8 and 4.4 on this ground, so the
+     text is lifted 30% toward the ink while the border keeps the identity colour intact */
+  color:color-mix(in srgb, var(--mcol) 70%, var(--ink));
+  border:1px solid color-mix(in srgb,var(--mcol) 60%, transparent);
   border-radius:100px; padding:1px 7px; white-space:nowrap}
 .boss.done{opacity:.5}
 .boss.done .tick{background:var(--brass); border-color:var(--brass); color:var(--surface)}
