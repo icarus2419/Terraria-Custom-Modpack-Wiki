@@ -86,7 +86,7 @@ def head_links():
     return ('<link rel="icon" type="image/png" sizes="16x16" href="%s">\n'
             '<link rel="icon" type="image/png" sizes="32x32" href="%s">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="%s">\n'
-            '<meta name="theme-color" content="#101229">\n'
+            '<meta name="theme-color" content="#14100e">\n'
             % (png_datauri(16), png_datauri(32), png_datauri(176)))
 
 BRAND_CSS = """
