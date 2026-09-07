@@ -137,20 +137,14 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
 """
 
 BODY = """
-<header class="masthead"><div class="wrap mast-in">
+<header class="masthead slim"><div class="wrap mast-in">
   <div class="brandline"><div>
-    <p class="eyebrow">Every boss in the pack &middot; one fight order</p>
     <h1>Boss Checklist</h1>
-    <p class="tagline">All <b>@@NB@@ bosses</b> the six mods and vanilla add, merged into a single
-    order and tickable as you go. Each mod publishes its own progression chart against the vanilla
-    bosses; those charts are laid over one another here, so a modded boss sits where <b>its own wiki
-    puts it</b>. Ticks are kept in this browser.</p>
+    <p class="tagline">Every boss in the pack, in one fight order. Tick as you go and the rest of
+    the wiki follows.
+    <span class="dim">@@NB@@ bosses, @@NM@@ of them from mods &middot;
+    <span id="metadone">0</span> beaten.</span></p>
   </div></div>
-  <dl class="meta">
-    <div><dt>Bosses</dt><dd>@@NB@@</dd></div>
-    <div><dt>Added by mods</dt><dd>@@NM@@</dd></div>
-    <div><dt>Beaten</dt><dd id="metadone">0</dd></div>
-  </dl>
 </div></header>
 
 <div class="toolbar"><div class="wrap toolbar-in">

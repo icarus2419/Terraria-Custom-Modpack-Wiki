@@ -11,9 +11,29 @@ MODCOL = {"vanilla":"#6f7794","thorium":"#3f9e8c","fargo":"#c9552f","spirit_refo
 
 EXTRA = """
 <style>
-.layout3{display:grid; grid-template-columns:224px minmax(0,1fr) 372px; gap:20px; align-items:start; padding:20px 0 60px}
-@media (max-width:1300px){ .layout3{grid-template-columns:200px minmax(0,1fr)} .detail{grid-column:1/-1} }
-@media (max-width:900px){ .layout3{grid-template-columns:minmax(0,1fr)} .stationnav{max-height:220px} }
+.layout3{display:grid; grid-template-columns:minmax(0,1fr) 352px; gap:16px; align-items:start;
+  padding:14px 0 56px}
+@media (max-width:980px){
+  .layout3{grid-template-columns:minmax(0,1fr)}
+  .detail{position:static; max-height:none}
+  /* one column: results come first, but once you pick an item its card moves above them
+     rather than sitting 13,000px below a 250-row table */
+  .layout3.picked .detail{order:-1}
+}
+/* denser rows: the same information, less air */
+.layout3 table.crafts td{padding:7px 14px}
+.layout3 .it .sp{width:30px; height:30px}
+.layout3 .it .sp img{max-width:23px; max-height:23px}
+.layout3 ul.ing{gap:2px 4px}
+.masthead.slim .tagline .dim{color:var(--ink-3)}
+/* the station picker, now a select rather than a 200px column of 130 buttons */
+.stationpick{display:flex; align-items:center; gap:7px}
+.stationpick select{font:inherit; font-size:12.5px; max-width:270px; padding:5px 9px;
+  border-radius:100px; border:1px solid var(--line-strong); background:var(--surface);
+  color:var(--ink); cursor:pointer}
+.stationpick select:hover{border-color:var(--brass)}
+.stationpick .lbl{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
 .stationnav{position:sticky; top:64px; max-height:calc(100vh - 84px); overflow-y:auto;
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
 .snav-h{padding:9px 12px; border-bottom:1px solid var(--line); background:var(--surface-2);
@@ -58,21 +78,12 @@ nmod  = sum(1 for v in I.values() if v["own"] != "vanilla")
 payload = json.dumps(D, separators=(",", ":")).replace("<", "\\u003c")
 
 TPL = """
-<header class="masthead"><div class="wrap mast-in">
+<header class="masthead slim"><div class="wrap mast-in">
   <div class="brandline"><div>
-    <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
     <h1>All Recipes</h1>
-    <p class="tagline">Every crafting recipe the pack adds, across <b>%(nst)d stations</b> and six mods &mdash;
-    Thorium, Fargo's Souls, Spirit Reforged, Spirit Classic, The Stars Above and Calamity Fables,
-    plus the vanilla Tinkerer's Workshop. Click any item for how to get it.</p>
+    <p class="tagline">Search any item, or pick a station. Click a result for how to get it.
+    <span class="dim">%(nrec)d recipes &middot; %(nitem)d items &middot; %(nst)d stations.</span></p>
   </div></div>
-  <dl class="meta">
-    <div><dt>Recipes</dt><dd>%(nrec)d</dd></div>
-    <div><dt>Items</dt><dd>%(nitem)d</dd></div>
-    <div><dt>Modded items</dt><dd>%(nmod)d</dd></div>
-    <div><dt>Pre-Hardmode</dt><dd>%(npre)d</dd></div>
-    <div><dt>Hardmode only</dt><dd>%(nhard)d</dd></div>
-  </dl>
 </div></header>
 
 <div class="controls"><div class="wrap ctl-in">
@@ -80,6 +91,11 @@ TPL = """
     <input id="q" type="search" placeholder="Search every item in the pack" autocomplete="off" aria-label="Search items">
     <button class="clearx" id="clearq" type="button" aria-label="Clear search">&times;</button>
   </div>
+  <div class="stationpick">
+    <span class="lbl">Station</span>
+    <select id="stationsel" aria-label="Filter by crafting station"></select>
+  </div>
+  <span class="chipsep" aria-hidden="true"></span>
   <div class="chips">%(chips)s</div>
   <span class="chipsep" aria-hidden="true"></span>
   <div class="chips">
@@ -91,7 +107,6 @@ TPL = """
 </div></div>
 
 <main class="wrap layout3">
-  <nav class="stationnav" id="snav"><div class="snav-h">Crafting stations</div></nav>
   <section class="tablecard">
     <div class="tablehead"><h2 id="sttitle">All recipes</h2><span class="sub" id="stsub"></span></div>
     <div class="tscroll">
@@ -128,7 +143,7 @@ TPL = """
 BODY = TPL % {"nrec": len(R), "nitem": len(I), "nmod": nmod, "npre": npre, "nhard": nhard,
               "nst": len(ST), "chips": chips(), "payload": payload}
 HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
-        + SC.nav("recipes.html", "all stations") + SC.runbar() + BODY)
+        + SC.nav("recipes.html", "{:,} recipes".format(len(R))) + SC.runbar() + BODY)
 
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>All Recipes</title>", 1)
 js = open(os.path.join(BASE, "full_wiki_js.html"), encoding="utf-8").read()

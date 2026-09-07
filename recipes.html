@@ -96,6 +96,12 @@ h1{
   text-shadow:2px 2px 0 var(--wordshadow);
 }
 .tagline{margin:0; color:var(--ink-2); font-size:14.5px; max-width:62ch}
+/* the compact masthead every page uses: a name and one line, not a title card */
+.masthead.slim .mast-in{padding:14px 0 12px}
+.masthead.slim h1{font-size:clamp(22px,2.4vw,30px); margin:0 0 3px}
+.masthead.slim .tagline{font-size:13.5px; max-width:none}
+.masthead.slim .tagline .dim{color:var(--ink-3)}
+.masthead.slim .brandline{flex:1 1 100%}
 .tagline b{color:var(--ink); font-weight:600}
 .eyebrow{
   font-family:"Pixelify Sans",sans-serif; font-size:10.5px; letter-spacing:.14em;
@@ -142,6 +148,13 @@ h1{
   border-bottom:1px solid var(--line); padding:11px 0;
 }
 .ctl-in{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+/* on a phone the chips wrap to 300px of filters; pinning that to the top leaves no room
+   for results, so let the whole bar scroll away */
+@media (max-width:760px){
+  .controls{position:static; padding:9px 0}
+  .ctl-in{gap:8px}
+  .chip{padding:3px 9px; font-size:11.5px}
+}
 .search{position:relative; flex:1 1 250px; min-width:200px; max-width:360px}
 .search input{
   width:100%; font:inherit; font-size:14.5px; color:var(--ink);
@@ -438,9 +451,29 @@ footer ul{margin:0; padding-left:16px; line-height:1.6}
 </style>
 
 <style>
-.layout3{display:grid; grid-template-columns:224px minmax(0,1fr) 372px; gap:20px; align-items:start; padding:20px 0 60px}
-@media (max-width:1300px){ .layout3{grid-template-columns:200px minmax(0,1fr)} .detail{grid-column:1/-1} }
-@media (max-width:900px){ .layout3{grid-template-columns:minmax(0,1fr)} .stationnav{max-height:220px} }
+.layout3{display:grid; grid-template-columns:minmax(0,1fr) 352px; gap:16px; align-items:start;
+  padding:14px 0 56px}
+@media (max-width:980px){
+  .layout3{grid-template-columns:minmax(0,1fr)}
+  .detail{position:static; max-height:none}
+  /* one column: results come first, but once you pick an item its card moves above them
+     rather than sitting 13,000px below a 250-row table */
+  .layout3.picked .detail{order:-1}
+}
+/* denser rows: the same information, less air */
+.layout3 table.crafts td{padding:7px 14px}
+.layout3 .it .sp{width:30px; height:30px}
+.layout3 .it .sp img{max-width:23px; max-height:23px}
+.layout3 ul.ing{gap:2px 4px}
+.masthead.slim .tagline .dim{color:var(--ink-3)}
+/* the station picker, now a select rather than a 200px column of 130 buttons */
+.stationpick{display:flex; align-items:center; gap:7px}
+.stationpick select{font:inherit; font-size:12.5px; max-width:270px; padding:5px 9px;
+  border-radius:100px; border:1px solid var(--line-strong); background:var(--surface);
+  color:var(--ink); cursor:pointer}
+.stationpick select:hover{border-color:var(--brass)}
+.stationpick .lbl{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
 .stationnav{position:sticky; top:64px; max-height:calc(100vh - 84px); overflow-y:auto;
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
 .snav-h{padding:9px 12px; border-bottom:1px solid var(--line); background:var(--surface-2);
@@ -466,22 +499,13 @@ button.snav[aria-current="true"] .c{color:var(--brass)}
 .more button:hover{border-color:var(--brass); color:var(--brass)}
 .stat-line{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--ink-3)}
 </style>
-<nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html">Home</a><a class="tab" href="bosses.html">Boss Order</a><a class="tab" href="loadouts.html">Loadouts</a><a class="tab" href="recipes.html" aria-current="page">All Recipes</a><a class="tab" href="tinkerers.html">Tinkerer's Workshop</a><span class="navspacer"></span><span class="navnote">all stations</span></div></nav><div class="runbar" id="runbar"></div>
-<header class="masthead"><div class="wrap mast-in">
+<nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html">Home</a><a class="tab" href="bosses.html">Boss Order</a><a class="tab" href="loadouts.html">Loadouts</a><a class="tab" href="recipes.html" aria-current="page">All Recipes</a><a class="tab" href="tinkerers.html">Tinkerer's Workshop</a><span class="navspacer"></span><span class="navnote">5,455 recipes</span></div></nav><div class="runbar" id="runbar"></div>
+<header class="masthead slim"><div class="wrap mast-in">
   <div class="brandline"><div>
-    <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
     <h1>All Recipes</h1>
-    <p class="tagline">Every crafting recipe the pack adds, across <b>130 stations</b> and six mods &mdash;
-    Thorium, Fargo's Souls, Spirit Reforged, Spirit Classic, The Stars Above and Calamity Fables,
-    plus the vanilla Tinkerer's Workshop. Click any item for how to get it.</p>
+    <p class="tagline">Search any item, or pick a station. Click a result for how to get it.
+    <span class="dim">5455 recipes &middot; 6255 items &middot; 130 stations.</span></p>
   </div></div>
-  <dl class="meta">
-    <div><dt>Recipes</dt><dd>5455</dd></div>
-    <div><dt>Items</dt><dd>6255</dd></div>
-    <div><dt>Modded items</dt><dd>4306</dd></div>
-    <div><dt>Pre-Hardmode</dt><dd>3149</dd></div>
-    <div><dt>Hardmode only</dt><dd>2306</dd></div>
-  </dl>
 </div></header>
 
 <div class="controls"><div class="wrap ctl-in">
@@ -489,6 +513,11 @@ button.snav[aria-current="true"] .c{color:var(--brass)}
     <input id="q" type="search" placeholder="Search every item in the pack" autocomplete="off" aria-label="Search items">
     <button class="clearx" id="clearq" type="button" aria-label="Clear search">&times;</button>
   </div>
+  <div class="stationpick">
+    <span class="lbl">Station</span>
+    <select id="stationsel" aria-label="Filter by crafting station"></select>
+  </div>
+  <span class="chipsep" aria-hidden="true"></span>
   <div class="chips"><button class="chip" type="button" data-src="vanilla" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#6f7794"></span>Vanilla<span class="n">157</span></button><button class="chip" type="button" data-src="thorium" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#3f9e8c"></span>Thorium<span class="n">2151</span></button><button class="chip" type="button" data-src="fargo" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#c9552f"></span>Fargo&#x27;s<span class="n">1395</span></button><button class="chip" type="button" data-src="spirit_reforged" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#7a5cc4"></span>Reforged<span class="n">662</span></button><button class="chip" type="button" data-src="spirit" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#5a80c9"></span>Spirit<span class="n">665</span></button><button class="chip" type="button" data-src="stars" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#c2a1e8"></span>Stars<span class="n">224</span></button><button class="chip" type="button" data-src="fables" aria-pressed="true"><span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:#c98a24"></span>Fables<span class="n">201</span></button></div>
   <span class="chipsep" aria-hidden="true"></span>
   <div class="chips">
@@ -500,7 +529,6 @@ button.snav[aria-current="true"] .c{color:var(--brass)}
 </div></div>
 
 <main class="wrap layout3">
-  <nav class="stationnav" id="snav"><div class="snav-h">Crafting stations</div></nav>
   <section class="tablecard">
     <div class="tablehead"><h2 id="sttitle">All recipes</h2><span class="sub" id="stsub"></span></div>
     <div class="tscroll">
@@ -665,38 +693,31 @@ function matches(r){
 }
 
 /* ---------- station nav ---------- */
-var snav=document.getElementById("snav");
+/* 130 stations read better as one grouped dropdown than as a column of buttons */
+var ssel=document.getElementById("stationsel");
 function buildNav(){
-  var all=el("button","snav"); all.type="button"; all.dataset.st="all";
-  all.appendChild(document.createTextNode("All stations"));
-  all.appendChild(el("span","c",String(R.length)));
-  snav.appendChild(all);
+  var all=document.createElement("option");
+  all.value="all"; all.textContent="All stations ("+R.length+")";
+  ssel.appendChild(all);
   ORDER.forEach(function(m){
     var list=[]; ST.forEach(function(s,i){ if(s.mod===m&&s.n) list.push([i,s]); });
     if(!list.length) return;
-    var h=el("div","snav-mod");
-    var sw=el("span","sw"); sw.style.background=MODCOL[m]; h.appendChild(sw);
-    h.appendChild(document.createTextNode(MODS[m].short));
-    snav.appendChild(h);
+    var g=document.createElement("optgroup"); g.label=MODS[m].short;
     list.sort(function(a,b){return b[1].n-a[1].n;});
     list.forEach(function(p){
-      var b=el("button","snav"); b.type="button"; b.dataset.st=p[0];
-      b.appendChild(document.createTextNode(p[1].name));
-      b.appendChild(el("span","c",String(p[1].n)));
-      snav.appendChild(b);
+      var o=document.createElement("option");
+      o.value=String(p[0]); o.textContent=p[1].name+" ("+p[1].n+")";
+      g.appendChild(o);
     });
+    ssel.appendChild(g);
   });
 }
-snav.addEventListener("click",function(e){
-  var b=e.target.closest("button.snav"); if(!b) return;
-  curStation = b.dataset.st==="all" ? null : +b.dataset.st;
+ssel.addEventListener("change",function(){
+  curStation = ssel.value==="all" ? null : +ssel.value;
   shown=PAGE; markNav(); render();
 });
 function markNav(){
-  snav.querySelectorAll("button.snav").forEach(function(b){
-    var on = (b.dataset.st==="all") ? curStation===null : (+b.dataset.st===curStation);
-    b.setAttribute("aria-current", on?"true":"false");
-  });
+  ssel.value = curStation===null ? "all" : String(curStation);
 }
 
 /* ---------- table ---------- */
@@ -894,7 +915,11 @@ function renderDetail(id,fromUser){
 
   markSel();
   if(!fromUser) return;
-  if(window.matchMedia("(max-width:1300px)").matches) panel.scrollIntoView({behavior:"smooth",block:"start"});
+  if(window.matchMedia("(max-width:980px)").matches){
+    var lay=document.querySelector(".layout3");
+    if(lay) lay.classList.add("picked");
+    panel.scrollIntoView({behavior:"smooth", block:"start"});
+  }
   else panel.scrollTop=0;
 }
 

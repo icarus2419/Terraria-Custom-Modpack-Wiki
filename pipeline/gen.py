@@ -59,21 +59,15 @@ changed_list = "".join(
 
 HTML = ('<meta charset="utf-8">\n' + CSS + SC.NAV_CSS + SC.PROGRESS_CSS
         + SC.nav("tinkerers.html", "accessory combinations") + SC.runbar() + """
-<header class="masthead"><div class="wrap mast-in">
+<header class="masthead slim"><div class="wrap mast-in">
   <div class="brandline">
     <div>
-      <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
       <h1>Tinkerer's Workshop</h1>
-      <p class="tagline">Every accessory combination in the pack, <b>modded and vanilla together</b> — Thorium, Fargo's Souls, Spirit Reforged, Spirit Classic and Calamity Fables alongside base Terraria. Click any item for how to get it.</p>
+      <p class="tagline">Every accessory combination, modded and vanilla together. Click any item
+      for how to get it.
+      <span class="dim">%(nrec)d combinations &middot; %(nitem)d items &middot; %(nmod)d from mods.</span></p>
     </div>
   </div>
-  <dl class="meta">
-    <div><dt>Combinations</dt><dd>%(nrec)d</dd></div>
-    <div><dt>Items</dt><dd>%(nitem)d</dd></div>
-    <div><dt>Modded items</dt><dd>%(nmod)d</dd></div>
-    <div><dt>Pre-Hardmode</dt><dd>%(npre)d</dd></div>
-    <div><dt>Hardmode only</dt><dd>%(nhard)d</dd></div>
-  </dl>
 </div></header>
 
 <div class="controls"><div class="wrap ctl-in">

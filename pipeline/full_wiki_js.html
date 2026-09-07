@@ -55,38 +55,31 @@ function matches(r){
 }
 
 /* ---------- station nav ---------- */
-var snav=document.getElementById("snav");
+/* 130 stations read better as one grouped dropdown than as a column of buttons */
+var ssel=document.getElementById("stationsel");
 function buildNav(){
-  var all=el("button","snav"); all.type="button"; all.dataset.st="all";
-  all.appendChild(document.createTextNode("All stations"));
-  all.appendChild(el("span","c",String(R.length)));
-  snav.appendChild(all);
+  var all=document.createElement("option");
+  all.value="all"; all.textContent="All stations ("+R.length+")";
+  ssel.appendChild(all);
   ORDER.forEach(function(m){
     var list=[]; ST.forEach(function(s,i){ if(s.mod===m&&s.n) list.push([i,s]); });
     if(!list.length) return;
-    var h=el("div","snav-mod");
-    var sw=el("span","sw"); sw.style.background=MODCOL[m]; h.appendChild(sw);
-    h.appendChild(document.createTextNode(MODS[m].short));
-    snav.appendChild(h);
+    var g=document.createElement("optgroup"); g.label=MODS[m].short;
     list.sort(function(a,b){return b[1].n-a[1].n;});
     list.forEach(function(p){
-      var b=el("button","snav"); b.type="button"; b.dataset.st=p[0];
-      b.appendChild(document.createTextNode(p[1].name));
-      b.appendChild(el("span","c",String(p[1].n)));
-      snav.appendChild(b);
+      var o=document.createElement("option");
+      o.value=String(p[0]); o.textContent=p[1].name+" ("+p[1].n+")";
+      g.appendChild(o);
     });
+    ssel.appendChild(g);
   });
 }
-snav.addEventListener("click",function(e){
-  var b=e.target.closest("button.snav"); if(!b) return;
-  curStation = b.dataset.st==="all" ? null : +b.dataset.st;
+ssel.addEventListener("change",function(){
+  curStation = ssel.value==="all" ? null : +ssel.value;
   shown=PAGE; markNav(); render();
 });
 function markNav(){
-  snav.querySelectorAll("button.snav").forEach(function(b){
-    var on = (b.dataset.st==="all") ? curStation===null : (+b.dataset.st===curStation);
-    b.setAttribute("aria-current", on?"true":"false");
-  });
+  ssel.value = curStation===null ? "all" : String(curStation);
 }
 
 /* ---------- table ---------- */
@@ -284,7 +277,11 @@ function renderDetail(id,fromUser){
 
   markSel();
   if(!fromUser) return;
-  if(window.matchMedia("(max-width:1300px)").matches) panel.scrollIntoView({behavior:"smooth",block:"start"});
+  if(window.matchMedia("(max-width:980px)").matches){
+    var lay=document.querySelector(".layout3");
+    if(lay) lay.classList.add("picked");
+    panel.scrollIntoView({behavior:"smooth", block:"start"});
+  }
   else panel.scrollTop=0;
 }
 

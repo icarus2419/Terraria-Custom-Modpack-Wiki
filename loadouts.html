@@ -96,6 +96,12 @@ h1{
   text-shadow:2px 2px 0 var(--wordshadow);
 }
 .tagline{margin:0; color:var(--ink-2); font-size:14.5px; max-width:62ch}
+/* the compact masthead every page uses: a name and one line, not a title card */
+.masthead.slim .mast-in{padding:14px 0 12px}
+.masthead.slim h1{font-size:clamp(22px,2.4vw,30px); margin:0 0 3px}
+.masthead.slim .tagline{font-size:13.5px; max-width:none}
+.masthead.slim .tagline .dim{color:var(--ink-3)}
+.masthead.slim .brandline{flex:1 1 100%}
 .tagline b{color:var(--ink); font-weight:600}
 .eyebrow{
   font-family:"Pixelify Sans",sans-serif; font-size:10.5px; letter-spacing:.14em;
@@ -142,6 +148,13 @@ h1{
   border-bottom:1px solid var(--line); padding:11px 0;
 }
 .ctl-in{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+/* on a phone the chips wrap to 300px of filters; pinning that to the top leaves no room
+   for results, so let the whole bar scroll away */
+@media (max-width:760px){
+  .controls{position:static; padding:9px 0}
+  .ctl-in{gap:8px}
+  .chip{padding:3px 9px; font-size:11.5px}
+}
 .search{position:relative; flex:1 1 250px; min-width:200px; max-width:360px}
 .search input{
   width:100%; font:inherit; font-size:14.5px; color:var(--ink);
@@ -441,22 +454,22 @@ footer ul{margin:0; padding-left:16px; line-height:1.6}
 /* ---------- progression rail: the whole game, left to right ---------- */
 .railwrap{position:sticky; top:var(--navh,42px); z-index:50; background:var(--surface);
   border-bottom:1px solid var(--line); box-shadow:0 10px 22px -20px rgba(0,0,0,.8)}
-.rail{display:flex; align-items:flex-start; overflow-x:auto; padding:11px 0 4px; scrollbar-width:thin}
+.rail{display:flex; align-items:flex-start; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin}
 .rail::-webkit-scrollbar{height:6px}
 .rail::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:3px}
-button.step{position:relative; flex:0 0 auto; min-width:86px; display:flex; flex-direction:column;
-  align-items:center; gap:5px; padding:2px 4px 8px; background:none; border:0; cursor:pointer;
+button.step{position:relative; flex:0 0 auto; min-width:82px; display:flex; flex-direction:column;
+  align-items:center; gap:4px; padding:2px 4px 5px; background:none; border:0; cursor:pointer;
   font:inherit; color:var(--ink-3)}
-button.step::before{content:""; position:absolute; top:19px; left:0; width:50%; height:2px;
+button.step::before{content:""; position:absolute; top:16px; left:0; width:50%; height:2px;
   background:var(--line-strong)}
-button.step::after{content:""; position:absolute; top:19px; left:50%; width:50%; height:2px;
+button.step::after{content:""; position:absolute; top:16px; left:50%; width:50%; height:2px;
   background:var(--line-strong)}
 button.step:first-child::before, button.step:last-child::after{display:none}
 button.step.done::before, button.step.done::after{background:var(--brass)}
 button.step[aria-current="true"]::before{background:var(--brass)}
-.step .dot{position:relative; z-index:1; width:38px; height:38px; border-radius:50%; flex:none;
+.step .dot{position:relative; z-index:1; width:32px; height:32px; border-radius:50%; flex:none;
   display:grid; place-items:center; background:var(--slot-bg); border:2px solid var(--line-strong)}
-.step .dot img{max-width:22px; max-height:22px; width:auto; height:auto; opacity:.75}
+.step .dot img{max-width:19px; max-height:19px; width:auto; height:auto; opacity:.75}
 .step .dot .n{font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--ink-3)}
 .step .lbl{font-size:11px; line-height:1.2; text-align:center; max-width:92px; color:var(--ink-2)}
 .step:hover .dot{border-color:var(--brass-line)}
@@ -476,7 +489,7 @@ button.step[aria-current="true"]::before{background:var(--brass)}
   text-transform:uppercase; color:var(--hard); writing-mode:vertical-rl; text-orientation:mixed}
 
 /* ---------- class strip ---------- */
-.classbar{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:0 0 9px;
+.classbar{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:0 0 7px;
   scrollbar-width:none}
 .classbar::-webkit-scrollbar{display:none}
 .classbar .lbl{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.1em;
@@ -491,7 +504,8 @@ button.cchip[aria-pressed="true"]{background:color-mix(in srgb,var(--ccol) 20%, 
 button.cchip.none{opacity:.45}
 
 /* ---------- stage header ---------- */
-.lo-main{padding:18px 0 60px}
+.lo-main{padding:14px 0 56px}
+footer b.lg{color:var(--src); font-weight:600}
 .stagehead{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
   box-shadow:var(--shadow); padding:15px 18px; margin-bottom:14px; display:flex; gap:18px;
   align-items:center; flex-wrap:wrap}
@@ -512,8 +526,20 @@ button.cchip.none{opacity:.45}
 /* ---------- the equipment panel ---------- */
 .pnl{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
   box-shadow:var(--shadow); overflow:hidden; margin-bottom:14px}
-.pnl > header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding:10px 15px;
-  border-bottom:1px solid var(--line); border-top:3px solid var(--ccol); background:var(--surface-2)}
+.pnl > .ph-stage{display:flex; align-items:center; gap:9px; flex-wrap:wrap; padding:8px 15px;
+  border-top:3px solid var(--ccol); border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, color-mix(in srgb,var(--brass-soft) 40%, var(--surface-2)), var(--surface-2));
+  font-size:12.5px; color:var(--ink-2)}
+.ph-stage .sic{width:26px; height:26px; flex:none; display:grid; place-items:center;
+  background:var(--slot-bg); border:1px solid var(--brass-line); border-radius:4px}
+.ph-stage .sic img{max-width:18px; max-height:18px; width:auto; height:auto}
+.ph-stage b{font-family:"Pixelify Sans",sans-serif; font-size:16px; color:var(--ink); font-weight:600}
+.ph-stage .era{margin:0}
+.ph-stage .ln{color:var(--ink-3); min-width:0}
+.ph-stage .cnt{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:11px;
+  color:var(--ink-3); white-space:nowrap}
+.pnl > header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding:9px 15px;
+  border-bottom:1px solid var(--line); background:var(--surface-2)}
 .pnl > header h3{margin:0; font-family:"Pixelify Sans",sans-serif; font-size:17px; color:var(--ccol)}
 .pnl > header .blurb{margin:0; font-size:11.5px; color:var(--ink-3)}
 .pnl > header .tagr{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:10px;
@@ -698,24 +724,12 @@ button.bignav .ar{font-size:19px; color:var(--brass)}
 @media (max-width:620px){ #statcard{display:none} }
 </style>
 <nav class="sitenav"><div class="wrap sitenav-in"><a class="brand" href="index.html"><span class="dot"></span>Joseph's Modpack Wiki</a><a class="tab" href="index.html">Home</a><a class="tab" href="bosses.html">Boss Order</a><a class="tab" href="loadouts.html" aria-current="page">Loadouts</a><a class="tab" href="recipes.html">All Recipes</a><a class="tab" href="tinkerers.html">Tinkerer's Workshop</a><span class="navspacer"></span><span class="navnote">11 checkpoints &middot; 7 classes</span></div></nav><div class="runbar" id="runbar"></div>
-<header class="masthead"><div class="wrap mast-in">
+<header class="masthead slim"><div class="wrap mast-in">
   <div class="brandline"><div>
-    <p class="eyebrow">Class setups &middot; every boss checkpoint</p>
     <h1>Loadouts</h1>
-    <p class="tagline">One boss, one class, one panel: <b>what to actually equip</b> before the fight.
-    Merged from the class-setup guides of Terraria, Thorium, Spirit and The Stars Above onto a single
-    timeline &mdash; every other option they list is still here, one click away.</p>
-    <ul class="howto">
-      <li><b>1</b>Pick the boss you are about to fight</li>
-      <li><b>2</b>Pick your class</li>
-      <li><b>3</b>Equip what is in the slots</li>
-    </ul>
+    <p class="tagline">Pick the boss, pick your class, equip what is in the slots.
+    <span class="dim">2,956 gear entries from four wikis on one timeline.</span></p>
   </div></div>
-  <dl class="meta">
-    <div><dt>Checkpoints</dt><dd>11</dd></div>
-    <div><dt>Classes</dt><dd>7</dd></div>
-    <div><dt>Gear entries</dt><dd>2,956</dd></div>
-  </dl>
 </div></header>
 
 <div class="railwrap"><div class="wrap">
@@ -724,17 +738,6 @@ button.bignav .ar{font-size:19px; color:var(--brass)}
 </div></div>
 
 <main class="wrap lo-main">
-  <div class="stagehead" id="stagehead"></div>
-  <div class="keybar">
-    <span class="lbl">Slot colour = which wiki recommends it</span>
-    <span class="k" style="--src:#6f7794"><i></i>Terraria</span>
-    <span class="k" style="--src:#3f9e8c"><i></i>Thorium</span>
-    <span class="k" style="--src:#5a80c9"><i></i>Spirit</span>
-    <span class="k" style="--src:#c2a1e8"><i></i>Stars Above</span>
-    <span class="sep"></span>
-    <span class="tag new">New here</span>
-    <span class="tag any">Any class</span>
-  </div>
   <div id="panelhost"></div>
   <div class="altwrap" id="alts"></div>
   <div class="stepnav" id="stepnav"></div>
@@ -752,6 +755,13 @@ button.bignav .ar{font-size:19px; color:var(--brass)}
     Cthulhu</em>, Spirit's <em>Pre-Evil Boss</em> and Stars Above's <em>Pre-The Vagrant of Space and
     Time</em> all sit at the same point. They are mapped onto one timeline, and every item still
     shows the wiki and the stage name it came from.</p></div>
+  <div><h4>Reading the panel</h4>
+    <p>The strip under each slot is the wiki that recommends it &mdash;
+    <b class="lg" style="--src:#6f7794">Terraria</b>,
+    <b class="lg" style="--src:#3f9e8c">Thorium</b>,
+    <b class="lg" style="--src:#5a80c9">Spirit</b>,
+    <b class="lg" style="--src:#c2a1e8">Stars Above</b>.
+    Pick the boss on the timeline, then your class; arrow keys walk the run.</p></div>
   <div><h4>What the tags mean</h4>
     <p><b>New here</b> means the gear was not in this class's list at its previous checkpoint &mdash;
     at Pre-Moon Lord the guides publish no Healer list at all, so its next list is compared against
@@ -932,8 +942,19 @@ cbar.addEventListener("click",function(e){
   var b=e.target.closest("button.cchip"); if(!b) return;
   cls=b.dataset.c; setHash(); render();
 });
+/* the rail scrolls sideways; stepping with the buttons or the arrow keys should not leave
+   the current checkpoint off the end of it. Only touches the rail, never the page. */
+function keepRailInView(){
+  var act=rail.querySelector('button.step[aria-current="true"]');
+  if(!act) return;
+  var r=act.getBoundingClientRect(), rr=rail.getBoundingClientRect();
+  if(r.left < rr.left+8 || r.right > rr.right-8)
+    rail.scrollLeft += (r.left - rr.left) - (rr.width - r.width)/2;
+}
+
 function scrollTop(){
-  var y=document.getElementById("stagehead").getBoundingClientRect().top+window.scrollY
+  var t=document.getElementById("panelhost");
+  var y=t.getBoundingClientRect().top+window.scrollY
         - (parseInt(getComputedStyle(document.documentElement).getPropertyValue("--railh"),10)||150);
   window.scrollTo({top:Math.max(0,y), behavior:"smooth"});
 }
@@ -1044,8 +1065,7 @@ function zoneTotals(){
 }
 
 /* ---------- render ---------- */
-var head=document.getElementById("stagehead"),
-    host=document.getElementById("panelhost"),
+var host=document.getElementById("panelhost"),
     altwrap=document.getElementById("alts"),
     stepnav=document.getElementById("stepnav");
 
@@ -1058,6 +1078,7 @@ function render(){
     b.classList.toggle("done", bi<i);
     b.classList.toggle("youarehere", here!==null && b.dataset.k===here);
   });
+  keepRailInView();
   var zones=(PANEL[cur]||{})[cls];
   cbar.querySelectorAll("button.cchip").forEach(function(b){
     var on=b.dataset.c===cls;
@@ -1065,34 +1086,28 @@ function render(){
     b.classList.toggle("none", !((OWN[cur]||{})[b.dataset.c]));
   });
 
-  /* --- stage header --- */
-  head.textContent="";
-  var ic=el("div","bossic");
-  if(ICON[cur]){ var im=new Image(); im.src=ICON[cur]; im.alt=""; im.className="px"; ic.appendChild(im); }
-  head.appendChild(ic);
-  var txt=el("div","txt");
-  txt.appendChild(el("p","eyebrow","Checkpoint "+(i+1)+" of "+STAGES.length));
-  var h2=el("h2",null,st[1]);
-  h2.appendChild(document.createTextNode(" "));
-  var era=el("span","era "+(st[3]?"hard":"pre"), st[3]?"hardmode":"pre-hardmode");
-  h2.appendChild(era);
-  txt.appendChild(h2);
-  var line;
-  if(i===0) line="A fresh world, nothing killed yet — this is what to open with.";
-  else if(i===STAGES.length-1)
-    line="Moon Lord is down. Past the end of the vanilla game: "+st[2]+".";
-  else line=(i>=2 ? "Beaten: "+STAGES[i-1][2]+". " : "")+"Gearing up for: "+st[2]+".";
-  txt.appendChild(el("p",null,line));
-  head.appendChild(txt);
-  var pg=el("div","progbar"), tr=el("div","track"), fl=el("div","fill");
-  fl.style.width=Math.round((i+1)/STAGES.length*100)+"%";
-  tr.appendChild(fl); pg.appendChild(tr);
-  pg.appendChild(el("p","cap", (i+1)+" / "+STAGES.length+" checkpoints"));
-  head.appendChild(pg);
+  /* --- the checkpoint line, built here and placed inside the panel below --- */
+  function stageStrip(){
+    var d=el("div","ph-stage");
+    if(ICON[cur]){
+      var ic=el("span","sic"); var im=new Image(); im.src=ICON[cur]; im.alt=""; im.className="px";
+      ic.appendChild(im); d.appendChild(ic);
+    }
+    d.appendChild(el("b",null, st[1]));
+    d.appendChild(el("span","era "+(st[3]?"hard":"pre"), st[3]?"hardmode":"pre-hardmode"));
+    var line;
+    if(i===0) line="a fresh world, nothing killed yet";
+    else if(i===STAGES.length-1) line="Moon Lord is down \u2014 "+st[2];
+    else line=(i>=2 ? "beaten "+STAGES[i-1][2]+", " : "")+"gearing up for "+st[2];
+    d.appendChild(el("span","ln", line));
+    d.appendChild(el("span","cnt", (i+1)+" / "+STAGES.length));
+    return d;
+  }
 
   /* --- the panel --- */
   host.textContent=""; altwrap.textContent="";
   if(!zones){
+    host.appendChild(stageStrip());
     var nd=el("div","nodata");
     nd.appendChild(el("p", null, "The guides publish no "+cls+" setup at "+st[1]+
       ". That is a gap in the source wikis, not a gap in the pack — nothing has been invented to fill it."));
@@ -1133,6 +1148,7 @@ function render(){
     }
     var meta=CM[cls]||["#7d85ab",""];
     var pnl=el("div","pnl"); pnl.style.setProperty("--ccol", meta[0]);
+    pnl.appendChild(stageStrip());
     var hd=el("header");
     hd.appendChild(el("h3",null,cls));
     hd.appendChild(el("p","blurb", meta[1]));
@@ -1371,10 +1387,6 @@ window.RUNBAR_EXTRA=function(wrap, st){
 
 window.addEventListener("resize", measure);
 measure(); render(); setHash();
-/* bring the current checkpoint into view on the rail */
-(function(){
-  var b=rail.querySelector('button.step[aria-current="true"]');
-  if(b && b.scrollIntoView) b.scrollIntoView({block:"nearest", inline:"center"});
-})();
+keepRailInView();
 })();
 </script>
