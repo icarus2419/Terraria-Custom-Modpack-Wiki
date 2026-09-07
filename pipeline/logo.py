@@ -27,10 +27,13 @@ GRID = [
     "......dddd......",
 ]
 
-INK = {"F": "#ff8a2b",   # flame
-       "y": "#ffe08a",   # hot core
-       "S": "#8a5a33",   # handle
-       "d": "#4a3120"}   # handle shadow
+# Ember, not pure orange: it sits in the same warm family as the brass accent the rest of
+# the site runs on, so the mark belongs to the palette instead of competing with it. Brass
+# alone was tried and rejected -- at 16px an unlit gold blob stops reading as a flame.
+INK = {"F": "#e08b3a",   # flame
+       "y": "#ffd88a",   # hot core
+       "S": "#6b4a28",   # handle
+       "d": "#3a2716"}   # handle shadow
 
 # No tile behind the mark: a solid ground reads as a black box in the browser tab.
 # The flame is mid-orange, so it holds up on light and dark chrome without one.

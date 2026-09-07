@@ -6,8 +6,8 @@ import site_common as SC
 
 D = json.load(open(os.path.join(BASE, "full_site_data.json")))
 MODS, ORDER, ST, I, R = D["mods"], D["order"], D["stations"], D["items"], D["recipes"]
-MODCOL = {"vanilla":"#6f7794","thorium":"#3f9e8c","fargo":"#c9552f","spirit_reforged":"#7a5cc4",
-          "spirit":"#5a80c9","stars":"#c2a1e8","fables":"#c98a24"}
+MODCOL = {"vanilla":"#989ea3","thorium":"#3f9e8c","fargo":"#c9552f","spirit_reforged":"#7a5cc4",
+          "spirit":"#5a80c9","stars":"#c2a1e8","fables":"#b8518d"}
 
 EXTRA = """
 <style>

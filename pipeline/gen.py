@@ -23,8 +23,8 @@ for i, r in enumerate(D["recipes"]):
 # attach sprite for the station
 STATION = sprites.get("__station__", "")
 
-MODCOL = {"vanilla":"#6f7794","thorium":"#3f9e8c","fargo":"#c9552f",
-          "spirit_reforged":"#7a5cc4","spirit":"#5a80c9","fables":"#c98a24"}
+MODCOL = {"vanilla":"#989ea3","thorium":"#3f9e8c","fargo":"#c9552f",
+          "spirit_reforged":"#7a5cc4","spirit":"#5a80c9","fables":"#b8518d"}
 
 I, R, MODS, ORDER = D["items"], D["recipes"], D["mods"], D["order"]
 per = {m: sum(1 for r in R if r["src"] == m) for m in ORDER}

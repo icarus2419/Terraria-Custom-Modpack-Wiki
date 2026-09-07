@@ -39,7 +39,7 @@ CLASS_META, CATO, DATA = L["class_meta"], L["cat_order"], L["data"]
 
 SHARED  = ["Mixed", "All Classes"]                       # gear the guides mark as class-agnostic
 CLASSES = [c for c in L["class_order"] if c not in SHARED]
-MODCOL  = {"vanilla":"#6f7794", "thorium":"#3f9e8c", "spirit":"#5a80c9", "stars":"#c2a1e8"}
+MODCOL  = {"vanilla":"#989ea3", "thorium":"#3f9e8c", "spirit":"#5a80c9", "stars":"#c2a1e8"}
 WIKI    = {"vanilla":"Terraria", "thorium":"Thorium", "spirit":"Spirit", "stars":"Stars Above"}
 
 # ---------------------------------------------------------------- zones
@@ -535,7 +535,7 @@ BODY = """
     shows the wiki and the stage name it came from.</p></div>
   <div><h2 class="fh">Reading the panel</h2>
     <p>The strip under each slot is the wiki that recommends it &mdash;
-    <b class="lg" style="--src:#6f7794">Terraria</b>,
+    <b class="lg" style="--src:#989ea3">Terraria</b>,
     <b class="lg" style="--src:#3f9e8c">Thorium</b>,
     <b class="lg" style="--src:#5a80c9">Spirit</b>,
     <b class="lg" style="--src:#c2a1e8">Stars Above</b>.

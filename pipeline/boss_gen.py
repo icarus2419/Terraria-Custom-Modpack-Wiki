@@ -13,8 +13,8 @@ def load(name):
 D  = load("bosses.json")
 SP = load("boss_sprites.json")
 
-MODCOL = {"vanilla":"#6f7794", "thorium":"#3f9e8c", "fargo":"#c9552f",
-          "spirit":"#5a80c9", "fables":"#c98a24", "stars":"#c2a1e8"}
+MODCOL = {"vanilla":"#989ea3", "thorium":"#3f9e8c", "fargo":"#c9552f",
+          "spirit":"#5a80c9", "fables":"#b8518d", "stars":"#c2a1e8"}
 BOSSES = D["bosses"]
 n_mod  = sum(1 for b in BOSSES if b["mod"] != "vanilla")
 
@@ -206,8 +206,12 @@ JS = r"""
 "use strict";
 var D = JSON.parse(document.getElementById("bossdata").textContent);
 var BANDS=D.bands, BOSSES=D.bosses, WIKI=D.wiki, MC=D.modcol, SP=D.sprites;
-var BANDCOL={pre:"#5fb08a", hard:"#d1704a", postml:"#a879d6", event:"#4f8fd4",
-             mini:"#8d93ad", seed:"#c9a227"};
+// Six invented hues replaced by the two the site already uses for exactly this idea:
+// --pre and --hard carry the pre-Hardmode / Hardmode split everywhere else. Post-Moon Lord
+// is past both, so it takes the brass the site uses for its own emphasis; the optional
+// bands stay neutral because they are not points on the progression.
+var BANDCOL={pre:"var(--pre)", hard:"var(--hard)", postml:"var(--brass)",
+             event:"var(--ink-3)", mini:"var(--ink-3)", seed:"var(--ink-3)"};
 
 function el(t,c,x){var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e;}
 function sprite(name){

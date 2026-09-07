@@ -42,7 +42,7 @@ MODS = [("Thorium Mod","thorium","#3f9e8c","11 bosses, ~2,600 items, and the Bar
         ("Spirit Reforged","spirit_reforged","#7a5cc4","Biomes, events and atmosphere, built for multiplayer."),
         ("Spirit Classic","spirit","#5a80c9","~12 bosses. Added last, after a clean join test."),
         ("The Stars Above","stars","#c2a1e8","9 bosses, Hardmode to post-Moon Lord. Native Thorium damage support."),
-        ("Calamity Fables","fables","#c98a24","A standalone Calamity reimagining. 3 pre-Hardmode bosses.")]
+        ("Calamity Fables","fables","#b8518d","A standalone Calamity reimagining. 3 pre-Hardmode bosses.")]
 per_mod = {}
 for r in FULL["recipes"]: per_mod[r["m"]] = per_mod.get(r["m"], 0) + 1
 
@@ -115,23 +115,23 @@ def card(href, ccol, icon, title, desc, figs, go):
             % (href, ccol, ic, title, desc, f, go))
 
 cards = "".join([
- card("bosses.html", "#5fb08a", BSP.get("Skeletron") or BSP.get("King Slime"),
+ card("bosses.html", "var(--brass)", BSP.get("Skeletron") or BSP.get("King Slime"),
       "Boss Order",
       "Every boss the pack contains, merged into one fight order and tickable as you go. Tick them "
       "off and the rest of the wiki follows &mdash; it knows which checkpoint you are on.",
       [("Bosses", n_boss), ("Added by mods", n_bmod)], "Open the checklist"),
- card("loadouts.html", "#c9552f", ICONS.get("Terraspark Boots"),
+ card("loadouts.html", "var(--brass)", ICONS.get("Terraspark Boots"),
       "Loadouts",
       "Pick the boss you are about to fight and your class, and get one filled equipment panel: "
       "armour, five <b>accessories</b>, a weapon hotbar, ammo and buffs. Everything else the guides "
       "list sits underneath.",
       [("Checkpoints", n_stage), ("Classes", n_cls)], "Gear up for a boss"),
- card("recipes.html", "#3f9e8c", ICONS.get("Soul Forge"),
+ card("recipes.html", "var(--brass)", ICONS.get("Soul Forge"),
       "All Recipes",
       "Every recipe the six mods add, across all %d crafting stations. Search any item, filter by "
       "mod, or browse one station at a time." % n_st,
       [("Recipes", "{:,}".format(n_rec)), ("Stations", n_st)], "Browse recipes"),
- card("tinkerers.html", "#e5b35a", ICONS.get("Tinkerer's Workshop"),
+ card("tinkerers.html", "var(--brass)", ICONS.get("Tinkerer's Workshop"),
       "Tinkerer's Workshop",
       "Every accessory combination in the pack, modded and vanilla side by side. The station where "
       "mod and vanilla gear actually meet.",
