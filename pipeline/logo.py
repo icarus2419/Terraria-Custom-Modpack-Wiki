@@ -32,7 +32,8 @@ INK = {"F": "#ff8a2b",   # flame
        "S": "#8a5a33",   # handle
        "d": "#4a3120"}   # handle shadow
 
-GROUND = "#12121a"       # the tile behind the mark in the tab icon
+# No tile behind the mark: a solid ground reads as a black box in the browser tab.
+# The flame is mid-orange, so it holds up on light and dark chrome without one.
 
 def _rects(scale=1, dx=0, dy=0):
     """One rect per horizontal run: small file, hard edges."""
@@ -56,19 +57,34 @@ def mark(size=20, cls="brandmark"):
             'shape-rendering="crispEdges" aria-hidden="true" focusable="false">%s</svg>'
             % (cls, size, size, _rects()))
 
-def favicon_datauri():
-    """Tab icon: the mark on a dark tile, so it reads on light and dark browser chrome."""
-    svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" '
-           'shape-rendering="crispEdges">'
-           '<rect width="20" height="20" rx="4" fill="%s"/>%s</svg>'
-           % (GROUND, _rects(scale=1, dx=2, dy=2)))
-    return "data:image/svg+xml;base64," + base64.b64encode(svg.encode()).decode()
+def _png(size):
+    """A transparent PNG of the mark at `size` px. The grid is 16 wide, so any multiple of
+    16 is an exact nearest-neighbour scale and stays perfectly sharp."""
+    from PIL import Image
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = im.load()
+    for y, row in enumerate(GRID):
+        for x, c in enumerate(row):
+            if c == ".": continue
+            h = INK[c].lstrip("#")
+            px[x, y] = (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16), 255)
+    if size != 16:
+        im = im.resize((size, size), Image.NEAREST)
+    import io
+    buf = io.BytesIO()
+    im.save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
+
+def png_datauri(size):
+    return "data:image/png;base64," + base64.b64encode(_png(size)).decode()
 
 def head_links():
-    d = favicon_datauri()
-    return ('<link rel="icon" type="image/svg+xml" href="%s">\n'
-            '<link rel="apple-touch-icon" href="%s">\n'
-            '<meta name="theme-color" content="#101229">\n' % (d, d))
+    """Transparent PNGs at the sizes a browser actually asks for."""
+    return ('<link rel="icon" type="image/png" sizes="16x16" href="%s">\n'
+            '<link rel="icon" type="image/png" sizes="32x32" href="%s">\n'
+            '<link rel="apple-touch-icon" sizes="180x180" href="%s">\n'
+            '<meta name="theme-color" content="#101229">\n'
+            % (png_datauri(16), png_datauri(32), png_datauri(176)))
 
 BRAND_CSS = """
 <style>
