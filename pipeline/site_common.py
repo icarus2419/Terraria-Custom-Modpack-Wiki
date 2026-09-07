@@ -180,3 +180,31 @@ def progress_js(page):
 
 def runbar():
     return '<div class="runbar" id="runbar"></div>'
+
+
+# ---------------------------------------------------------------------------
+# Per-page head: language, description, and the tags that build a link preview
+# when someone drops the URL into Discord or a chat. Without these a shared link
+# is a bare URL with no title, which is most of how this site gets passed around.
+# ---------------------------------------------------------------------------
+SITE = "https://josephwiki.pages.dev"
+
+def head(page, title, description):
+    """Everything above the stylesheet. Emits the doctype and <html lang> too, which
+    no page had -- a screen reader could not tell what language it was reading."""
+    url = SITE + ("" if page == "index.html" else "/" + page.replace(".html", ""))
+    esc = lambda t: (t.replace("&", "&amp;").replace("<", "&lt;")
+                      .replace('"', "&quot;"))
+    t, d = esc(title), esc(description)
+    return ('<!doctype html>\n<html lang="en">\n'
+            '<meta charset="utf-8">\n'
+            '<meta name="description" content="%s">\n'
+            '<meta property="og:type" content="website">\n'
+            '<meta property="og:site_name" content="Joseph\'s Modpack Wiki">\n'
+            '<meta property="og:title" content="%s">\n'
+            '<meta property="og:description" content="%s">\n'
+            '<meta property="og:url" content="%s">\n'
+            '<meta name="twitter:card" content="summary">\n'
+            '<meta name="twitter:title" content="%s">\n'
+            '<meta name="twitter:description" content="%s">\n'
+            % (d, t, d, url, t, d))

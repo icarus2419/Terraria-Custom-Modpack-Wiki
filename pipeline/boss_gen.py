@@ -195,7 +195,7 @@ BODY = """
 for a, b in [("@@NB@@", str(len(BOSSES))), ("@@NM@@", str(n_mod)), ("@@PAYLOAD@@", payload)]:
     BODY = BODY.replace(a, b)
 
-HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
+HTML = (SC.head('bosses.html', 'Boss Checklist', "All 87 bosses the modpack adds, merged into a single fight order from each mod's own progression chart, and tickable as you go.") + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
         + SC.nav("bosses.html", str(len(BOSSES)) + " bosses &middot; one order")
         + BODY)
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>Boss Checklist</title>", 1)

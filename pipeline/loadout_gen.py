@@ -560,7 +560,7 @@ for a, b in [("@@NST@@", str(len(STAGES))), ("@@NCL@@", str(len(CLASSES))),
              ("@@NIT@@", "{:,}".format(n_items)), ("@@PAYLOAD@@", payload)]:
     BODY = BODY.replace(a, b)
 
-HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
+HTML = (SC.head('loadouts.html', 'Loadouts by Boss', 'Pick the boss and your class, and get one filled equipment panel: armour, five accessories, a weapon hotbar, ammo and buffs, from four wikis on one timeline.') + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
         + SC.nav("loadouts.html", str(len(STAGES)) + " checkpoints &middot; "
                  + str(len(CLASSES)) + " classes")
         + SC.runbar() + BODY)

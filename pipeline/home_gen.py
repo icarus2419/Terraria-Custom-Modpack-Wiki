@@ -221,7 +221,7 @@ for a, b in [("@@NREC@@", "{:,}".format(n_rec)), ("@@NST@@", str(n_st)),
              ("@@QUICK@@", quick)]:
     BODY = BODY.replace(a, b)
 
-HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
+HTML = (SC.head('index.html', "Joseph's Modpack Wiki", 'An offline wiki for a Terraria tModLoader 1.4.4 modpack: 87 bosses in one fight order, 5,455 recipes across 130 stations, and a filled equipment panel for every class at every boss.') + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
         + SC.nav("index.html", "offline &middot; " + "{:,}".format(n_rec) + " recipes")
         + SC.runbar() + BODY)
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>",

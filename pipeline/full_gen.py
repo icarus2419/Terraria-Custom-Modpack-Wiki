@@ -142,7 +142,7 @@ TPL = """
 # the % formatting binds to the template alone -- the shared CSS is full of "100%"
 BODY = TPL % {"nrec": len(R), "nitem": len(I), "nmod": nmod, "npre": npre, "nhard": nhard,
               "nst": len(ST), "chips": chips(), "payload": payload}
-HTML = ('<meta charset="utf-8">\n' + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
+HTML = (SC.head('recipes.html', 'All Recipes', 'Every crafting recipe the six mods add, across all 130 stations, with how to get each item and whether you can make it before Hardmode.') + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
         + SC.nav("recipes.html", "{:,} recipes".format(len(R))) + SC.runbar() + BODY)
 
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>All Recipes</title>", 1)

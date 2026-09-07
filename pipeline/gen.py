@@ -57,7 +57,7 @@ changed_list = "".join(
   "<li><b>%s</b> — %s</li>" % (html.escape(n), ", ".join(MODS[s]["short"] for s in v))
   for n, v in sorted(D["changed"].items()))
 
-HTML = ('<meta charset="utf-8">\n' + CSS + SC.NAV_CSS + SC.PROGRESS_CSS
+HTML = (SC.head('tinkerers.html', "Tinkerer's Workshop", 'Every accessory combination in the modpack, modded and vanilla side by side, with how to get each ingredient.') + CSS + SC.NAV_CSS + SC.PROGRESS_CSS
         + SC.nav("tinkerers.html", "accessory combinations") + SC.runbar() + """
 <header class="masthead slim"><div class="wrap mast-in">
   <div class="brandline">
