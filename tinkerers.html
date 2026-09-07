@@ -47,7 +47,7 @@
     --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
     --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
     --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
-    --rar-blend:#0a070c; --rar-amt:0%;
+    --rar-blend:#0a070c; --rar-amt:22%;
     --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(255,225,240,.035);
     color-scheme:dark;
   }
@@ -63,7 +63,7 @@
   --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
   --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
   --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
-  --rar-blend:#0a070c; --rar-amt:0%;
+  --rar-blend:#0a070c; --rar-amt:22%;
   --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(255,225,240,.035);
   color-scheme:dark;
 }
@@ -298,6 +298,25 @@ tbody tr.rec:hover td.ing::before{opacity:1}
   border:1px solid var(--brass-line); border-radius:100px; padding:0 5px; white-space:nowrap;
   font-family:"Pixelify Sans",sans-serif}
 .rar{color:var(--rar); color:color-mix(in srgb, var(--rar) calc(100% - var(--rar-amt)), var(--rar-blend)); text-shadow:var(--ui-shadow)}
+
+/* ---------- motion ----------
+   Short, and only on things you are pointing at or that just appeared. Everything here
+   is disabled wholesale for anyone who has asked for reduced motion. */
+@media (prefers-reduced-motion:no-preference){
+  tbody tr.rec{transition:background-color .12s ease}
+  .it{transition:transform .1s ease, border-color .12s ease, background-color .12s ease}
+  .it:hover{transform:translateY(-1px)}
+  .chip,.snav,button.tbtn,a.qlink,a.gear,button.cchip,button.modchip{
+    transition:background-color .13s ease, border-color .13s ease, color .13s ease}
+  .detail{animation:card-in .18s ease both}
+  .d-sp img{animation:sprite-in .22s cubic-bezier(.2,.9,.3,1.2) both}
+  .boss .tick{transition:background-color .12s ease, border-color .12s ease, transform .1s ease}
+  .boss .tick:active{transform:scale(.9)}
+  .track .fill, .bandbar .t i, .progbar .fill{transition:width .35s cubic-bezier(.3,.9,.3,1)}
+  .slotrow,.hb{transition:opacity .15s ease}
+}
+@keyframes card-in{from{opacity:0; transform:translateY(4px)}to{opacity:1; transform:none}}
+@keyframes sprite-in{from{opacity:0; transform:scale(.82)}to{opacity:1; transform:none}}
 .modtick{width:5px; height:5px; border-radius:50%; flex:none; margin-left:1px}
 
 ul.ing{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; align-items:center; gap:3px 4px}
@@ -378,7 +397,7 @@ button.gitem:hover{border-color:var(--brass); color:var(--brass)}
   padding:2px 7px; border-radius:100px; border:1px solid var(--line-strong); color:var(--ink-2);
   font-family:"Pixelify Sans",sans-serif; white-space:nowrap;
 }
-.pill.rare{border-color:transparent}
+.pill.rare{background:transparent; border:1px solid currentColor}
 .pill.hm{background:var(--flag-soft); color:var(--flag); border-color:color-mix(in srgb,var(--flag) 35%, transparent)}
 .pill.mod{border-color:transparent; color:#fff}
 
@@ -638,7 +657,9 @@ function renderTable(){
     var mr=el("div","mr");
     var sw=el("span","swatch"); sw.style.background=MODCOL[src]; mr.appendChild(sw);
     mr.appendChild(el("span","mn",MODS[src].name));
-    mr.appendChild(el("span","mc",list.length+(list.length===1?" combination":" combinations")+" · "+MODS[src].wiki));
+      // the raw hostname added noise to every group header; the count is the useful
+      // part, and the source wiki is already named on each item's own card
+      mr.appendChild(el("span","mc",list.length+(list.length===1?" combination":" combinations")));
     th.appendChild(mr); tr.appendChild(th); tbody.appendChild(tr);
 
     list.forEach(function(ri){
@@ -753,7 +774,12 @@ function renderDetail(id, fromUser){
   pl.appendChild(pill(MODS[it.own].name,"mod",{background:MODCOL[it.own]}));
   if(it.rn && RARECOL[String(it.r)]){
     var c=RARECOL[String(it.r)];
-    pl.appendChild(pill(it.rn,"rare",{background:c,color:lum(c)>0.5?"#14172b":"#fff"}));
+    // the rarity tier reads as a label, not a highlighter: outline it in the rarity colour
+    // instead of flooding a pill with it
+    // routed through the same blend as the rarity name, so the tier label and the item
+    // title agree instead of one being twice as loud as the other
+    var rp = pill(it.rn,"rare rar"); rp.style.setProperty("--rar", c);
+    pl.appendChild(rp);
   }
   if(it.hm) pl.appendChild(pill("Hardmode","hm"));
   (it.ty||[]).slice(0,3).forEach(function(x){ pl.appendChild(pill(x)); });

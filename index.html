@@ -47,7 +47,7 @@
     --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
     --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
     --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
-    --rar-blend:#0a070c; --rar-amt:0%;
+    --rar-blend:#0a070c; --rar-amt:22%;
     --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(255,225,240,.035);
     color-scheme:dark;
   }
@@ -63,7 +63,7 @@
   --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
   --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
   --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
-  --rar-blend:#0a070c; --rar-amt:0%;
+  --rar-blend:#0a070c; --rar-amt:22%;
   --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(255,225,240,.035);
   color-scheme:dark;
 }
@@ -298,6 +298,25 @@ tbody tr.rec:hover td.ing::before{opacity:1}
   border:1px solid var(--brass-line); border-radius:100px; padding:0 5px; white-space:nowrap;
   font-family:"Pixelify Sans",sans-serif}
 .rar{color:var(--rar); color:color-mix(in srgb, var(--rar) calc(100% - var(--rar-amt)), var(--rar-blend)); text-shadow:var(--ui-shadow)}
+
+/* ---------- motion ----------
+   Short, and only on things you are pointing at or that just appeared. Everything here
+   is disabled wholesale for anyone who has asked for reduced motion. */
+@media (prefers-reduced-motion:no-preference){
+  tbody tr.rec{transition:background-color .12s ease}
+  .it{transition:transform .1s ease, border-color .12s ease, background-color .12s ease}
+  .it:hover{transform:translateY(-1px)}
+  .chip,.snav,button.tbtn,a.qlink,a.gear,button.cchip,button.modchip{
+    transition:background-color .13s ease, border-color .13s ease, color .13s ease}
+  .detail{animation:card-in .18s ease both}
+  .d-sp img{animation:sprite-in .22s cubic-bezier(.2,.9,.3,1.2) both}
+  .boss .tick{transition:background-color .12s ease, border-color .12s ease, transform .1s ease}
+  .boss .tick:active{transform:scale(.9)}
+  .track .fill, .bandbar .t i, .progbar .fill{transition:width .35s cubic-bezier(.3,.9,.3,1)}
+  .slotrow,.hb{transition:opacity .15s ease}
+}
+@keyframes card-in{from{opacity:0; transform:translateY(4px)}to{opacity:1; transform:none}}
+@keyframes sprite-in{from{opacity:0; transform:scale(.82)}to{opacity:1; transform:none}}
 .modtick{width:5px; height:5px; border-radius:50%; flex:none; margin-left:1px}
 
 ul.ing{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; align-items:center; gap:3px 4px}

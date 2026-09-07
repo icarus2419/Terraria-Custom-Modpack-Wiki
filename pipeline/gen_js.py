@@ -86,7 +86,9 @@ function renderTable(){
     var mr=el("div","mr");
     var sw=el("span","swatch"); sw.style.background=MODCOL[src]; mr.appendChild(sw);
     mr.appendChild(el("span","mn",MODS[src].name));
-    mr.appendChild(el("span","mc",list.length+(list.length===1?" combination":" combinations")+" · "+MODS[src].wiki));
+      // the raw hostname added noise to every group header; the count is the useful
+      // part, and the source wiki is already named on each item's own card
+      mr.appendChild(el("span","mc",list.length+(list.length===1?" combination":" combinations")));
     th.appendChild(mr); tr.appendChild(th); tbody.appendChild(tr);
 
     list.forEach(function(ri){
@@ -201,7 +203,12 @@ function renderDetail(id, fromUser){
   pl.appendChild(pill(MODS[it.own].name,"mod",{background:MODCOL[it.own]}));
   if(it.rn && RARECOL[String(it.r)]){
     var c=RARECOL[String(it.r)];
-    pl.appendChild(pill(it.rn,"rare",{background:c,color:lum(c)>0.5?"#14172b":"#fff"}));
+    // the rarity tier reads as a label, not a highlighter: outline it in the rarity colour
+    // instead of flooding a pill with it
+    // routed through the same blend as the rarity name, so the tier label and the item
+    // title agree instead of one being twice as loud as the other
+    var rp = pill(it.rn,"rare rar"); rp.style.setProperty("--rar", c);
+    pl.appendChild(rp);
   }
   if(it.hm) pl.appendChild(pill("Hardmode","hm"));
   (it.ty||[]).slice(0,3).forEach(function(x){ pl.appendChild(pill(x)); });
