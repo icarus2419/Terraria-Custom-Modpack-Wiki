@@ -6,8 +6,7 @@ var D = JSON.parse(document.getElementById("dataset").textContent);
 var I = D.items, R = D.recipes, MODS = D.mods, ORDER = D.order;
 
 var BYNAME={}; Object.keys(I).forEach(function(k){ var n=I[k].n; if(!(n in BYNAME)) BYNAME[n]=+k; });
-var MODCOL = {vanilla:"#989ea3", thorium:"#3f9e8c", fargo:"#c9552f",
-              spirit_reforged:"#7a5cc4", spirit:"#5a80c9", fables:"#b8518d"};
+@@MODCOL@@
 var RARECOL = {"-13":"#e02020","-12":"#8f6fd8","-11":"#e8c33a","-1":"#8b8b8b","0":"#f0f0f0",
   "1":"#9696ff","2":"#96ff96","3":"#ffc896","4":"#ff9696","5":"#ff96ff","6":"#d2a0ff",
   "7":"#96ff0a","8":"#ffff0a","9":"#05c8ff","10":"#ff2864","11":"#b428ff"};

@@ -6,8 +6,7 @@ import site_common as SC
 
 D = json.load(open(os.path.join(BASE, "full_site_data.json")))
 MODS, ORDER, ST, I, R = D["mods"], D["order"], D["stations"], D["items"], D["recipes"]
-MODCOL = {"vanilla":"#989ea3","thorium":"#3f9e8c","fargo":"#c9552f","spirit_reforged":"#7a5cc4",
-          "spirit":"#5a80c9","stars":"#c2a1e8","fables":"#b8518d"}
+MODCOL = SC.MODCOL
 
 EXTRA = """
 <style>
@@ -147,6 +146,8 @@ HTML = (SC.head('recipes.html', 'All Recipes', 'Every crafting recipe the six mo
 
 HTML = HTML.replace("<title>Joseph's Modpack Wiki</title>", "<title>All Recipes</title>", 1)
 js = open(os.path.join(BASE, "full_wiki_js.html"), encoding="utf-8").read()
+assert "@@MODCOL@@" in js, "full_wiki_js.html lost its palette placeholder"
+js = js.replace("@@MODCOL@@", SC.modcol_js())
 out = os.path.join(ROOT, "recipes.html")
 open(out, "w", encoding="utf-8").write(HTML + SC.progress_js("recipes.html") + js)
 print("wrote recipes.html %.1f MB" % (os.path.getsize(out)/1048576))

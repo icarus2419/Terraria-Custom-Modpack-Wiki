@@ -208,3 +208,32 @@ def head(page, title, description):
             '<meta name="twitter:title" content="%s">\n'
             '<meta name="twitter:description" content="%s">\n'
             % (d, t, d, url, t, d))
+
+
+# ---------------------------------------------------------------------------
+# The one place the mod palette is defined.
+#
+# It used to be declared in six files. Two of them drifted into meaning something
+# else entirely (#3f9e8c was both Thorium and the All Recipes card), and a seventh
+# copy inside full_wiki_js.html was missed when the rest were corrected. Colour is
+# the only thing on this site that carries data, so it gets a single source.
+#
+# Chosen by measurement, not taste: every pair is >=124 apart perceptually, nothing
+# is within 173 of the brass the UI uses for its own voice, and each clears 3.5:1 on
+# the surface it sits on. Terraria is neutral because it is the base game, not a mod
+# competing for a hue.
+# ---------------------------------------------------------------------------
+MODCOL = {
+    "vanilla":         "#989ea3",   # neutral: the base game
+    "thorium":         "#3f9e8c",   # teal
+    "fargo":           "#c9552f",   # rust
+    "spirit":          "#5a80c9",   # blue
+    "spirit_reforged": "#7a5cc4",   # violet
+    "fables":          "#b8518d",   # rose
+    "stars":           "#c2a1e8",   # lilac
+}
+
+def modcol_js(name="MODCOL"):
+    """The same palette as a JS declaration, so no page hand-copies it."""
+    import json as _j
+    return "var %s=%s;" % (name, _j.dumps(MODCOL, separators=(",", ":")))

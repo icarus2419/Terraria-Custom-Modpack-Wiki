@@ -13,8 +13,7 @@ def load(name):
 D  = load("bosses.json")
 SP = load("boss_sprites.json")
 
-MODCOL = {"vanilla":"#989ea3", "thorium":"#3f9e8c", "fargo":"#c9552f",
-          "spirit":"#5a80c9", "fables":"#b8518d", "stars":"#c2a1e8"}
+MODCOL = SC.MODCOL
 BOSSES = D["bosses"]
 n_mod  = sum(1 for b in BOSSES if b["mod"] != "vanilla")
 

@@ -39,7 +39,7 @@ CLASS_META, CATO, DATA = L["class_meta"], L["cat_order"], L["data"]
 
 SHARED  = ["Mixed", "All Classes"]                       # gear the guides mark as class-agnostic
 CLASSES = [c for c in L["class_order"] if c not in SHARED]
-MODCOL  = {"vanilla":"#989ea3", "thorium":"#3f9e8c", "spirit":"#5a80c9", "stars":"#c2a1e8"}
+MODCOL  = {k: SC.MODCOL[k] for k in ("vanilla", "thorium", "spirit", "stars")}
 WIKI    = {"vanilla":"Terraria", "thorium":"Thorium", "spirit":"Spirit", "stars":"Stars Above"}
 
 # ---------------------------------------------------------------- zones
