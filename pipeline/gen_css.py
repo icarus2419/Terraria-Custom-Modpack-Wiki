@@ -9,7 +9,7 @@ CSS = r"""
   --bg:#eae7ee; --surface:#faf8fc; --surface-2:#f1eef5; --surface-3:#e3dfe9;
   --line:#d5d0dd; --line-strong:#b6aec2;
   --ink:#1c1620; --ink-2:#544b5c; --ink-3:#6d6377;
-  --brass:#c02348; --brass-bright:#9c1738; --brass-soft:#fbe2e8; --brass-line:#e8b0c0;
+  --brass:#9c4256; --brass-bright:#843548; --brass-soft:#f5e6ea; --brass-line:#dcbcc4;
   --flag:#b23a1c; --flag-soft:#f9e0d6;
   --tip-bg:#1c1620; --tip-ink:#f6eef2;
   --shadow:0 1px 2px rgba(25,29,48,.07), 0 8px 24px -12px rgba(25,29,48,.18);
@@ -26,7 +26,7 @@ CSS = r"""
     --bg:#0a070c; --surface:#130e14; --surface-2:#1a131c; --surface-3:#241a26;
     --line:#2c2130; --line-strong:#3f2f44;
     --ink:#f6eef2; --ink-2:#c3aeba; --ink-3:#8f7d89;
-    --brass:#ff4d6d; --brass-bright:#ff849c; --brass-soft:#33101c; --brass-line:#75253c;
+    --brass:#c96a7e; --brass-bright:#dd8b9c; --brass-soft:#251319; --brass-line:#5c3a43;
     --flag:#ff7a5c; --flag-soft:#3d1c14;
     --tip-bg:#0c0908; --tip-ink:#f6eef2;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
@@ -42,7 +42,7 @@ CSS = r"""
   --bg:#0a070c; --surface:#130e14; --surface-2:#1a131c; --surface-3:#241a26;
   --line:#2c2130; --line-strong:#3f2f44;
   --ink:#f6eef2; --ink-2:#c3aeba; --ink-3:#8f7d89;
-  --brass:#ff4d6d; --brass-bright:#ff849c; --brass-soft:#33101c; --brass-line:#75253c;
+  --brass:#c96a7e; --brass-bright:#dd8b9c; --brass-soft:#251319; --brass-line:#5c3a43;
   --flag:#ff7a5c; --flag-soft:#3d1c14;
   --tip-bg:#0c0908; --tip-ink:#f6eef2;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);

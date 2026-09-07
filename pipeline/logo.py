@@ -30,10 +30,10 @@ GRID = [
 # A soulfire flame, in the crimson the rest of the site runs on, so the mark belongs to the
 # palette rather than competing with it. The pale core keeps it reading as fire at 16px --
 # a flat crimson blob does not.
-INK = {"F": "#ff4d6d",   # flame
-       "y": "#ffd0dc",   # hot core
-       "S": "#5c3340",   # handle
-       "d": "#331d25"}   # handle shadow
+INK = {"F": "#c96a7e",   # flame
+       "y": "#f0c4ce",   # hot core
+       "S": "#4f3239",   # handle
+       "d": "#2b1c21"}   # handle shadow
 
 # No tile behind the mark: a solid ground reads as a black box in the browser tab.
 # The flame is mid-orange, so it holds up on light and dark chrome without one.
