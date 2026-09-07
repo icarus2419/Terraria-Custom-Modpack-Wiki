@@ -147,7 +147,7 @@ modrows = "".join(
 BODY = """
 <div class="hero"><div class="wrap hero-in">
   <p class="eyebrow">Terraria &middot; tModLoader 1.4.4 &middot; Covenant Route</p>
-  <h1>Joseph's Modpack Wiki</h1>
+  <h1><span class="wm-a">Joseph's</span> <span class="wm-b">Modpack Wiki</span><span class="wm-rule"></span></h1>
   <p>Everything the pack adds, in one place: <b>@@NREC@@ recipes</b> across <b>@@NST@@ crafting
   stations</b>, <b>@@NITEM@@ items</b> with how to get each one, and a ready equipment panel for
   every class at every boss. Built from the mods' own wikis, and it works offline.</p>

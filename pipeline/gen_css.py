@@ -6,51 +6,51 @@ CSS = r"""
 <title>Joseph's Modpack Wiki</title>
 <style>
 :root{
-  --bg:#e9ebf4; --surface:#ffffff; --surface-2:#f3f4fa; --surface-3:#e4e7f2;
-  --line:#cfd4e6; --line-strong:#b3bad3;
-  --ink:#191d30; --ink-2:#4e5573; --ink-3:#79809c;
-  --brass:#8a5d12; --brass-bright:#b8801f; --brass-soft:#f5e9cf; --brass-line:#d9bd80;
-  --flag:#b04a17; --flag-soft:#fbe6da;
-  --tip-bg:#1a1e36; --tip-ink:#dfe3f5;
+  --bg:#efe9df; --surface:#fbf8f3; --surface-2:#f2ece2; --surface-3:#e6ded1;
+  --line:#d9cfc0; --line-strong:#bfb2a0;
+  --ink:#221b15; --ink-2:#5b4f44; --ink-3:#736556;
+  --brass:#a8560b; --brass-bright:#8f4708; --brass-soft:#f7e4cd; --brass-line:#d8b98a;
+  --flag:#b23a1c; --flag-soft:#f9e0d6;
+  --tip-bg:#221b15; --tip-ink:#f4efe8;
   --shadow:0 1px 2px rgba(25,29,48,.07), 0 8px 24px -12px rgba(25,29,48,.18);
   --radius:7px;
-  --slot-bg:#dde1f0; --slot-line:#bfc6dd; --slot-in:rgba(255,255,255,.85);
+  --slot-bg:#e4dccf; --slot-line:#c8bcaa; --slot-in:rgba(255,255,255,.85);
   --pre:#0d6b5e; --pre-soft:#d7efe9; --pre-line:#7fc4b6;
-  --hard:#a3341f; --hard-soft:#fadfd8; --hard-line:#e09b88;
-  --rar-blend:#141830; --rar-amt:48%;
-  --ui-shadow:none; --wordshadow:rgba(20,24,48,.13); --grid:rgba(20,24,48,.045);
+  --hard:#b23a1c; --hard-soft:#f9e0d6; --hard-line:#dda893;
+  --rar-blend:#14100e; --rar-amt:48%;
+  --ui-shadow:none; --wordshadow:rgba(34,27,21,.16); --grid:rgba(34,27,21,.075);
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#101229; --surface:#1a1e3a; --surface-2:#212648; --surface-3:#2a3057;
-    --line:#333a68; --line-strong:#454d80;
-    --ink:#e9ebfa; --ink-2:#a9b0d2; --ink-3:#7d85ab;
-    --brass:#e5b35a; --brass-bright:#f2c976; --brass-soft:#33280f; --brass-line:#6b5522;
-    --flag:#ff9a5c; --flag-soft:#3a2113;
-    --tip-bg:#0a0c1c; --tip-ink:#dfe3f5;
+    --bg:#14100e; --surface:#1c1714; --surface-2:#241d19; --surface-3:#2e2621;
+    --line:#3a302a; --line-strong:#4e4139;
+    --ink:#f4efe8; --ink-2:#c2b5a6; --ink-3:#8e8175;
+    --brass:#ff9d3d; --brass-bright:#ffb968; --brass-soft:#3a2410; --brass-line:#7a4f1e;
+    --flag:#ff7a5c; --flag-soft:#3d1c14;
+    --tip-bg:#0c0908; --tip-ink:#f4efe8;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-    --slot-bg:#272d55; --slot-line:#3c4472; --slot-in:rgba(255,255,255,.07);
+    --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
     --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
-    --hard:#ff8a6b; --hard-soft:#3d1c14; --hard-line:#7a3626;
-    --rar-blend:#141830; --rar-amt:0%;
-    --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.62); --grid:rgba(255,255,255,.032);
+    --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
+    --rar-blend:#14100e; --rar-amt:0%;
+    --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.7); --grid:rgba(255,190,120,.055);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#101229; --surface:#1a1e3a; --surface-2:#212648; --surface-3:#2a3057;
-  --line:#333a68; --line-strong:#454d80;
-  --ink:#e9ebfa; --ink-2:#a9b0d2; --ink-3:#7d85ab;
-  --brass:#e5b35a; --brass-bright:#f2c976; --brass-soft:#33280f; --brass-line:#6b5522;
-  --flag:#ff9a5c; --flag-soft:#3a2113;
-  --tip-bg:#0a0c1c; --tip-ink:#dfe3f5;
+  --bg:#14100e; --surface:#1c1714; --surface-2:#241d19; --surface-3:#2e2621;
+  --line:#3a302a; --line-strong:#4e4139;
+  --ink:#f4efe8; --ink-2:#c2b5a6; --ink-3:#8e8175;
+  --brass:#ff9d3d; --brass-bright:#ffb968; --brass-soft:#3a2410; --brass-line:#7a4f1e;
+  --flag:#ff7a5c; --flag-soft:#3d1c14;
+  --tip-bg:#0c0908; --tip-ink:#f4efe8;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-  --slot-bg:#272d55; --slot-line:#3c4472; --slot-in:rgba(255,255,255,.07);
+  --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
   --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
-  --hard:#ff8a6b; --hard-soft:#3d1c14; --hard-line:#7a3626;
-  --rar-blend:#141830; --rar-amt:0%;
-  --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.62); --grid:rgba(255,255,255,.032);
+  --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
+  --rar-blend:#14100e; --rar-amt:0%;
+  --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.7); --grid:rgba(255,190,120,.055);
   color-scheme:dark;
 }
 
@@ -96,6 +96,11 @@ h1{
   letter-spacing:.01em; text-wrap:balance;
   text-shadow:2px 2px 0 var(--wordshadow);
 }
+/* wordmark: the owner's name recedes so the thing itself carries the ember */
+h1 .wm-a{color:var(--ink-2)}
+h1 .wm-b{color:var(--brass)}
+h1 .wm-rule{display:block; width:2.2em; height:3px; margin-top:10px;
+  background:linear-gradient(90deg, var(--brass), transparent)}
 .tagline{margin:0; color:var(--ink-2); font-size:14.5px; max-width:62ch}
 /* the compact masthead every page uses: a name and one line, not a title card */
 .masthead.slim .mast-in{padding:14px 0 12px}
