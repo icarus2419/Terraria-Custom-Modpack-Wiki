@@ -169,7 +169,9 @@ BODY = """
     </div>
     <div class="card nextup" id="nextup"></div>
   </div>
-  <div id="bands"></div>
+  <!-- height reserved from the known row count so the footer does not jump when the
+       list renders; the JS clears it once the real content is in -->
+  <div id="bands" style="min-height:@@BANDSMIN@@px"></div>
 </main>
 
 <footer><div class="wrap fgrid">
@@ -195,7 +197,11 @@ BODY = """
 <script id="bossdata" type="application/json">@@PAYLOAD@@</script>
 """
 
-for a, b in [("@@NB@@", str(len(BOSSES))), ("@@NM@@", str(n_mod)), ("@@PAYLOAD@@", payload)]:
+# 81px a row plus a header per band, measured from the rendered page
+BANDS_MIN = len(BOSSES) * 81 + len({b["band"] for b in BOSSES}) * 62
+
+for a, b in [("@@NB@@", str(len(BOSSES))), ("@@NM@@", str(n_mod)),
+             ("@@BANDSMIN@@", str(BANDS_MIN)), ("@@PAYLOAD@@", payload)]:
     BODY = BODY.replace(a, b)
 
 HTML = (SC.head('bosses.html', 'Boss Checklist', "All 87 bosses the modpack adds, merged into a single fight order from each mod's own progression chart, and tickable as you go.") + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA
@@ -398,6 +404,7 @@ function render(){
   drawNext(next, skippedBefore(list, next));
 
   bandsHost.textContent="";
+  bandsHost.style.minHeight="";   // reservation done its job; let the real content size it
   BANDS.forEach(function(bd){
     var inb = list.filter(function(b){ return b.band===bd[0]; });
     if(!inb.length) return;

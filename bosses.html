@@ -656,7 +656,9 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
     </div>
     <div class="card nextup" id="nextup"></div>
   </div>
-  <div id="bands"></div>
+  <!-- height reserved from the known row count so the footer does not jump when the
+       list renders; the JS clears it once the real content is in -->
+  <div id="bands" style="min-height:7419px"></div>
 </main>
 
 <footer><div class="wrap fgrid">
@@ -952,6 +954,7 @@ function render(){
   drawNext(next, skippedBefore(list, next));
 
   bandsHost.textContent="";
+  bandsHost.style.minHeight="";   // reservation done its job; let the real content size it
   BANDS.forEach(function(bd){
     var inb = list.filter(function(b){ return b.band===bd[0]; });
     if(!inb.length) return;
