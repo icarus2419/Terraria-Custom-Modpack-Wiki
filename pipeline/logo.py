@@ -27,13 +27,13 @@ GRID = [
     "......dddd......",
 ]
 
-# Ember, not pure orange: it sits in the same warm family as the brass accent the rest of
-# the site runs on, so the mark belongs to the palette instead of competing with it. Brass
-# alone was tried and rejected -- at 16px an unlit gold blob stops reading as a flame.
-INK = {"F": "#e08b3a",   # flame
-       "y": "#ffd88a",   # hot core
-       "S": "#6b4a28",   # handle
-       "d": "#3a2716"}   # handle shadow
+# A soulfire flame, in the crimson the rest of the site runs on, so the mark belongs to the
+# palette rather than competing with it. The pale core keeps it reading as fire at 16px --
+# a flat crimson blob does not.
+INK = {"F": "#ff4d6d",   # flame
+       "y": "#ffd0dc",   # hot core
+       "S": "#5c3340",   # handle
+       "d": "#331d25"}   # handle shadow
 
 # No tile behind the mark: a solid ground reads as a black box in the browser tab.
 # The flame is mid-orange, so it holds up on light and dark chrome without one.
@@ -86,7 +86,7 @@ def head_links():
     return ('<link rel="icon" type="image/png" sizes="16x16" href="%s">\n'
             '<link rel="icon" type="image/png" sizes="32x32" href="%s">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="%s">\n'
-            '<meta name="theme-color" content="#14100e">\n'
+            '<meta name="theme-color" content="#0a070c">\n'
             % (png_datauri(16), png_datauri(32), png_datauri(176)))
 
 BRAND_CSS = """
