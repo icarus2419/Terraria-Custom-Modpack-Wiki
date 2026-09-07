@@ -13,7 +13,7 @@ NAV_CSS = """
   padding:9px 14px 9px 0; margin-right:6px; white-space:nowrap;
 }
 .sitenav .brand:hover{color:var(--brass)}
-.sitenav .brand .dot{width:9px;height:9px;border-radius:2px;background:var(--brass);flex:none}
+.sitenav .brand .brandmark{flex:none; display:block; margin-right:1px}
 .sitenav a.tab{
   font-family:"Pixelify Sans",sans-serif; font-size:12.5px; letter-spacing:.03em;
   color:var(--ink-2); text-decoration:none; padding:10px 13px; border-bottom:2px solid transparent;
@@ -38,8 +38,10 @@ TABS = [("index.html",     "Home"),
         ("tinkerers.html", "Tinkerer's Workshop")]
 
 def nav(active, note=""):
+    import logo
     out = ['<nav class="sitenav"><div class="wrap sitenav-in">',
-           '<a class="brand" href="index.html"><span class="dot"></span>Joseph\'s Modpack Wiki</a>']
+           '<a class="brand" href="index.html">' + logo.mark(20)
+           + 'Joseph\'s Modpack Wiki</a>']
     for href, label in TABS:
         cur = ' aria-current="page"' if href == active else ""
         out.append('<a class="tab" href="%s"%s>%s</a>' % (href, cur, label))

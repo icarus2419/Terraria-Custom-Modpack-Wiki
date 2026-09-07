@@ -1,6 +1,8 @@
+import logo as _logo
+
 CSS = r"""
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+@@ICONS@@<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <title>Joseph's Modpack Wiki</title>
 <style>
 :root{
@@ -399,3 +401,5 @@ footer ul{margin:0; padding-left:16px; line-height:1.6}
 @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
 </style>
 """
+
+CSS = CSS.replace("@@ICONS@@", _logo.head_links())
