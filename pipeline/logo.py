@@ -30,10 +30,10 @@ GRID = [
 # A soulfire flame, in the crimson the rest of the site runs on, so the mark belongs to the
 # palette rather than competing with it. The pale core keeps it reading as fire at 16px --
 # a flat crimson blob does not.
-INK = {"F": "#c96a7e",   # flame
-       "y": "#f0c4ce",   # hot core
-       "S": "#4f3239",   # handle
-       "d": "#2b1c21"}   # handle shadow
+INK = {"F": "#7fc8c8",   # flame
+       "y": "#d8f2f2",   # hot core
+       "S": "#3c4a52",   # handle
+       "d": "#232d33"}   # handle shadow   # handle shadow
 
 # No tile behind the mark: a solid ground reads as a black box in the browser tab.
 # The flame is mid-orange, so it holds up on light and dark chrome without one.
@@ -86,7 +86,7 @@ def head_links():
     return ('<link rel="icon" type="image/png" sizes="16x16" href="%s">\n'
             '<link rel="icon" type="image/png" sizes="32x32" href="%s">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="%s">\n'
-            '<meta name="theme-color" content="#0a070c">\n'
+            '<meta name="theme-color" content="#0b0d11">\n'
             % (png_datauri(16), png_datauri(32), png_datauri(176)))
 
 BRAND_CSS = """
