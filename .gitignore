@@ -24,3 +24,4 @@ pipeline/hardmode.json
 pipeline/*.log
 pipeline/__pycache__/
 .DS_Store
+pipeline/fonts_cache.json
