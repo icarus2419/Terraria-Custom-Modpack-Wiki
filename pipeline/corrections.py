@@ -19,6 +19,7 @@ ROOT = os.path.dirname(BASE)
 DATA = os.path.join(ROOT, "data")
 sys.path.insert(0, BASE)
 import version_gate as VG
+import world_gate as WG
 
 
 # ---------- loadout_stats.json ----------
@@ -188,16 +189,20 @@ def main():
     report = {}
     report["loadout_stats"] = _patch("loadout_stats.json", fix_stats)
 
-    gate_log = []
+    gate_log, world_log = [], []
 
     def _loadouts(obj):
         changed = fix_loadouts(obj)
         gate_log[:] = VG.gate_loadouts(obj)
+        world_log[:] = WG.gate_loadouts(obj)
         return changed
 
     report["loadouts"] = _patch("loadouts.json", _loadouts)
     report["version gate (%s)" % VG.GAME_VERSION] = [
         "%s: removed from %s/%s/%s" % (n, st, cls, sect) for st, cls, _m, sect, n in gate_log
+    ]
+    report["world gate (%s)" % WG.WORLD_EVIL] = [
+        "%s: %s/%s/%s" % (n, st, cls, sect) for st, cls, sect, n in world_log
     ]
     report["bosses"] = _patch("bosses.json", fix_bosses, indent=1)
 
@@ -214,7 +219,7 @@ def main():
                 for sections in mods.values():
                     for sec in sections:
                         still_used |= {i["name"] for i in sec["items"]}
-    orphans = VG.unavailable() - still_used
+    orphans = (VG.unavailable() | WG.locked()) - still_used
     pruned = []
     for name in ("loadout_sprites.json", "loadout_stats.json"):
         for p in _copies(name):

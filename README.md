@@ -212,6 +212,30 @@ Worth knowing: **whip stacking still works in 1.4.4.** Tags from different whips
 that is what 1.4.5.0 removed and 1.4.5.7 handed back through those accessories. The summoner build
 is intact; the accessories simply are not there.
 
+### Half the evil-biome loot is not in this world
+
+The world is **Corruption** (Large, Expert — per the Covenant Route install reference). The wikis
+document both evils side by side, the scrape keeps both, and the loadouts recommended both. No
+Crimson biome generates here, breaking altars in Hardmode spreads Corruption and Hallow rather than
+Crimson, and there is no cross-world route to Crimtane, Tissue Sample, Vertebra or Ichor.
+
+`pipeline/world_gate.py` drops the 24 Crimson-locked picks that were reaching the panels. Four of
+them were tagged **Best**: Fetid Baghnakhs and Vampire Knives for Melee, Life Drain for Magic, and
+**Flask of Ichor** for both Summoner and Melee at five checkpoints each — Ichor drops only from
+Ichor Stickers in the Underground Crimson and from Hematic Crates fished in Crimson water. Flask of
+Cursed Flames is the Corruption equivalent and inherits the tag where it is listed.
+
+Set `WORLD_EVIL = "crimson"` to flip the gate to the Corruption-locked list instead.
+
+### Known gap: Fargo's Souls
+
+The item database holds 497 Fargo's items, and **two** of them reach a loadout panel. Fargo's Souls
+is the pack's difficulty layer — Eternity Mode rewrites every vanilla boss — and Fargo's Mutant Mod
+supplies the boss summons, so the loadouts are quietest about the mod that changes the fights most.
+Fargo's publishes no class-setup guide for `parse_guides.py` to read, which is why. Its gear has to
+be found on the boss pages: the Banished Baron's Decrepit Airstrike Remote, for one, is a 375-damage
+summon weapon that appears nowhere on this site.
+
 ### Hand-verified corrections
 
 `pipeline/corrections.py` fixes what the scrape got wrong, each one checked against the mod's own
