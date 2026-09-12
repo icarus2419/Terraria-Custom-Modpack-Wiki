@@ -34,6 +34,9 @@ ADDED_IN_1_4_5_7 = {
     "Mystic Arts Sash",
     # consumables and misc
     "Kinship Peach", "Little Kinship Peach", "Giant Tiki", "Guide to Old World Parkour",
+    # Heavy, Scout's and Templar's are the whole sling family and all three are above,
+    # so the umbrella "Slings" entry the guides link to is 1.4.5.7 content end to end.
+    "Slings", "slings",
 }
 
 # Version each set of names was introduced in, so a future tModLoader build can reopen

@@ -83,6 +83,12 @@ DROP_PLACEMENTS = [
     ("mech", "Melee", "Phantom In The Mirror"),
 ]
 
+# parse_guides.py follows every link in a guide's gear list, including ones that point
+# at a concept page rather than an item. These reached the panels as equippable picks:
+# "aggro" is the game mechanic, and "Explosive Trap" the sentry-type page (the item is
+# the Explosive Trap Rod, which is listed separately and correctly).
+CONCEPT_LINKS = {"aggro", "Explosive Trap"}
+
 MOVE_PLACEMENTS = [
     # (from_stage, to_stage, class, item)
     ("mech", "golem", "Melee", "Phantom In The Mirror"),
@@ -92,6 +98,15 @@ MOVE_PLACEMENTS = [
 def fix_loadouts(loadouts):
     changed = []
     data = loadouts["data"]
+
+    for stage, classes in data.items():
+        for cls, mods in classes.items():
+            for sections in mods.values():
+                for sec in sections:
+                    before = {i["name"] for i in sec["items"]}
+                    sec["items"] = [i for i in sec["items"] if i["name"] not in CONCEPT_LINKS]
+                    for n in sorted(before - {i["name"] for i in sec["items"]}):
+                        changed.append("%s: concept link removed from %s/%s" % (n, stage, cls))
 
     # Move first, so the moved copy is built before the source placement is dropped.
     for src, dst, cls, item in MOVE_PLACEMENTS:
