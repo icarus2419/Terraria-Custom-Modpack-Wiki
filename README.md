@@ -9,7 +9,7 @@ station, how to get each item, and a suggested loadout for every class before ev
 
 Open `index.html` in any browser. No install, no build step, no network.
 
-## The five pages
+## The six pages
 
 They are in the order a player needs them: what to fight, what to wear, what to make.
 
@@ -20,6 +20,7 @@ They are in the order a player needs them: what to fight, what to wear, what to 
 | `loadouts.html` | One filled equipment panel per class, per boss checkpoint |
 | `recipes.html` | Every recipe the six mods add, across all 130 stations |
 | `tinkerers.html` | Every accessory combination, modded and vanilla side by side |
+| `stars.html` | The Stars Above, explained — the one mod that adds a system |
 
 ## One run, followed across the site
 
@@ -112,6 +113,25 @@ Where a guide stops re-listing armour or accessories at a later stage (vanilla d
 Pre-Moon Lord), the previous stage's gear is carried forward, labelled as such, and never counted as
 new.
 
+## The Stars Above
+
+Five of the six mods add things to make and fight. The Stars Above also adds a companion and a
+menu bound to an item, and none of that is discoverable from a recipe list — so the home page
+so it gets its own page, reached from its own card on the home page.
+
+Every part of it answers the same four questions — **what it does, why you want it, how you get it,
+and when in the run**: the **Spatial Disk**, the permanent Asphodene/Eridani choice, and the four
+screens behind the disk's right-click (Stellar Array, Stellar Nova, Astrolabe, Archive), each with
+its unlock — the Nova after The Vagrant of Space and Time, the Astrolabe after King Slime. Then the
+Nova's damage table, the mod's nine bosses in the pack's own fight order, and the handful of items
+worth knowing by name with their recipes.
+
+`stars_guide.py` fetches the mod's `Early Guide` and its `Stellar Array`, `Stellar Novas`,
+`Cosmic Voyages`, `Key Items` and `Essences` pages into `data/stars_guide.json`, along with the six
+icons the page shows. The **Nova damage table is parsed out of that wikitext** rather than typed
+into the generator, so it cannot drift from its source; recipes, stations and the fight order come
+from the same datasets as the rest of the site, and the page links to every wiki page it used.
+
 ## Recipes
 
 | Source | Recipes |
@@ -175,11 +195,46 @@ Sources: `terraria.wiki.gg` · `thoriummod.wiki.gg` · `fargosmods.wiki.gg` · `
 
 Where a mod's wiki is out of date with its own mod, this inherits that.
 
+### The vanilla wiki is a version ahead
+
+terraria.wiki.gg documents current desktop Terraria. tModLoader is a separate build that lags it,
+and this pack is **tModLoader 1.4.4** — so every vanilla item added in 1.4.5 is on the wiki, gets
+scraped, and gets recommended for a game you cannot launch. Ninety-one such picks were reaching the
+loadout panels across every class, including the whole whip tag-slot accessory chain (Twilight
+Grasp, Wicked Armlet, Wicked Claws, Armlet Of Ruin, Druidic Serpent Cloak, Silver Shield) and the
+Ruinous Staff, all introduced in 1.4.5.7.
+
+`pipeline/version_gate.py` holds the 1.4.5.7 item list and the target `GAME_VERSION`, and drops
+those picks. Only vanilla entries are gated — a mod shipping its own item under a name the vanilla
+wiki also uses is real. If tModLoader ships a 1.4.5 build, change `GAME_VERSION` and the gate opens.
+
+Worth knowing: **whip stacking still works in 1.4.4.** Tags from different whips stack natively —
+that is what 1.4.5.0 removed and 1.4.5.7 handed back through those accessories. The summoner build
+is intact; the accessories simply are not there.
+
+### Hand-verified corrections
+
+`pipeline/corrections.py` fixes what the scrape got wrong, each one checked against the mod's own
+wiki page with the source named in the file:
+
+| Fix | Was | Source |
+|---|---|---|
+| The Blender | 340 Melee — topped every pre-mechanical melee ranking | 12 Radiant, a pre-Hardmode Healer scythe |
+| Ballista / Explosive Trap rods and canes | knockback, velocity, use and tip all scraped the item id (3824, 3832); speed read "Snail" | fields dropped, damage and type kept |
+| Pain Monger's armor | listed for Summoner | every piece is magic damage, crit or mana |
+| Phantom In The Mirror | Pre-Mechanical | Dioskouroi unlocks it pre-Hardmode, but the recipe needs a Shroomite Bar, The Horseman's Blade and a Christmas Tree Sword — Ectoplasm gates it to post-Plantera |
+| Lich | order 33, ahead of The Twins | cannot be summoned until all three mechanical bosses are down |
+
+The corrections are idempotent, and they patch both the `pipeline/` working copy and the committed
+`data/` copy — the generators resolve to `pipeline/` first, so a fix applied to only one is a fix
+the page never sees.
+
 ## Repository layout
 
 ```
 index.html bosses.html loadouts.html recipes.html tinkerers.html   the wiki
-data/         merged datasets (bosses, recipes, items, Hardmode verdicts, loadouts)
+data/         merged datasets (bosses, recipes, items, Hardmode verdicts, loadouts,
+              and the Stars Above guide the home page's explainer is built from)
 pipeline/     the scripts that build it from the source wikis
 _preserved/   the first Tinkerer's-only build, kept for reference
 ```
@@ -207,6 +262,9 @@ python3 full_entities.py    # resolve drop-source NPCs
 python3 full_cats2.py       # categories for items with no direct Hardmode signal
 python3 full_data.py        # merge, index, classify Hardmode
 
+# the Stars Above explainer on the home page -> ../data/stars_guide.json
+python3 stars_guide.py      # its own Early Guide, plus the six icons that page uses
+
 # loadouts -> loadouts.json, loadout_sprites.json, loadout_stats.json
 python3 loadouts.py         # parse the class-setup guides onto one timeline
 python3 loadout_sprites.py
@@ -222,6 +280,13 @@ python3 hardmode.py         # -> hardmode.json
 python3 build_data.py       # -> site_data.json
 ```
 
+Then apply the hand-verified corrections, which must run after the data build and before the
+generators:
+
+```bash
+python3 corrections.py      # patches loadouts.json, loadout_stats.json, bosses.json in place
+```
+
 Then generate the pages, which only read the files above:
 
 ```bash
@@ -229,6 +294,7 @@ python3 full_gen.py         # recipes.html
 python3 gen.py              # tinkerers.html
 python3 loadout_gen.py      # loadouts.html
 python3 boss_gen.py         # bosses.html
+python3 stars_gen.py        # stars.html
 python3 home_gen.py         # index.html
 ```
 

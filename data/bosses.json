@@ -715,18 +715,18 @@
    "host": "thoriummod.wiki.gg",
    "url": "https://thoriummod.wiki.gg/wiki/Lich",
    "band": "hard",
-   "anchor": "Queen Slime",
-   "order": 33,
+   "anchor": "Skeletron Prime",
+   "order": 37.5,
    "unordered": false,
    "tier": "hard",
    "section": "Hardmode Bosses",
-   "evidence": null,
-   "how": "charted",
+   "evidence": "It can only be summoned at night after all three mechanical bosses have been defeated.",
+   "how": "stated",
    "summon": "Summoned with 30 Pumpkins at an Ancient Phylactery in the Natural Graveyard.",
    "life": "28000",
    "env": null,
    "img": "Lich (First form).gif",
-   "stage": "mech"
+   "stage": "plantera"
   },
   {
    "name": "The Twins",
