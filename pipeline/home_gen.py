@@ -1,4 +1,4 @@
-import json, os
+import json, os, re
 BASE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(BASE)
 from gen_css import CSS as BASECSS
@@ -29,6 +29,10 @@ def sprite_of(name):
 ICONS = {n: sprite_of(n) for n in
          ["Tinkerer's Workshop","Soul Forge","Terraspark Boots","Ankh Shield"]}
 
+SGP = os.path.join(ROOT, "data", "stars_guide.json")
+SG  = json.load(open(SGP, encoding="utf-8")) if os.path.exists(SGP) else {"icons": {}, "source": ""}
+SICON = SG.get("icons", {})
+
 BOSSES = json.load(open(os.path.join(BASE, "bosses.json"), encoding="utf-8"))["bosses"] \
          if os.path.exists(os.path.join(BASE, "bosses.json")) else \
          json.load(open(os.path.join(os.path.dirname(BASE), "data", "bosses.json"),
@@ -36,6 +40,13 @@ BOSSES = json.load(open(os.path.join(BASE, "bosses.json"), encoding="utf-8"))["b
 BSP     = json.load(open(os.path.join(BASE, "boss_sprites.json"), encoding="utf-8"))
 n_boss  = len(BOSSES)
 n_bmod  = sum(1 for b in BOSSES if b["mod"] != "vanilla")
+
+# the card's two figures: bosses from the merged order, abilities from the mod's own
+# Stellar Array page, so neither goes stale if the pack or the mod changes
+n_sboss = sum(1 for b in json.load(open(os.path.join(ROOT, "data", "bosses.json"),
+                                        encoding="utf-8"))["bosses"] if b.get("mod") == "stars")
+_m = re.search(r"there are (\d+) abilities", SG.get("systems", {}).get("Stellar Array", ""))
+n_sabil = int(_m.group(1)) if _m else 24
 
 MODS = [("Thorium Mod","thorium","#3f9e8c","11 bosses, ~2,600 items, and the Bard, Healer and Thrower classes."),
         ("Fargo's Souls / Mutant","fargo","#c9552f","Eternity Mode rewrites every vanilla boss. Boss summons and re-fights."),
@@ -61,7 +72,7 @@ EXTRA = """
 .hero p{margin:0; font-size:16px; line-height:1.55; color:var(--ink-2); max-width:62ch}
 .hero p b{color:var(--ink); font-weight:600}
 
-.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:16px; padding:26px 0 6px}
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:16px; padding:26px 0 6px}
 a.card{display:flex; flex-direction:column; gap:9px; text-decoration:none; color:inherit;
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
   box-shadow:var(--shadow); padding:18px 18px 16px; border-top:3px solid var(--ccol); position:relative}
@@ -104,6 +115,7 @@ a.qlink .n{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(-
 .startbox ol{margin:0; padding-left:20px; font-size:13.5px; line-height:1.7; color:var(--ink-2)}
 .startbox ol b{color:var(--ink)}
 .startbox a{font-weight:600}
+
 </style>
 """
 
@@ -136,6 +148,12 @@ cards = "".join([
       "Every accessory combination in the pack, modded and vanilla side by side. The station where "
       "mod and vanilla gear actually meet.",
       [("Combinations", n_tink), ("Changed by mods", 9)], "Open the workshop"),
+ card("stars.html", "var(--brass)", sprite_of("Spatial Disk"),
+      "The Stars Above",
+      "The one mod that adds a <b>system</b> rather than more things to make: a companion, and a "
+      "menu with four screens behind it. What each one does, why you want it, how you get it and "
+      "when &mdash; then its nine bosses in order.",
+      [("Bosses", n_sboss), ("Abilities", n_sabil)], "Learn the mod"),
 ])
 
 modrows = "".join(
@@ -214,11 +232,50 @@ quick = "".join('<a class="qlink" href="loadouts.html#%s">%s<span class="n">%d</
                              for m in c.values() for b in m))
                 for s in LO["stages"][:7])
 
+# the full label ("Pre-Eater / Brain"), not the short one: a boss's stage is the checkpoint
+# you want to be geared at *before* the fight, so "after Eater / Brain" would be backwards
+STAGE_FULL = {st[0]: st[1] for st in LO["stages"]}
+BAND_NAME   = {"pre": "Pre-Hardmode", "hard": "Hardmode", "postml": "Post-Moon Lord",
+               "event": "Event boss", "mini": "Mini-boss", "seed": "Secret seed"}
+
+def _icon(key, cls="ti"):
+    d = SICON.get(key)
+    return ('<img class="%s" src="%s" alt="">' % (cls, d)) if d else ""
+
+def _inline(key, label):
+    """The two permanent choices, named next to their own icon."""
+    d = SICON.get(key)
+    return ('<span class="pick">%s<b>%s</b></span>'
+            % (('<img src="%s" alt="">' % d) if d else "", label))
+
+disk_sp = sprite_of("Spatial Disk") or ""
+stars_bosses = sorted((b for b in BOSSES if b.get("mod") == "stars"),
+                      key=lambda b: b.get("order", 999))
+sboss = "".join(
+  '<li><a href="loadouts.html#%s"><span class="sp">%s</span><span class="tx">'
+  '<span class="nm">%s</span><span class="at">%s &middot; gear at %s</span></span></a></li>'
+  % (b.get("stage", ""),
+     ('<img class="px" src="%s" alt="">' % BSP[b["name"]]) if b["name"] in BSP else "",
+     b["name"],
+     BAND_NAME.get(b.get("band"), b.get("band", "")),
+     STAGE_FULL.get(b.get("stage"), b.get("stage", "")))
+  for b in stars_bosses)
+
+starsrc = ('The four screens and the twins are summarised from The Stars Above\'s own '
+           '<a href="%s" target="_blank" rel="noopener noreferrer">Early Guide</a>; the disk\'s '
+           'recipe and the fight order come from the same data as the rest of this site. '
+           'Nothing here is written from memory.' % SG.get("source", ""))
+
 for a, b in [("@@NREC@@", "{:,}".format(n_rec)), ("@@NST@@", str(n_st)),
              ("@@NITEM@@", "{:,}".format(n_items)), ("@@CARDS@@", cards),
              ("@@MODS@@", modrows), ("@@NPRE@@", "{:,}".format(n_pre)),
              ("@@NHARD@@", "{:,}".format(n_hard)), ("@@NCHG@@", "9"),
-             ("@@QUICK@@", quick)]:
+             ("@@QUICK@@", quick),
+             ("@@DISKSP@@", disk_sp), ("@@SBOSSES@@", sboss), ("@@STARSRC@@", starsrc),
+             ("@@ASTRAL@@", _inline("astral", "Astral")),
+             ("@@UMBRAL@@", _inline("umbral", "Umbral")),
+             ("@@I_ARRAY@@", _icon("stellar_array")), ("@@I_NOVA@@", _icon("stellar_nova")),
+             ("@@I_VOYAGE@@", _icon("voyage")), ("@@I_ARCHIVE@@", _icon("archive"))]:
     BODY = BODY.replace(a, b)
 
 HTML = (SC.head('index.html', "Joseph's Modpack Wiki", 'An offline wiki for a Terraria tModLoader 1.4.4 modpack: 87 bosses in one fight order, 5,455 recipes across 130 stations, and a filled equipment panel for every class at every boss.') + BASECSS + SC.NAV_CSS + SC.PROGRESS_CSS + EXTRA

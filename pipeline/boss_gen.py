@@ -100,9 +100,6 @@ button.tbtn[aria-pressed="true"]{background:var(--brass-soft); border-color:var(
 .boss .nm .top{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
 /* light mode lifts toward a dark ink, where the neutral Terraria grey has far less room
    than the saturated mods, so it needs to travel further to clear 4.5:1 */
-@media (prefers-color-scheme:light){
-  :root:not([data-theme="dark"]) .modtag{color:color-mix(in srgb, var(--mcol) 50%, var(--ink))}
-}
 :root[data-theme="light"] .modtag{color:color-mix(in srgb, var(--mcol) 50%, var(--ink))}
 .boss .nm a.name{font-family:"Pixelify Sans",sans-serif; font-size:15.5px; color:var(--ink);
   text-decoration:none}

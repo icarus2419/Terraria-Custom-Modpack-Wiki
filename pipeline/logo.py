@@ -27,16 +27,17 @@ GRID = [
     "......dddd......",
 ]
 
-# A soulfire flame, in the crimson the rest of the site runs on, so the mark belongs to the
-# palette rather than competing with it. The pale core keeps it reading as fire at 16px --
-# a flat crimson blob does not.
-INK = {"F": "#7fc8c8",   # flame
-       "y": "#d8f2f2",   # hot core
-       "S": "#3c4a52",   # handle
-       "d": "#232d33"}   # handle shadow   # handle shadow
+# The mark is the site's two souls in one object: a Soul of Light flame on a Soul of
+# Night handle, both taken straight from the item sprites. The pale core keeps it
+# reading as fire at 16px -- a flat blob does not.
+INK = {"F": "#ff8dd3",   # Soul of Light
+       "y": "#ffd4ef",   # its core, the brightest pixel on the ramp
+       "S": "#3f007b",   # Soul of Night, the handle
+       "d": "#26004a"}   # the same, 60% toward black
 
 # No tile behind the mark: a solid ground reads as a black box in the browser tab.
-# The flame is mid-orange, so it holds up on light and dark chrome without one.
+# The flame is a mid pink and the handle a deep violet, so the mark holds its shape on
+# light and dark chrome without one.
 
 def _rects(scale=1, dx=0, dy=0):
     """One rect per horizontal run: small file, hard edges."""
@@ -86,7 +87,7 @@ def head_links():
     return ('<link rel="icon" type="image/png" sizes="16x16" href="%s">\n'
             '<link rel="icon" type="image/png" sizes="32x32" href="%s">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="%s">\n'
-            '<meta name="theme-color" content="#0b0d11">\n'
+            '<meta name="theme-color" content="#100020">\n'
             % (png_datauri(16), png_datauri(32), png_datauri(176)))
 
 BRAND_CSS = """

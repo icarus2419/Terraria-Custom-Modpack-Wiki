@@ -65,9 +65,10 @@ def chips():
     out = []
     for m in ORDER:
         if not per.get(m): continue
-        out.append('<button class="chip" type="button" data-src="%s" aria-pressed="true">'
+        out.append('<button class="chip modsrc" type="button" data-src="%s" aria-pressed="true" style="--mcol:%s">'
                    '<span class="swatch" style="width:8px;height:8px;border-radius:2px;display:inline-block;background:%s"></span>'
-                   '%s<span class="n">%d</span></button>' % (m, MODCOL[m], html.escape(MODS[m]["short"]), per[m]))
+                   '%s<span class="n">%d</span></button>'
+                   % (m, MODCOL[m], MODCOL[m], html.escape(MODS[m]["short"]), per[m]))
     return "".join(out)
 
 npre  = sum(1 for r in R if r["phm"] is True)

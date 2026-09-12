@@ -13,6 +13,7 @@ whole site works with no network connection.
 - [Loadouts](https://josephwiki.pages.dev/loadouts): Pick a boss and a class, get one equipment panel — armour, five accessories, a weapon hotbar, ammo and buffs.
 - [All Recipes](https://josephwiki.pages.dev/recipes): 5,455 recipes across 130 crafting stations, with how to obtain each item and whether it is craftable before Hardmode.
 - [Tinkerer's Workshop](https://josephwiki.pages.dev/tinkerers): Every accessory combination, modded and vanilla side by side.
+- [The Stars Above](https://josephwiki.pages.dev/stars): The one mod that adds a system rather than content — the Spatial Disk, the Starfarer you choose, the four screens behind it and the nine bosses in order, each with what it does, how you get it and when.
 
 ## Sources
 

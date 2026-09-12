@@ -1,4 +1,4 @@
-"""Shared chrome for every page of the wiki: nav bar + its styles."""
+"""Shared chrome for every page of the wiki: nav bar, theme toggle, and their styles."""
 
 NAV_CSS = """
 <style>
@@ -26,7 +26,32 @@ NAV_CSS = """
   font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--ink-3);
   padding-right:2px; white-space:nowrap;
 }
+/* ---- the theme toggle ----
+   It is the two items the palette is sampled from, not a sun and a moon: the soul you
+   are looking at is the soul the page is currently made of. Both sprites are always in
+   the DOM and cross-fade, so there is no flash of a swapped src on click. */
+.themetoggle{
+  display:inline-flex; align-items:center; gap:7px; flex:none; cursor:pointer;
+  font-family:"Pixelify Sans",sans-serif; font-size:11.5px; letter-spacing:.04em;
+  color:var(--ink-2); background:var(--surface-2);
+  border:1px solid var(--line-strong); border-radius:100px;
+  padding:4px 11px 4px 6px; margin-left:10px; white-space:nowrap;
+}
+.themetoggle:hover{color:var(--brass); border-color:var(--brass); box-shadow:var(--glow-soft)}
+.themetoggle .soulwrap{position:relative; width:16px; height:16px; flex:none; display:block}
+.themetoggle .soul{
+  position:absolute; inset:0; width:16px; height:16px; display:block;
+  image-rendering:pixelated; image-rendering:crisp-edges;
+}
+.themetoggle .soul.light{opacity:0}
+:root[data-theme="light"] .themetoggle .soul.night{opacity:0}
+:root[data-theme="light"] .themetoggle .soul.light{opacity:1}
+@media (prefers-reduced-motion:no-preference){
+  .themetoggle{transition:color .14s ease, border-color .14s ease, box-shadow .14s ease}
+  .themetoggle .soul{transition:opacity .26s ease}
+}
 @media (max-width:700px){ .sitenav .navnote{display:none} .sitenav a.tab{padding:9px 10px} }
+@media (max-width:460px){ .themetoggle .tlabel{display:none} .themetoggle{padding:4px 6px} }
 </style>
 """
 
@@ -35,7 +60,8 @@ TABS = [("index.html",     "Home"),
         ("bosses.html",    "Boss Order"),
         ("loadouts.html",  "Loadouts"),
         ("recipes.html",   "All Recipes"),
-        ("tinkerers.html", "Tinkerer's Workshop")]
+        ("tinkerers.html", "Tinkerer's Workshop"),
+        ("stars.html",     "Stars Above")]
 
 def nav(active, note=""):
     import logo
@@ -47,8 +73,59 @@ def nav(active, note=""):
         out.append('<a class="tab" href="%s"%s>%s</a>' % (href, cur, label))
     out.append('<span class="navspacer"></span>')
     if note: out.append('<span class="navnote">%s</span>' % note)
+    out.append(theme_button())
     out.append("</div></nav>")
     return "".join(out)
+
+
+def theme_button():
+    """Sits last in the nav, so it lands top right on every page."""
+    import souls
+    return ('<button class="themetoggle" type="button" id="themetoggle" '
+            'aria-pressed="false" aria-label="Switch theme" title="Switch theme">'
+            '<span class="soulwrap">'
+            + souls.img("night", 16, "soul night")
+            + souls.img("light", 16, "soul light")
+            + '</span><span class="tlabel">Night</span></button>')
+
+
+# The theme, decided before the stylesheet is parsed so the page never paints the wrong
+# one and then corrects itself. Dark is the CSS default and needs no attribute; only a
+# stored preference for light sets one. Nothing here touches the network or the server.
+THEME_BOOT = """
+<script>
+(function(){
+"use strict";
+var K="theme", R=document.documentElement;
+try{ if(localStorage.getItem(K)==="light") R.setAttribute("data-theme","light"); }catch(e){}
+function cur(){ return R.getAttribute("data-theme")==="light" ? "light" : "dark"; }
+function paint(){
+  var b=document.getElementById("themetoggle"); if(!b) return;
+  var t=cur();
+  b.setAttribute("aria-pressed", t==="light" ? "true" : "false");
+  b.setAttribute("aria-label", "Switch to the "+(t==="dark"?"light":"dark")+" theme");
+  b.title = t==="dark" ? "Soul of Night \u2014 switch to the light theme"
+                       : "Soul of Light \u2014 switch to the dark theme";
+  var l=b.querySelector(".tlabel"); if(l) l.textContent = t==="dark" ? "Night" : "Light";
+}
+function boot(){
+  var b=document.getElementById("themetoggle"); if(!b) return;
+  b.addEventListener("click", function(){
+    var next = cur()==="dark" ? "light" : "dark";
+    R.classList.add("theming");
+    if(next==="light") R.setAttribute("data-theme","light");
+    else R.removeAttribute("data-theme");
+    try{ localStorage.setItem(K, next); }catch(e){}
+    paint();
+    setTimeout(function(){ R.classList.remove("theming"); }, 320);
+  });
+  paint();
+}
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
+})();
+</script>
+"""
 
 
 # ---------------------------------------------------------------------------
@@ -207,7 +284,7 @@ def head(page, title, description):
             '<meta name="twitter:card" content="summary">\n'
             '<meta name="twitter:title" content="%s">\n'
             '<meta name="twitter:description" content="%s">\n'
-            % (d, t, d, url, t, d))
+            % (d, t, d, url, t, d)) + THEME_BOOT
 
 
 # ---------------------------------------------------------------------------

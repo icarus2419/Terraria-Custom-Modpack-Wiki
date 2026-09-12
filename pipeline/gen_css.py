@@ -6,56 +6,85 @@ CSS = r"""
 @@ICONS@@@@PIXELFONT@@<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <title>Joseph's Modpack Wiki</title>
 <style>
+/* ---------------------------------------------------------------------------
+   The palette is two vanilla item sprites, read pixel by pixel and used whole.
+
+   Soul of Light   #7b004e #a91b7d #dc1db7 #ea5fd2 #ff6cc6 #ff8dd3 #ffd4ef
+   Soul of Night   #3f007b #571ba9 #7b1ddc #a25fea #bc6cff #e08dff #fdd4ff
+
+   Seven steps each, and the two ramps run parallel -- both climb from a near-black
+   to a near-white core. So the page can be built from one and written in the other,
+   and the light and dark themes are the same idea inverted:
+
+     light theme -- a page made of Soul of Light, its words in Soul of Night
+     dark theme  -- a page made of Soul of Night, its words in Soul of Light
+
+   Every value below is either a pixel from one of those sprites or a stated mix of
+   one with black or white. Nothing here is picked by eye.
+
+   The era colours (--pre, --hard), the alert (--flag) and the mod colours in
+   site_common.py are deliberately NOT from these ramps: they carry data, and they
+   are measured to stay clear of the accent. Changing them here would break that.
+
+   Dark is the default. This is a night sky with two souls in it, and you get that
+   without asking; the light theme is opt-in, through the toggle in the nav.
+   --------------------------------------------------------------------------- */
 :root{
-  --bg:#eceef1; --surface:#fbfcfd; --surface-2:#f2f4f7; --surface-3:#e4e8ed;
-  --line:#d6dbe2; --line-strong:#b4bcc7;
-  --ink:#141920; --ink-2:#4a545f; --ink-3:#5c6672;
-  --brass:#0f6d72; --brass-bright:#0b585d; --brass-soft:#dff0f1; --brass-line:#a7cfd1;
-  --flag:#b23a1c; --flag-soft:#f9e0d6;
-  --tip-bg:#141920; --tip-ink:#eef1f5;
-  --shadow:0 1px 2px rgba(25,29,48,.07), 0 8px 24px -12px rgba(25,29,48,.18);
-  --radius:7px;
-  --slot-bg:#e4dccf; --slot-line:#c8bcaa; --slot-in:rgba(255,255,255,.85);
-  --pre:#0d6b5e; --pre-soft:#d7efe9; --pre-line:#7fc4b6;
-  --hard:#b23a1c; --hard-soft:#f9e0d6; --hard-line:#dda893;
-  --rar-blend:#0b0d11; --rar-amt:48%;
-  --ui-shadow:none; --wordshadow:rgba(20,25,32,.14); --grid:rgba(20,25,32,.055);
-  color-scheme:light;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0b0d11; --surface:#14171c; --surface-2:#1b1f26; --surface-3:#252a33;
-    --line:#2b313a; --line-strong:#3d4552;
-    --ink:#eef1f5; --ink-2:#aeb8c4; --ink-3:#7f8a97;
-    --brass:#7fc8c8; --brass-bright:#a5dcdc; --brass-soft:#12292c; --brass-line:#33636a;
-    --flag:#ff7a5c; --flag-soft:#3d1c14;
-    --tip-bg:#0c0908; --tip-ink:#eef1f5;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-    --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
-    --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
-    --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
-    --rar-blend:#0b0d11; --rar-amt:22%;
-    --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(190,225,240,.038);
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0b0d11; --surface:#14171c; --surface-2:#1b1f26; --surface-3:#252a33;
-  --line:#2b313a; --line-strong:#3d4552;
-  --ink:#eef1f5; --ink-2:#aeb8c4; --ink-3:#7f8a97;
-  --brass:#7fc8c8; --brass-bright:#a5dcdc; --brass-soft:#12292c; --brass-line:#33636a;
+  /* ground: Soul of Night's darkest, toward black */
+  --bg:#100020; --surface:#1a0034; --surface-2:#1e0939; --surface-3:#2a0d51;
+  --line:#361169; --line-strong:#5e3788;
+  /* words: Soul of Light's core pixel, exact */
+  --ink:#ffd4ef; --ink-2:#c19db9; --ink-3:#9f7f9c;
+  --brass:#ff8dd3; --brass-bright:#ffd4ef; --brass-soft:#400029; --brass-line:#69114e;
   --flag:#ff7a5c; --flag-soft:#3d1c14;
-  --tip-bg:#0c0908; --tip-ink:#eef1f5;
+  --tip-bg:#0a0014; --tip-ink:#ffd4ef;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-  --slot-bg:#2a221d; --slot-line:#40352d; --slot-in:rgba(255,255,255,.07);
+  --radius:7px;
+  --slot-bg:#250047; --slot-line:#391270; --slot-in:rgba(255,255,255,.07);
   --pre:#5fd3bd; --pre-soft:#0f3a34; --pre-line:#2a6b60;
   --hard:#ff7a5c; --hard-soft:#3d1c14; --hard-line:#7a3626;
-  --rar-blend:#0b0d11; --rar-amt:22%;
-  --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(190,225,240,.038);
+  /* Terraria's own rarity colours are data, so they are never replaced -- only blended
+     far enough to stay readable. On a violet ground the purple tiers (#b428ff, #d2a0ff)
+     were sinking into it at 2.4:1, so dark lifts them toward the light soul rather than
+     darkening them toward the page. Worst tier now 4.9:1, and the tiers stay separable. */
+  --rar-blend:#ffd4ef; --rar-amt:34%;
+  --ui-shadow:0 1px 0 rgba(0,0,0,.6); --wordshadow:rgba(0,0,0,.75); --grid:rgba(224,141,255,.040);
+  /* A soul gives off light. Only the dark theme can afford to show it: on white a glow
+     turns to grey mud, so the light theme sets these to nothing rather than shrinking them. */
+  --glow:0 0 22px -6px var(--brass);
+  --glow-soft:0 0 14px -6px var(--brass);
+  --halo:radial-gradient(58% 120% at 10% 0%, color-mix(in srgb,var(--brass) 15%, transparent), transparent 68%);
+  --starop:1;
   color-scheme:dark;
+}
+:root[data-theme="light"]{
+  /* ground: Soul of Light washed to white, 5% Soul of Night to take the edge off */
+  --bg:#f5e4f3; --surface:#fffafd; --surface-2:#f7eaf6; --surface-3:#ffe8f6;
+  --line:#e5d2f9; --line-strong:#c297ef;
+  /* words: Soul of Night's darkest, toward black; three levels of one colour */
+  --ink:#15002a; --ink-2:#463256; --ink-3:#614e6e;
+  /* voice: Soul of Light's deepest pixel, exact -- 10.4:1 on the surface */
+  --brass:#7b004e; --brass-bright:#540035; --brass-soft:#ffe6f6; --brass-line:#ffc6e9;
+  --flag:#b23a1c; --flag-soft:#f9e0d6;
+  --tip-bg:#15002a; --tip-ink:#ffd4ef;
+  --shadow:0 1px 2px rgba(21,0,42,.07), 0 8px 24px -12px rgba(21,0,42,.18);
+  --slot-bg:#eae3f0; --slot-line:#cdbbe5; --slot-in:rgba(255,255,255,.85);
+  --pre:#0d6b5e; --pre-soft:#d7efe9; --pre-line:#7fc4b6;
+  --hard:#b23a1c; --hard-soft:#f9e0d6; --hard-line:#dda893;
+  --rar-blend:#15002a; --rar-amt:60%;   /* worst tier 3.0:1 -> 4.6:1 on the pale ground */
+  --ui-shadow:none; --wordshadow:rgba(21,0,42,.14); --grid:rgba(21,0,42,.055);
+  /* not 'none': these sit inside shadow lists, and one 'none' invalidates the whole rule */
+  --glow:0 0 0 transparent; --glow-soft:0 0 0 transparent;
+  --halo:radial-gradient(58% 120% at 10% 0%, color-mix(in srgb,var(--brass) 6%, transparent), transparent 68%);
+  --starop:0;
+  color-scheme:light;
 }
 
 *{box-sizing:border-box}
+/* Pixelify Sans ligates "fi" into a single glyph that reads as a capital A -- "first"
+   renders as "Arst", "fifty" as "Afty". It is inherited, so switching it off at the root
+   covers every page; the body face loses only decorative ligatures by it. */
+:root{font-variant-ligatures:none}
 body{
   background:var(--bg); color:var(--ink);
   font-family:"Asap","Segoe UI",system-ui,-apple-system,sans-serif;
@@ -75,6 +104,7 @@ a:hover{color:var(--brass-bright)}
   position:relative; overflow:hidden;
   border-bottom:2px solid var(--brass-line);
   background:
+    var(--halo),
     linear-gradient(180deg, color-mix(in srgb,var(--brass-soft) 55%, var(--surface)) 0%, var(--surface) 100%);
 }
 .masthead::after{
@@ -85,21 +115,16 @@ a:hover{color:var(--brass-bright)}
 }
 /* A night sky rather than graph paper: sixty fixed stars, most of them faint. Seeded so
    the layout is identical on every build, and hidden in light mode where it reads as dust. */
-:root{--stars:radial-gradient(1px 1px at 32.38% 15.08%,rgba(226,240,250,0.329) 50%,transparent 51%),radial-gradient(1px 1px at 7.24% 53.59%,rgba(226,240,250,0.255) 50%,transparent 51%),radial-gradient(1px 1px at 5.8% 50.74%,rgba(226,240,250,0.17) 50%,transparent 51%),radial-gradient(1px 1px at 43.36% 6.99%,rgba(226,240,250,0.184) 50%,transparent 51%),radial-gradient(1px 1px at 42.45% 82.69%,rgba(226,240,250,0.192) 50%,transparent 51%),radial-gradient(1px 1px at 22.32% 62.74%,rgba(226,240,250,0.406) 50%,transparent 51%),radial-gradient(1px 1px at 57.71% 39.67%,rgba(226,240,250,0.414) 50%,transparent 51%),radial-gradient(1px 1px at 4.66% 85.85%,rgba(226,240,250,0.235) 50%,transparent 51%),radial-gradient(1px 1px at 14.43% 11.78%,rgba(226,240,250,0.24) 50%,transparent 51%),radial-gradient(1px 1px at 81.61% 18.07%,rgba(226,240,250,0.311) 50%,transparent 51%),radial-gradient(1px 1px at 63.89% 37.24%,rgba(226,240,250,0.302) 50%,transparent 51%),radial-gradient(1px 1px at 6.28% 5.96%,rgba(226,240,250,0.214) 50%,transparent 51%),radial-gradient(1px 1px at 68.04% 42.76%,rgba(226,240,250,0.242) 50%,transparent 51%),radial-gradient(1px 1px at 58.56% 45.32%,rgba(226,240,250,0.238) 50%,transparent 51%),radial-gradient(1px 1px at 79.44% 69.9%,rgba(226,240,250,0.223) 50%,transparent 51%),radial-gradient(1px 1px at 57.44% 52.52%,rgba(226,240,250,0.388) 50%,transparent 51%),radial-gradient(1px 1px at 72.94% 28.79%,rgba(226,240,250,0.415) 50%,transparent 51%),radial-gradient(1px 1px at 11.81% 41.81%,rgba(226,240,250,0.357) 50%,transparent 51%),radial-gradient(1px 1px at 15.2% 48.9%,rgba(226,240,250,0.17) 50%,transparent 51%),radial-gradient(1px 1px at 66.82% 76.46%,rgba(226,240,250,0.309) 50%,transparent 51%),radial-gradient(1px 1px at 87.55% 31.37%,rgba(226,240,250,0.341) 50%,transparent 51%),radial-gradient(1px 1px at 59.44% 57.99%,rgba(226,240,250,0.279) 50%,transparent 51%),radial-gradient(1px 1px at 84.0% 94.47%,rgba(226,240,250,0.283) 50%,transparent 51%),radial-gradient(1px 1px at 66.42% 6.07%,rgba(226,240,250,0.342) 50%,transparent 51%),radial-gradient(1px 1px at 64.71% 99.31%,rgba(226,240,250,0.374) 50%,transparent 51%),radial-gradient(1px 1px at 28.46% 38.58%,rgba(226,240,250,0.334) 50%,transparent 51%),radial-gradient(1px 1px at 2.26% 46.17%,rgba(226,240,250,0.204) 50%,transparent 51%),radial-gradient(1px 1px at 11.71% 5.9%,rgba(226,240,250,0.36) 50%,transparent 51%),radial-gradient(1px 1px at 12.93% 24.76%,rgba(226,240,250,0.262) 50%,transparent 51%),radial-gradient(1px 1px at 87.14% 8.06%,rgba(226,240,250,0.277) 50%,transparent 51%),radial-gradient(1px 1px at 54.94% 88.34%,rgba(226,240,250,0.373) 50%,transparent 51%),radial-gradient(1px 1px at 86.4% 27.84%,rgba(226,240,250,0.268) 50%,transparent 51%),radial-gradient(1px 1px at 35.88% 88.42%,rgba(226,240,250,0.409) 50%,transparent 51%),radial-gradient(1px 1px at 15.09% 17.62%,rgba(226,240,250,0.22) 50%,transparent 51%),radial-gradient(1px 1px at 23.33% 48.5%,rgba(226,240,250,0.313) 50%,transparent 51%),radial-gradient(1px 1px at 26.27% 0.41%,rgba(226,240,250,0.269) 50%,transparent 51%),radial-gradient(1px 1px at 36.93% 56.63%,rgba(226,240,250,0.408) 50%,transparent 51%),radial-gradient(1px 1px at 69.05% 51.55%,rgba(226,240,250,0.321) 50%,transparent 51%),radial-gradient(1px 1px at 67.62% 5.4%,rgba(226,240,250,0.394) 50%,transparent 51%),radial-gradient(1px 1px at 78.0% 87.45%,rgba(226,240,250,0.367) 50%,transparent 51%),radial-gradient(1px 1px at 39.24% 39.9%,rgba(226,240,250,0.187) 50%,transparent 51%),radial-gradient(1px 1px at 63.43% 6.22%,rgba(226,240,250,0.178) 50%,transparent 51%),radial-gradient(1px 1px at 20.88% 16.23%,rgba(226,240,250,0.248) 50%,transparent 51%),radial-gradient(1px 1px at 5.26% 0.02%,rgba(226,240,250,0.199) 50%,transparent 51%),radial-gradient(1px 1px at 10.15% 36.36%,rgba(226,240,250,0.167) 50%,transparent 51%),radial-gradient(1px 1px at 87.43% 61.41%,rgba(226,240,250,0.199) 50%,transparent 51%),radial-gradient(2px 2px at 25.23% 34.74%,rgba(226,240,250,0.431) 50%,transparent 51%),radial-gradient(2px 2px at 12.28% 84.89%,rgba(226,240,250,0.658) 50%,transparent 51%),radial-gradient(2px 2px at 46.6% 48.38%,rgba(226,240,250,0.331) 50%,transparent 51%),radial-gradient(2px 2px at 10.22% 34.26%,rgba(226,240,250,0.395) 50%,transparent 51%),radial-gradient(2px 2px at 82.89% 16.14%,rgba(226,240,250,0.308) 50%,transparent 51%),radial-gradient(2px 2px at 95.1% 52.83%,rgba(226,240,250,0.353) 50%,transparent 51%),radial-gradient(2px 2px at 54.32% 2.7%,rgba(226,240,250,0.49) 50%,transparent 51%),radial-gradient(2px 2px at 97.85% 86.33%,rgba(226,240,250,0.551) 50%,transparent 51%),radial-gradient(2px 2px at 26.11% 36.67%,rgba(226,240,250,0.36) 50%,transparent 51%),radial-gradient(2px 2px at 77.19% 53.26%,rgba(226,240,250,0.58) 50%,transparent 51%),radial-gradient(2px 2px at 32.97% 22.3%,rgba(226,240,250,0.592) 50%,transparent 51%),radial-gradient(2px 2px at 98.49% 85.26%,rgba(226,240,250,0.59) 50%,transparent 51%),radial-gradient(2px 2px at 81.83% 73.99%,rgba(226,240,250,0.382) 50%,transparent 51%),radial-gradient(2px 2px at 51.76% 35.56%,rgba(226,240,250,0.31) 50%,transparent 51%)}
+:root{--stars:radial-gradient(1px 1px at 32.38% 15.08%,rgba(253,212,255,0.329) 50%,transparent 51%),radial-gradient(1px 1px at 7.24% 53.59%,rgba(253,212,255,0.255) 50%,transparent 51%),radial-gradient(1px 1px at 5.8% 50.74%,rgba(253,212,255,0.17) 50%,transparent 51%),radial-gradient(1px 1px at 43.36% 6.99%,rgba(253,212,255,0.184) 50%,transparent 51%),radial-gradient(1px 1px at 42.45% 82.69%,rgba(253,212,255,0.192) 50%,transparent 51%),radial-gradient(1px 1px at 22.32% 62.74%,rgba(253,212,255,0.406) 50%,transparent 51%),radial-gradient(1px 1px at 57.71% 39.67%,rgba(253,212,255,0.414) 50%,transparent 51%),radial-gradient(1px 1px at 4.66% 85.85%,rgba(253,212,255,0.235) 50%,transparent 51%),radial-gradient(1px 1px at 14.43% 11.78%,rgba(253,212,255,0.24) 50%,transparent 51%),radial-gradient(1px 1px at 81.61% 18.07%,rgba(253,212,255,0.311) 50%,transparent 51%),radial-gradient(1px 1px at 63.89% 37.24%,rgba(253,212,255,0.302) 50%,transparent 51%),radial-gradient(1px 1px at 6.28% 5.96%,rgba(253,212,255,0.214) 50%,transparent 51%),radial-gradient(1px 1px at 68.04% 42.76%,rgba(253,212,255,0.242) 50%,transparent 51%),radial-gradient(1px 1px at 58.56% 45.32%,rgba(253,212,255,0.238) 50%,transparent 51%),radial-gradient(1px 1px at 79.44% 69.9%,rgba(253,212,255,0.223) 50%,transparent 51%),radial-gradient(1px 1px at 57.44% 52.52%,rgba(253,212,255,0.388) 50%,transparent 51%),radial-gradient(1px 1px at 72.94% 28.79%,rgba(253,212,255,0.415) 50%,transparent 51%),radial-gradient(1px 1px at 11.81% 41.81%,rgba(253,212,255,0.357) 50%,transparent 51%),radial-gradient(1px 1px at 15.2% 48.9%,rgba(253,212,255,0.17) 50%,transparent 51%),radial-gradient(1px 1px at 66.82% 76.46%,rgba(253,212,255,0.309) 50%,transparent 51%),radial-gradient(1px 1px at 87.55% 31.37%,rgba(253,212,255,0.341) 50%,transparent 51%),radial-gradient(1px 1px at 59.44% 57.99%,rgba(253,212,255,0.279) 50%,transparent 51%),radial-gradient(1px 1px at 84.0% 94.47%,rgba(253,212,255,0.283) 50%,transparent 51%),radial-gradient(1px 1px at 66.42% 6.07%,rgba(253,212,255,0.342) 50%,transparent 51%),radial-gradient(1px 1px at 64.71% 99.31%,rgba(253,212,255,0.374) 50%,transparent 51%),radial-gradient(1px 1px at 28.46% 38.58%,rgba(253,212,255,0.334) 50%,transparent 51%),radial-gradient(1px 1px at 2.26% 46.17%,rgba(253,212,255,0.204) 50%,transparent 51%),radial-gradient(1px 1px at 11.71% 5.9%,rgba(253,212,255,0.36) 50%,transparent 51%),radial-gradient(1px 1px at 12.93% 24.76%,rgba(253,212,255,0.262) 50%,transparent 51%),radial-gradient(1px 1px at 87.14% 8.06%,rgba(253,212,255,0.277) 50%,transparent 51%),radial-gradient(1px 1px at 54.94% 88.34%,rgba(253,212,255,0.373) 50%,transparent 51%),radial-gradient(1px 1px at 86.4% 27.84%,rgba(253,212,255,0.268) 50%,transparent 51%),radial-gradient(1px 1px at 35.88% 88.42%,rgba(253,212,255,0.409) 50%,transparent 51%),radial-gradient(1px 1px at 15.09% 17.62%,rgba(253,212,255,0.22) 50%,transparent 51%),radial-gradient(1px 1px at 23.33% 48.5%,rgba(253,212,255,0.313) 50%,transparent 51%),radial-gradient(1px 1px at 26.27% 0.41%,rgba(253,212,255,0.269) 50%,transparent 51%),radial-gradient(1px 1px at 36.93% 56.63%,rgba(253,212,255,0.408) 50%,transparent 51%),radial-gradient(1px 1px at 69.05% 51.55%,rgba(253,212,255,0.321) 50%,transparent 51%),radial-gradient(1px 1px at 67.62% 5.4%,rgba(253,212,255,0.394) 50%,transparent 51%),radial-gradient(1px 1px at 78.0% 87.45%,rgba(253,212,255,0.367) 50%,transparent 51%),radial-gradient(1px 1px at 39.24% 39.9%,rgba(253,212,255,0.187) 50%,transparent 51%),radial-gradient(1px 1px at 63.43% 6.22%,rgba(253,212,255,0.178) 50%,transparent 51%),radial-gradient(1px 1px at 20.88% 16.23%,rgba(253,212,255,0.248) 50%,transparent 51%),radial-gradient(1px 1px at 5.26% 0.02%,rgba(253,212,255,0.199) 50%,transparent 51%),radial-gradient(1px 1px at 10.15% 36.36%,rgba(253,212,255,0.167) 50%,transparent 51%),radial-gradient(1px 1px at 87.43% 61.41%,rgba(253,212,255,0.199) 50%,transparent 51%),radial-gradient(2px 2px at 25.23% 34.74%,rgba(253,212,255,0.431) 50%,transparent 51%),radial-gradient(2px 2px at 12.28% 84.89%,rgba(253,212,255,0.658) 50%,transparent 51%),radial-gradient(2px 2px at 46.6% 48.38%,rgba(253,212,255,0.331) 50%,transparent 51%),radial-gradient(2px 2px at 10.22% 34.26%,rgba(253,212,255,0.395) 50%,transparent 51%),radial-gradient(2px 2px at 82.89% 16.14%,rgba(253,212,255,0.308) 50%,transparent 51%),radial-gradient(2px 2px at 95.1% 52.83%,rgba(253,212,255,0.353) 50%,transparent 51%),radial-gradient(2px 2px at 54.32% 2.7%,rgba(253,212,255,0.49) 50%,transparent 51%),radial-gradient(2px 2px at 97.85% 86.33%,rgba(253,212,255,0.551) 50%,transparent 51%),radial-gradient(2px 2px at 26.11% 36.67%,rgba(253,212,255,0.36) 50%,transparent 51%),radial-gradient(2px 2px at 77.19% 53.26%,rgba(253,212,255,0.58) 50%,transparent 51%),radial-gradient(2px 2px at 32.97% 22.3%,rgba(253,212,255,0.592) 50%,transparent 51%),radial-gradient(2px 2px at 98.49% 85.26%,rgba(253,212,255,0.59) 50%,transparent 51%),radial-gradient(2px 2px at 81.83% 73.99%,rgba(253,212,255,0.382) 50%,transparent 51%),radial-gradient(2px 2px at 51.76% 35.56%,rgba(253,212,255,0.31) 50%,transparent 51%)}
 .masthead::before, .hero::before{
   content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-  background-image:var(--stars); background-size:420px 300px; opacity:0;
+  background-image:var(--stars); background-size:420px 300px; opacity:var(--starop);
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]) .masthead::before,
-  :root:not([data-theme="light"]) .hero::before{opacity:1}
-}
-:root[data-theme="dark"] .masthead::before,
-:root[data-theme="dark"] .hero::before{opacity:1}
 @media (prefers-reduced-motion:no-preference){
   .masthead::before{animation:twinkle 7s ease-in-out infinite alternate}
 }
-@keyframes twinkle{from{opacity:.72}to{opacity:1}}
+/* scaled by --starop so the same keyframes stay silent in the light theme */
+@keyframes twinkle{from{opacity:calc(var(--starop) * .72)}to{opacity:var(--starop)}}
 .mast-in{position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:22px 34px; align-items:flex-end; padding:26px 0 20px}
 .brandline{display:flex; align-items:center; gap:14px; min-width:0}
 .station{
@@ -116,7 +141,7 @@ h1{
 }
 /* wordmark: the owner's name recedes so the thing itself carries the ember */
 h1 .wm-a{color:var(--ink-2)}
-h1 .wm-b{color:var(--brass)}
+h1 .wm-b{color:var(--brass); text-shadow:2px 2px 0 var(--wordshadow), var(--glow-soft)}
 h1 .wm-rule{display:block; width:2.2em; height:3px; margin-top:10px;
   background:linear-gradient(90deg, var(--brass), transparent)}
 .tagline{margin:0; color:var(--ink-2); font-size:14.5px; max-width:62ch}
@@ -212,6 +237,16 @@ h1 .wm-rule{display:block; width:2.2em; height:3px; margin-top:10px;
 .chip.phmchip[aria-pressed="true"] .n{color:var(--pre)}
 .chip.hmchip[aria-pressed="true"]{background:var(--hard-soft); border-color:var(--hard-line); color:var(--hard)}
 .chip.hmchip[aria-pressed="true"] .n{color:var(--hard)}
+/* A mod chip wears its own mod colour when it is on, like the era chips above and like
+   button.modchip on the boss page. Seven chips in one brass was a row you had to read
+   the swatches of to tell apart. --mcol comes from MODCOL, so this stays in step with it. */
+.chip.modsrc[aria-pressed="true"]{
+  background:color-mix(in srgb, var(--mcol) 20%, var(--surface));
+  border-color:color-mix(in srgb, var(--mcol) 62%, var(--surface));
+  color:color-mix(in srgb, var(--mcol) 58%, var(--ink));
+}
+.chip.modsrc[aria-pressed="true"] .n{color:color-mix(in srgb, var(--mcol) 46%, var(--ink))}
+.chip.modsrc[aria-pressed="false"]{opacity:.45}
 .spacer{flex:1}
 .count{font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums}
 
@@ -301,6 +336,39 @@ tbody tr.rec:hover td.ing::before{opacity:1}
   .boss .tick:active{transform:scale(.9)}
   .track .fill, .bandbar .t i, .progbar .fill{transition:width .35s cubic-bezier(.3,.9,.3,1)}
   .slotrow,.hb{transition:opacity .15s ease}
+  /* the page arriving: the masthead and the bar under it, nothing per-row */
+  .masthead .mast-in{animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
+  .sectionbar{animation:rise .5s .05s cubic-bezier(.2,.8,.3,1) both}
+  /* the two souls breathe, the way they do hanging in a cavern */
+  .sitenav .brand .brandmark{animation:soul-breathe 4.6s ease-in-out infinite}
+  .themetoggle .soul{animation:soul-bob 3.4s ease-in-out infinite}
+  a.card,.nextup{transition:transform .14s ease, border-color .14s ease, box-shadow .14s ease}
+  a.card:hover{transform:translateY(-2px); box-shadow:var(--glow), var(--shadow)}
+  .sitenav a.tab{transition:color .14s ease, background-color .14s ease, border-color .14s ease}
+  .sitenav .brand{transition:color .14s ease}
+  .themetoggle:active{transform:scale(.95)}
+  /* the pill buttons pick up the soul's glow as you reach them */
+  .runbar a.go,.runbar button.go,button.tbtn,.nextup .acts a,.nextup .acts button{
+    transition:background-color .13s ease, border-color .13s ease, color .13s ease, box-shadow .14s ease}
+  .runbar a.go:hover,.runbar button.go:hover,button.tbtn:hover,
+  .nextup .acts a:hover,.nextup .acts button:hover{box-shadow:var(--glow-soft)}
+  /* a row you are pointing at steps out of the column by two pixels */
+  .boss{transition:border-color .14s ease, transform .13s ease, box-shadow .14s ease}
+  .boss:hover{transform:translateX(2px)}
+  .it .sp img{transition:transform .14s ease}
+  .it:hover .sp img{transform:scale(1.09)}
+  summary{transition:color .13s ease}
+  summary:hover{color:var(--brass)}
+}
+@keyframes rise{from{opacity:0; transform:translateY(7px)}to{opacity:1; transform:none}}
+@keyframes soul-breathe{0%,100%{filter:drop-shadow(0 0 2px transparent)}
+                        50%{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--brass) 65%, transparent))}}
+@keyframes soul-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+/* Only while the toggle is mid-swap. Scoped to the chrome rather than "*", because
+   recipes.html is 5,455 rows and transitioning all of them drops frames. */
+:root.theming body,:root.theming .sitenav,:root.theming .runbar,
+:root.theming .masthead,:root.theming footer,:root.theming .sectionbar{
+  transition:background-color .3s ease, color .3s ease, border-color .3s ease;
 }
 @keyframes card-in{from{opacity:0; transform:translateY(4px)}to{opacity:1; transform:none}}
 @keyframes sprite-in{from{opacity:0; transform:scale(.82)}to{opacity:1; transform:none}}

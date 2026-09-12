@@ -316,7 +316,12 @@ footer b.lg{color:var(--src); font-weight:600}
   color:var(--ink-3); white-space:nowrap}
 .pnl > header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding:9px 15px;
   border-bottom:1px solid var(--line); background:var(--surface-2)}
-.pnl > header h3{margin:0; font-family:"Pixelify Sans",sans-serif; font-size:17px; color:var(--ccol)}
+/* The class colour is data, so it is blended toward the ink rather than replaced -- the
+   same move .modtag makes on the boss page. Raw, Summoner sat at 3.8:1 on the dark ground
+   and Healer at 2.3:1 on the light one; the light theme has less room, so it travels further. */
+.pnl > header h3{margin:0; font-family:"Pixelify Sans",sans-serif; font-size:17px;
+  color:color-mix(in srgb, var(--ccol) 85%, var(--ink))}
+:root[data-theme="light"] .pnl > header h3{color:color-mix(in srgb, var(--ccol) 60%, var(--ink))}
 .pnl > header .blurb{margin:0; font-size:11.5px; color:var(--ink-3)}
 .pnl > header .tagr{margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:10px;
   color:var(--ink-3)}
@@ -398,6 +403,34 @@ footer b.lg{color:var(--src); font-weight:600}
 
 /* ---------- alternatives ---------- */
 .altwrap{margin-top:6px}
+/* The two things the page already marks on every entry, turned into a way to ask for them.
+   "Recommended" is the pick the panel equips for that slot; "new here" is gear that was not
+   in this class's list at its previous checkpoint. Either chip alone, or both for the union. */
+.gfilter{display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin:0 0 13px}
+.gfilter .glab{font-family:"Pixelify Sans",sans-serif; font-size:9.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-3)}
+.gfilter .gchip{font-family:"Pixelify Sans",sans-serif; font-size:11px; letter-spacing:.04em;
+  cursor:pointer; padding:3px 12px; border-radius:100px;
+  border:1px solid var(--line-strong); background:var(--surface-2); color:var(--ink-2)}
+.gfilter .gchip:hover{border-color:var(--brass); color:var(--brass)}
+.gfilter .gchip[aria-pressed="true"]{background:var(--brass-soft); border-color:var(--brass);
+  color:var(--brass-bright); font-weight:600; box-shadow:var(--glow-soft)}
+.gfilter .gcount{font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--ink-3)}
+.gfilter .gclear{font-size:11px; cursor:pointer; background:none; border:0; padding:2px 4px;
+  color:var(--ink-3); text-decoration:underline; text-underline-offset:2px}
+.gfilter .gclear:hover{color:var(--brass)}
+@media (prefers-reduced-motion:no-preference){
+  .gfilter .gchip{transition:background-color .14s ease, border-color .14s ease,
+    color .14s ease, box-shadow .14s ease}
+  .gear{transition:border-color .13s ease, color .13s ease, transform .12s ease}
+  .gear:hover{transform:translateY(-1px)}
+  .slotrow .slot img{transition:transform .14s ease}
+  .slotrow:hover .slot img{transform:scale(1.07)}
+  /* only while a filter is on, so this animates the handful that matched rather than
+     all 2,956 entries on every render */
+  .altwrap.filtering .gearlist li:not([hidden]){animation:gear-in .19s ease both}
+}
+@keyframes gear-in{from{opacity:0; transform:translateY(-3px)}to{opacity:1; transform:none}}
 .altwrap > h3{margin:20px 0 3px; font-family:"Pixelify Sans",sans-serif; font-size:14px}
 .altwrap > p.lede{margin:0 0 11px; font-size:12.5px; color:var(--ink-2); max-width:76ch}
 details.alt{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
@@ -426,7 +459,9 @@ a.gear:hover{border-color:var(--src); background:color-mix(in srgb, var(--src) 4
 .gear .gsp{width:24px; height:24px; display:grid; place-items:center; background:var(--slot-bg);
   border:1px solid var(--slot-line); border-radius:3px; flex:none}
 .gear .gsp img{max-width:19px; max-height:19px; width:auto; height:auto}
-.gear .qual{font-size:9.5px; color:var(--ink-3); font-style:italic}
+/* ink-3 on a gear pill tinted 24% with the mod colour fell to 3.3:1 against Stars Above's
+   lilac; ink-2 clears it on every mod in both themes. */
+.gear .qual{font-size:9.5px; color:var(--ink-2); font-style:italic}
 .gear.equipped{box-shadow:0 0 0 1px color-mix(in srgb,var(--brass) 55%, transparent)}
 .gear .eq{font-family:"Pixelify Sans",sans-serif; font-size:8.5px; letter-spacing:.06em;
   text-transform:uppercase; color:var(--brass-bright)}
@@ -944,6 +979,7 @@ function render(){
     altwrap.appendChild(el("p","lede",
       "The panel above is one pick per slot. This is the full published list for "+cls+" at "+st[1]+
       ", in the same ranked order, with what is equipped marked."));
+    altwrap.appendChild(buildGearFilter());
     var byZone={};
     cats.forEach(function(c){ (byZone[ZONE[c[0]]||"util"] = byZone[ZONE[c[0]]||"util"]||[]).push(c); });
     ZL.concat(ZR).forEach(function(zd){
@@ -971,7 +1007,8 @@ function render(){
           node.appendChild(document.createTextNode(p[0]));
           if(p[2]) node.appendChild(el("span","qual", p[2]));
           if(p[3]) node.appendChild(el("span","qual","new"));
-          if(topPick[p[0]]){ node.classList.add("equipped"); node.appendChild(el("span","eq","recommended")); }
+          if(p[3]) node.dataset.isnew="1";
+          if(topPick[p[0]]){ node.dataset.rec="1"; node.classList.add("equipped"); node.appendChild(el("span","eq","recommended")); }
           else if(equipped[p[0]]){ node.classList.add("equipped"); node.appendChild(el("span","eq","in the panel")); }
           var li=el("li"); li.appendChild(node); ul.appendChild(li);
         });
@@ -979,6 +1016,69 @@ function render(){
       });
       d.appendChild(body); altwrap.appendChild(d);
     });
+  }
+
+  /* Filter state lives for one render; changing class or checkpoint starts clean, which is
+     what you want -- a filter left on from three checkpoints ago reads as missing data. */
+  var gstate={rec:false, isnew:false};
+  function each(list, fn){ Array.prototype.forEach.call(list, fn); }
+
+  function buildGearFilter(){
+    gstate={rec:false, isnew:false};
+    var bar=el("div","gfilter");
+    bar.appendChild(el("span","glab","Show only"));
+    var count=el("span","gcount");
+    var clear=el("button","gclear","show everything again");
+    clear.type="button"; clear.hidden=true;
+    function chip(key,label,title){
+      var b=el("button","gchip",label); b.type="button"; b.title=title;
+      b.setAttribute("aria-pressed","false");
+      b.addEventListener("click", function(){
+        gstate[key]=!gstate[key];
+        b.setAttribute("aria-pressed", gstate[key]?"true":"false");
+        applyGearFilter(count, clear);
+      });
+      return b;
+    }
+    bar.appendChild(chip("rec","recommended",
+      "Only the entry the panel above equips for each slot."));
+    bar.appendChild(chip("isnew","new here",
+      "Only gear that was not in this class's list at its previous checkpoint."));
+    bar.appendChild(count);
+    clear.addEventListener("click", function(){
+      gstate={rec:false, isnew:false};
+      each(bar.querySelectorAll(".gchip"), function(c){ c.setAttribute("aria-pressed","false"); });
+      applyGearFilter(count, clear);
+    });
+    bar.appendChild(clear);
+    return bar;
+  }
+
+  function applyGearFilter(count, clear){
+    var on = gstate.rec || gstate.isnew, shown=0, total=0;
+    each(altwrap.querySelectorAll("details.alt"), function(d){
+      var dshown=0;
+      each(d.querySelectorAll(".altcat"), function(box){
+        var cshown=0;
+        each(box.querySelectorAll("li"), function(li){
+          var g=li.firstChild; total++;
+          var ok = !on || (gstate.rec && g.dataset.rec==="1")
+                       || (gstate.isnew && g.dataset.isnew==="1");
+          li.hidden=!ok;
+          if(ok){ cshown++; shown++; }
+        });
+        box.hidden = (cshown===0);
+        var c=box.querySelector("h4 .cnt"); if(c) c.textContent=String(cshown);
+        dshown+=cshown;
+      });
+      d.hidden = (dshown===0);
+      var sc=d.querySelector("summary .cnt"); if(sc) sc.textContent=dshown+" listed";
+      /* opening them is the point: the matches are inside collapsed sections */
+      if(on && dshown>0) d.open=true;
+    });
+    altwrap.classList.toggle("filtering", on);
+    if(count) count.textContent = on ? ("showing "+shown+" of "+total) : "";
+    if(clear) clear.hidden = !on;
   }
 
   function buildStepnav(i){
