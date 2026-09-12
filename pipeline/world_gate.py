@@ -39,6 +39,9 @@ CRIMSON_LOCKED = {
     "Crimson Rod",               # Hematic Crate
     "Life Drain",
     "Vessel Buster",             # Crimtane Bar
+    # armour whose Thorium material chains back to Ichor or Tissue Sample
+    "Flesh armor",               # Unfathomable Flesh <- Tissue Sample, Ichor
+    "Demon Blood armor",         # Demon Blood Shard <- Ichor
     # other classes
     "Crimtane Tomahawk", "Festering Balloon", "Shadewood Tambourine",
     "The Blender", "Dark Contagion",

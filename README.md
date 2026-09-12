@@ -227,6 +227,29 @@ Cursed Flames is the Corruption equivalent and inherits the tag where it is list
 
 Set `WORLD_EVIL = "crimson"` to flip the gate to the Corruption-locked list instead.
 
+### Thorium's armour page has two tiers; the run has eleven checkpoints
+
+`thorium_armor.py` buckets Thorium's armour into pre-Hardmode and Hardmode, and the loadout merge
+then offered every Hardmode set at every Hardmode checkpoint. So **Terrarium armour — 62 defence,
+crafted at a station the Lunatic Cultist drops — was an option on the Pre-Mechanical Bosses panel**,
+four bosses and most of a game too early. Pyromancer sat there too, and it is post-Moon Lord.
+
+`pipeline/tier_floor.py` fixes it from the recipe rather than from another hand-written tier list —
+a set cannot be built before its station exists or its materials drop, and both are already in
+`full_site_data.json`:
+
+| Gate | Evidence | Floor |
+|---|---|---|
+| Ancient Manipulator | dropped by the Lunatic Cultist | `moonlord` |
+| Primordial Essences | post-Moon Lord, from The Primordials | `endgame` |
+| Soul Forge | needs Soul of Fright and Soul of Sight | `plantera` |
+| Chlorophyte Bar | post-mechanical bosses | `plantera` |
+| Martian Conduit Plating | post-Golem, Martian Madness | `cultist` |
+
+Nine sets moved. Lodestone and Valadium smelt from chunks at a Hellforge and are genuinely early
+Hardmode; White Knight's Hallowed Charm is Pixie Dust and Soul of Light, both pre-mechanical. Those
+were left where they were.
+
 ### Known gap: Fargo's Souls
 
 The item database holds 497 Fargo's items, and **two** of them reach a loadout panel. Fargo's Souls
