@@ -5,7 +5,7 @@ station, how to get each item, and a suggested loadout for every class before ev
 
 **Live:** https://josephwiki.pages.dev · **Mirror:** https://icarus2419.github.io/Terraria-Custom-Modpack-Wiki
 
-**87 bosses · 5,455 recipes · 6,255 items · 130 stations · 2,956 loadout entries**
+**87 bosses · 5,455 recipes · 6,255 items · 130 stations · 2,778 loadout entries**
 
 Open `index.html` in any browser. No install, no build step, no network.
 
