@@ -202,6 +202,43 @@ def _patch(name, fn, indent=None):
     return lines
 
 
+# ---------- full_site_data.json ----------
+
+def flag_unobtainable(full):
+    """Mark, don't delete. Recipes address items by index, so removing one would shift
+    every reference; and a reader who searches for Twilight Grasp is better served by
+    seeing it struck through with a reason than by finding nothing at all."""
+    changed = []
+    reasons = {}
+    for name in VG.unavailable():
+        reasons[name] = "added in Terraria %s; this pack is tModLoader %s" % (
+            "1.4.5.7", VG.GAME_VERSION)
+    for name in WG.locked():
+        reasons[name] = "Crimson-only; this world is %s" % WG.WORLD_EVIL.capitalize()
+
+    blocked = set()
+    for iid, it in full["items"].items():
+        why = reasons.get(it["n"])
+        if why and it.get("na") != why:
+            it["na"] = why
+            blocked.add(iid)
+            changed.append("%s: flagged (%s)" % (it["n"], why))
+        elif why:
+            blocked.add(iid)
+
+    # A recipe is equally unusable whether the blocked item is what it makes or what it
+    # needs, so both get the flag and both drop out of "only what I can make now".
+    for r in full["recipes"]:
+        dead = str(r["res"]) in blocked or any(
+            str(o["i"]) in blocked for g in r["ing"] for o in g)
+        if dead and not r.get("na"):
+            r["na"] = 1
+            changed.append("recipe for %s: flagged" % full["items"][str(r["res"])]["n"])
+        elif not dead and r.get("na"):
+            del r["na"]
+    return changed
+
+
 def main():
     report = {}
     report["loadout_stats"] = _patch("loadout_stats.json", fix_stats)
@@ -227,6 +264,10 @@ def main():
         for st, cls, _sect, n, floor in floor_log
     ]
     report["bosses"] = _patch("bosses.json", fix_bosses, indent=1)
+    # recipes.html reads full_site_data.json, tinkerers.html reads site_data.json, and
+    # the Tinkerer's Workshop is exactly where the 1.4.5 whip accessories live. Both.
+    report["unobtainable in recipes page"] = _patch("full_site_data.json", flag_unobtainable)
+    report["unobtainable in tinkerers page"] = _patch("site_data.json", flag_unobtainable)
 
     # The page ships a sprite and a stats blob for every name the loadouts mention.
     # Gated names are no longer mentioned, so their entries are dead payload -- a

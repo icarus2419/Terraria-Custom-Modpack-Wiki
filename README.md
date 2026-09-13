@@ -259,6 +259,17 @@ Fargo's publishes no class-setup guide for `parse_guides.py` to read, which is w
 be found on the boss pages: the Banished Baron's Decrepit Airstrike Remote, for one, is a 375-damage
 summon weapon that appears nowhere on this site.
 
+### Unobtainable items are struck through, not deleted
+
+The version gate and the world gate remove picks from the loadout panels, but `recipes.html`
+and `tinkerers.html` were still offering the same items as craftable — the Tinkerer's Workshop
+page in particular is exactly where the 1.4.5 whip accessories live. Both datasets now carry an
+`na` field on the 52 affected items and on the 128 recipes that make or need one.
+
+They are marked rather than removed: recipes address items by index, so deleting one would shift
+every reference, and a reader searching for Twilight Grasp is better served by seeing it struck
+through with a reason than by finding nothing. *Only what I can make now* filters them out.
+
 ### Hand-verified corrections
 
 `pipeline/corrections.py` fixes what the scrape got wrong, each one checked against the mod's own

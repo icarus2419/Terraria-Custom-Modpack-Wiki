@@ -17,7 +17,8 @@ function sprite(it){var s=el("span","sp");
   if(it.sp){var im=new Image(); im.src=it.sp; im.alt=""; im.className="px"; im.loading="lazy"; s.appendChild(im);} return s;}
 function itemBtn(id,qty,isRes,variant){
   var it=I[id]; var b=el("button","it"+(isRes?" res-it":"")); b.type="button"; b.dataset.id=id;
-  b.title=it.n+(it.tt?" — "+it.tt:"");
+  b.title=it.n+(it.tt?" — "+it.tt:"")+(it.na?"  [not in this build: "+it.na+"]":"");
+  if(it.na) b.classList.add("na");
   b.appendChild(sprite(it));
   var nm=el("span","nm",it.n);
   if(isRes&&RARECOL[String(it.r)]){nm.className="nm rar"; nm.style.setProperty("--rar",RARECOL[String(it.r)]);}
@@ -45,6 +46,7 @@ function matches(r){
   if(r.phm===true&&!eras.pre) return false;
   if(r.phm===false&&!eras.hard) return false;
   if(reach && r.phm===false && !hardmodeOpen()) return false;
+  if(reach && r.na) return false;
   if(curStation!==null && r.s!==curStation) return false;
   if(!q) return true;
   if(I[r.res].n.toLowerCase().indexOf(q)>=0) return true;
@@ -197,6 +199,11 @@ function renderDetail(id,fromUser){
   if(it.rn&&RARECOL[String(it.r)]){var c=RARECOL[String(it.r)];
     pl.appendChild(pill(it.rn,"rare",{background:c,color:lum(c)>0.5?"#14172b":"#fff"}));}
   if(it.hm) pl.appendChild(pill("Hardmode","hm"));
+  if(it.na){
+    var np=pill("Not in this build","na");
+    np.title="Present on the source wiki but unobtainable here: "+it.na;
+    pl.appendChild(np);
+  }
   (it.ty||[]).forEach(function(x){pl.appendChild(pill(x));});
   t.appendChild(pl); head.appendChild(t); panel.appendChild(head);
 

@@ -30,7 +30,8 @@ function itemBtn(id, qty, isRes){
   var it=I[id];
   var b=el("button","it"+(isRes?" res-it":""));
   b.type="button"; b.dataset.id=id;
-  b.title=it.n+(it.tt?" — "+it.tt:"");
+  b.title=it.n+(it.tt?" — "+it.tt:"")+(it.na?"  [not in this build: "+it.na+"]":"");
+  if(it.na) b.classList.add("na");
   b.appendChild(sprite(it));
   var nm=el("span","nm",it.n);
   if(isRes && RARECOL[String(it.r)]){
@@ -65,6 +66,7 @@ function recipeMatches(r){
   if(r.phm===true && !eras.pre) return false;
   if(r.phm===false && !eras.hard) return false;
   if(reach && r.phm===false && !hardmodeOpen()) return false;
+  if(reach && r.na) return false;
   if(!q) return true;
   var t=I[r.res].n.toLowerCase();
   if(t.indexOf(q)>=0) return true;
@@ -211,6 +213,11 @@ function renderDetail(id, fromUser){
     pl.appendChild(rp);
   }
   if(it.hm) pl.appendChild(pill("Hardmode","hm"));
+  if(it.na){
+    var np=pill("Not in this build","na");
+    np.title="Present on the source wiki but unobtainable here: "+it.na;
+    pl.appendChild(np);
+  }
   (it.ty||[]).slice(0,3).forEach(function(x){ pl.appendChild(pill(x)); });
   t.appendChild(pl); head.appendChild(t); panel.appendChild(head);
 

@@ -514,3 +514,13 @@ footer ul{margin:0; padding-left:16px; line-height:1.6}
 
 CSS = CSS.replace("@@ICONS@@", _logo.head_links())
 CSS = CSS.replace("@@PIXELFONT@@", _fonts.css())
+
+# Items the source wiki documents but this build cannot obtain -- 1.4.5 content on a
+# 1.4.4 tModLoader, and Crimson drops in a Corruption world. Kept visible and searchable
+# rather than deleted, because "why is this missing" is a worse question to leave a
+# reader with than "why is this greyed out".
+CSS += """
+.it.na{opacity:.45;filter:grayscale(1)}
+.it.na .nm{text-decoration:line-through}
+.pill.na{background:#5c2230;color:#ffd9e0;border-color:#7d2f42}
+"""
