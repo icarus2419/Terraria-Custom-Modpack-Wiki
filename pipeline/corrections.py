@@ -30,8 +30,9 @@ import tier_floor as TF
 # returns for a use time that is really an id. Damage and damage type survived, so keep
 # those and drop the rest rather than printing a knockback of 3824.
 ID_SCRAPED = {
-    "Ballista Rod": 3824, "Ballista Cane": 3824,
+    "Ballista Rod": 3824, "Ballista Cane": 3824, "Ballista Staff": 3824,
     "Explosive Trap Rod": 3832, "Explosive Trap Cane": 3832, "Explosive Trap": 3832,
+    "Explosive Trap Staff": 3832,
 }
 
 # thoriummod.wiki.gg/wiki/The_Blender -- 12 Radiant damage, a pre-Hardmode Healer scythe

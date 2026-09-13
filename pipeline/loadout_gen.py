@@ -217,12 +217,20 @@ for si, st in enumerate(ORDER):
 n_items = sum(len(b["items"]) for s in DATA.values() for c in s.values()
               for m in c.values() for b in m)
 
+# weapon_stats_fetch.py fills loadout_stats.json for every weapon on all six wikis, not
+# just the ones a guide names -- around 7,000 entries against the ~2,800 this page can
+# show. Shipping all of them costs the reader about a megabyte for hover cards that never
+# open, so send only the names this page actually renders.
+SHOWN = {i["name"] for c in DATA.values() for m in c.values() for bs in m.values()
+         for b in bs for i in b["items"]}
+PAGE_STATS = {k: v for k, v in STATS.items() if k in SHOWN}
+
 payload = json.dumps(
     {"stages":STAGES, "order":ORDER, "classes":CLASSES, "class_meta":CLASS_META,
      "modcol":MODCOL, "wiki":WIKI, "slots":SLOTS, "panel":PANEL, "alts":ALTS,
      "carry":CARRY, "has":HAS, "own":OWN, "upfrom":UPFROM,
      "items":ITEMS, "zone":ZONE, "cat_order":CATO,
-     "sprites":SP, "icons":ICON, "stats":STATS},
+     "sprites":SP, "icons":ICON, "stats":PAGE_STATS},
     separators=(",", ":")).replace("<", "\\u003c")
 
 EXTRA = """

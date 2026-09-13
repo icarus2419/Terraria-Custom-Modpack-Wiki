@@ -31,6 +31,7 @@ CRIMSON_LOCKED = {
     "The Rotted Fork",           # Hematic Crate
     "Vile Flail-Core",           # Ichor
     "Crimson Sakura Alpha",
+    "Sanguine Flayer",         # Crimson Mimic
     # ranged
     "The Undertaker",            # Hematic Crate
     "Ripper Slug",               # Tissue Sample
